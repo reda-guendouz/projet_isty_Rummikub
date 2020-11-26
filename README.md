@@ -9,11 +9,13 @@
 ## Liste des choses à faire ##
 
 **VUE :**
-*-Refaire une librairie*
-*-Trouver une interface ergonomique du plateau*
+
+*1.Refaire une librairie*
+*2.Trouver une interface ergonomique du plateau*
 
 **MODELE :**
-*-Fonction pour créer le plateau*
+
+*1.Fonction pour créer le plateau*
 
 <table border="1px">
   <tr>
