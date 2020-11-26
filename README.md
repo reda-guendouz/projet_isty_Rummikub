@@ -21,11 +21,11 @@
 <table border="1px">
   <tr>
     <td>
-      **26/11/2020**
+      <strong>26/11/2020</strong>
     </td>
     <td>
-      **Vue :** Revoir la librairie
-      **Modele :** Commencer les classes + quelques tests 
+      <strong>Vue :</strong> Revoir la librairie
+      <strong>Modele :</strong> Commencer les classes + quelques tests 
     </td>
   </tr>
   <tr>
