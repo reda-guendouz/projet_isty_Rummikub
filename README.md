@@ -25,6 +25,7 @@
     </td>
     <td>
       <strong>Vue :</strong> Revoir la librairie
+      
       <strong>Modele :</strong> Commencer les classes + quelques tests 
     </td>
   </tr>
