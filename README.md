@@ -11,6 +11,7 @@
 **VUE :**
 
 *1.Refaire une librairie*
+
 *2.Trouver une interface ergonomique du plateau*
 
 **MODELE :**
