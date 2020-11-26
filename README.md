@@ -1,16 +1,18 @@
 # Projet Isty Rummikub
 
+## Formations des groupes ##
+
 **Modèle :** Lucas + Reda
 
 **Vue :** Achraf + Klément + Marwane
 
-#Liste des choses à faire#
+## Liste des choses à faire ##
 
-**VUE : **
+**VUE :**
 -Refaire une librairie
 -Trouver une interface ergonomique du plateau
 
-**MODELE : **
+**MODELE :**
 -Fonction pour créer le plateau
 
 <table border="1px">
