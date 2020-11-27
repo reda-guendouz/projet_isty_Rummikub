@@ -4,7 +4,7 @@
 
 **Modèle :** Lucas + Reda
 
-**Vue :** Achraf + Klément + Marwane
+**Vue :** Achraf + Clément + Marwane
 
 ## Liste des choses à faire ##
 
