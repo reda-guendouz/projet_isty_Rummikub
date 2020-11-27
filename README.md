@@ -2,7 +2,7 @@
 
 ## Formations des groupes ##
 
-**Modèle :** Lucas + Reda
+**Modèle :** Lucas + Réda
 
 **Vue :** Achraf + Clément + Marwane
 
