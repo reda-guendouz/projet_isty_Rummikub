@@ -73,8 +73,8 @@
 void init_graphics()
 	{
 	// Initialisation d'une taille voulu
-	WIDTH  = 1000;
-	HEIGHT = 1000;
+	WIDTH  = 1200;
+	HEIGHT = 800;
 
 	// Initialisation de la SDL_surface
 	SDL_Init(SDL_INIT_VIDEO);

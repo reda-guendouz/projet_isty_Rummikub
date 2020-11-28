@@ -33,5 +33,5 @@ Outils.o : Outils.c Outils.h
 clean:
 	rm -f *core
 	rm -f *.o
-	rm -f exemple
+	rm -f main
 	rm -f *.tar
