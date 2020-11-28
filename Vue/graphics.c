@@ -80,8 +80,10 @@ void init_graphics()
 	SDL_Init(SDL_INIT_VIDEO);
 
 	/// met en place le mode video avec la longueur, la largeur et le nombre de pixel donnée
-	/// SDL_HWSURFACE choisit le processeur graphique par défaut
-	/// SDL_DOUBLEBUF choisit la carte graphique
+	/// SDL_HWSURFACE permet d'utiliser la carte graphique
+	/// SDL_DOUBLEBUF permet d'optimiser l'utilisation de la carte graphique
+	/// SDL_RESIZABLE permet au joueur de modifier la resolution de la fenetre
+	/// ( avec la souris en cliquant sur les cotes par exemple ) 
 	SDL_screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_RESIZABLE);
 	if ( SDL_screen == NULL )
 		{
