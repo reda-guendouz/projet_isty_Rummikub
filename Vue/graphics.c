@@ -462,7 +462,7 @@ void draw_line(POINT p1, POINT p2, COULEUR color)
 			add_pix(i,j,color);
 			}
 		}
-	if (SDL_AFFICHE_AUTO) affiche_all();
+		if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 	// 4.4 Dessine un rectangle non rempli
