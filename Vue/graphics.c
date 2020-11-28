@@ -76,8 +76,12 @@ void init_graphics()
 	WIDTH  = 1200;
 	HEIGHT = 800;
 
-	// Initialisation de la SDL_surface
-	SDL_Init(SDL_INIT_VIDEO);
+	/// Initialisation de la SDL_surface (variable 1.1)
+	if(SDL_Init(SDL_INIT_VIDEO) != 0)
+		{
+			SDL_Log("Impossible de charger la librairie SDL: %s", SDL_GetError());
+			return 1;
+		}
 
 	/// met en place le mode video avec la longueur, la largeur et le nombre de pixel donnée
 	/// SDL_HWSURFACE permet d'utiliser la carte graphique
