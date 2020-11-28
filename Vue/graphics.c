@@ -79,8 +79,8 @@ void init_graphics()
 	/// Initialisation de la SDL_surface (variable 1.1)
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
 		{
-			SDL_Log("Impossible de charger la librairie SDL: %s", SDL_GetError());
-			return 1;
+			printf("Impossible de charger la librairie SDL: %s", SDL_GetError());
+			exit(EXIT_FAILURE);
 		}
 
 	/// met en place le mode video avec la longueur, la largeur et le nombre de pixel donnée
@@ -92,13 +92,13 @@ void init_graphics()
 	if ( SDL_screen == NULL )
 		{
 		fprintf(stderr, "Impossible de passer en %dx%d en 32 bits: %s\n", WIDTH, HEIGHT, SDL_GetError());
-		exit(1);
+		exit(EXIT_FAILURE);
 		}
 
 	/// a voir avec les pseudos des joueurs
 	// Autorise la prise en compte de repetition lors d'un appui
 	// long sur une touche
-	SDL_EnableKeyRepeat(1,0);
+	///////SDL_EnableKeyRepeat(1,0);
 
 	// Le titre de la fenetre
 	SDL_WM_SetCaption("Rummikub",NULL);
@@ -161,8 +161,8 @@ COULEUR couleur_RGB(int r, int g, int b)
 	return C;
 	}
 
-void souris_visible()  {SDL_ShowCursor(1);}
-void souris_invisible(){SDL_ShowCursor(0);}
+void souris_visible()  {SDL_ShowCursor(SDL_ENABLE);}
+void souris_invisible(){SDL_ShowCursor(SDL_DISABLE);}
 
 // #######################
 // 3. GESTION D'�V�NEMENTS
@@ -181,23 +181,24 @@ POINT get_arrow()
 	POINT dep;
 	dep.x = dep.y = 0;
 	SDL_Event event;
-	while (SDL_PollEvent(&event))
+	while (SDL_WaitEvent(&event))
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
+		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		/* Si l'utilisateur a appuy� sur une touche */
 		if (event.type == SDL_KEYDOWN)
 			{
 			switch (event.key.keysym.sym)
 					{
-						case SDLK_ESCAPE : exit(0);
-						case SDLK_LEFT   : (dep.x) -= MINDEP; break;
-						case SDLK_RIGHT  : (dep.x) += MINDEP; break;
-						case SDLK_UP     : (dep.y) += MINDEP; break;
-						case SDLK_DOWN   : (dep.y) -= MINDEP; break;
+						case SDLK_ESCAPE : exit(EXIT_SUCCESS);
+						case SDLK_LEFT   : (dep.x) -= MINDEP; printf("fleche gauche\n"); break;
+						case SDLK_RIGHT  : (dep.x) += MINDEP; printf("fleche droite\n"); break;
+						case SDLK_UP     : (dep.y) += MINDEP; printf("fleche haut\n"); break;
+						case SDLK_DOWN   : (dep.y) -= MINDEP; printf("fleche du bas\n"); break;
 						default          : break;
 					}
+			break;
 			}
 		}
 	return dep;
@@ -250,7 +251,7 @@ void wait_escape()
 	while (SDL_WaitEvent(&event) && display)
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
+		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		/* Si l'utilisateur a appuy� sur une touche */
 		if (event.type == SDL_KEYDOWN)
@@ -318,7 +319,7 @@ POINT wait_clic()
 			fflush(stdout);
 			}
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
+		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		}
 #ifdef EN_LOCAL
