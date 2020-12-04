@@ -5,7 +5,6 @@ LIBS=`sdl-config --libs` -lm -lSDL_ttf
 all: graphics.o main.c
 	rm -f main
 	$(CC) $(CFLAGS) graphics.o  main.c -o main $(LIBS)
-	./main
 
 
 graphics.o: graphics.c graphics.h
