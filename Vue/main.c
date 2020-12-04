@@ -1,4 +1,3 @@
-
 #include "graphics.h"
 
 void deplacement(POINT* p1,POINT* p2,COULEUR clr){
@@ -14,6 +13,8 @@ int main(void) {
     init_graphics();
     
     POINT carre1,carre2;
+    int hauteur,largeur;
+    hauteur = largeur = 0;
     carre1.x = carre1.y = 20;
     carre2.x = carre2.y = 40;
     draw_rectangle(carre1,carre2,white);
@@ -22,6 +23,8 @@ int main(void) {
     for (int i = 0; i < 10; i++)
     {
         deplacement(&carre1,&carre2,red);
+        taille(&hauteur,&largeur);
+        printf("hauteur: %d\tlargeur: %d\n",hauteur,largeur);
     }
     
     wait_escape();

@@ -982,3 +982,14 @@ int distance(POINT P1, POINT P2)
 	d = (P1.x-P2.x)*(P1.x-P2.x) + (P1.y-P2.y)*(P1.y-P2.y);
 	return (int)(sqrt(d));
 	}
+
+
+/// #########
+/// 10. DIVERS v2
+/// #########
+
+	/// 10.1 Permet d'avoir la hauteur et la largeur de la surface
+	void taille(int* h,int* w){
+		*h = SDL_screen->h;
+		*w = SDL_screen->w;
+	}

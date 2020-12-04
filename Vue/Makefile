@@ -2,11 +2,10 @@ CC=gcc
 CFLAGS=-O2 -Wall `sdl-config --cflags`
 LIBS=`sdl-config --libs` -lm -lSDL_ttf
 
-%: graphics.o %.c
-
-	rm -f $@
-	$(CC) $(CFLAGS) graphics.o  $@.c -o $@ $(LIBS)
-
+all: graphics.o main.c
+	rm -f main
+	$(CC) $(CFLAGS) graphics.o  main.c -o main $(LIBS)
+	./main
 
 
 graphics.o: graphics.c graphics.h
