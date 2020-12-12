@@ -4,20 +4,20 @@
  * TUILE  *
  * *******/
 
-void affiche_tuile(TUILE tuile) {
+void affiche_tuile(TUILE tuile, int numTuiles) {
     switch (tuile.clr) 
     {
     case 0 :
-        printf("Tuile : %d NOIR\n",tuile.chiffre);
+        printf("Tuile n°%d : %d NOIR\n",numTuiles,tuile.chiffre);
         break;
     case 1 :
-        printf("Tuile : %d ORANGE\n",tuile.chiffre);
+        printf("Tuile n°%d : %d ORANGE\n",numTuiles,tuile.chiffre);
         break;
     case 2 :
-        printf("Tuile : %d ROUGE \n",tuile.chiffre);
+        printf("Tuile n°%d : %d ROUGE \n",numTuiles,tuile.chiffre);
         break;
     case 3 :
-        printf("Tuile : %d BLEU\n",tuile.chiffre);
+        printf("Tuile n°%d : %d BLEU\n",numTuiles,tuile.chiffre);
         break;
     default:
         break;
@@ -49,14 +49,13 @@ void affiche_joueur(JOUEUR joueur) {
     printf("CHEVALET : \n");
     for (i = 0; i<joueur.chevalet.nbTuiles;i++) 
     {
-        affiche_tuile(joueur.chevalet.pile[i]);
+        affiche_tuile(joueur.chevalet.pile[i], i);
     }
 }
 
-
-void affiche_joueurs(int nbJoueur) {
+void affiche_joueurs() {
     int i = 0;
-    for (i = 0; i<nbJoueur;i++) {
+    for (i = 0; i<4;i++) {
         affiche_joueur(joueurs[i]);
     }
 }
@@ -88,7 +87,7 @@ void affiche_pioche() {
     int i;
     for (i = 0; i <= pioche->nbTuiles; i++) 
     {
-        affiche_tuile(pioche->pile[i]);
+        affiche_tuile(pioche->pile[i], i);
     }
 }
 
@@ -111,4 +110,15 @@ TUILE piocher(int numJoueur) {
     pioche->nbTuiles--;
     joueurs[numJoueur].chevalet.nbTuiles++;
     return tuile;
+}
+
+
+/***********
+ * Plateau *
+ * ********/
+
+void affiche_plateau () {
+
+
+
 }

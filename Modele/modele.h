@@ -24,7 +24,7 @@ typedef struct TUILE
 	int chiffre;
 }TUILE;
 
-void affiche_tuile(TUILE tuile);
+void affiche_tuile(TUILE tuile, int numTuiles);
 
 /*********************************
  * Structure des chevalet/pioche *
@@ -54,13 +54,15 @@ void init_joueurs(int nbJoueur);
 
 void affiche_joueur(JOUEUR joueur);
 
-void affiche_joueurs(int nbJoueur);
+void affiche_joueurs();
 
 /******************
  * Plateau de jeu *
  * ***************/
 
 TUILE plateau[8][22];
+
+void affiche_plateau();
 
 /**********
  * Pioche *
