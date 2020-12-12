@@ -54,7 +54,7 @@ TUILE plateau[8][22];
  * Pioche *
  * *******/
 
-TUILE pioche[106];
+CHEVALET pioche[106];
 
 void affiche_pioche();
 
