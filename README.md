@@ -2,9 +2,9 @@
 
 ## Formations des groupes ##
 
-**Modèle :** Lucas + Réda
+**Modèle :** Lucas + Clément
 
-**Vue :** Achraf + Clément + Marwane
+**Vue :** Achraf + Réda + Marwane
 
 ## Liste des choses à faire ##
 
