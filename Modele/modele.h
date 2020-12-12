@@ -3,6 +3,7 @@
 #include <time.h>
 
 #define MAX_CHIFFRE 13
+#define JOUEURS_MAX 4
 #define MAX_TUILES 106
 #define PIOCHE_DEPART 14
 #define DIM_PLATEAU_W 22
@@ -50,9 +51,9 @@ typedef struct JOUEUR
     CHEVALET chevalet;
 }JOUEUR;
 
-JOUEUR joueurs[4];
+JOUEUR joueurs[JOUEURS_MAX];
 
-void init_joueurs(int nbJoueur);
+void init_joueurs(int nbJoueurs);
 
 void affiche_joueur(JOUEUR joueur);
 

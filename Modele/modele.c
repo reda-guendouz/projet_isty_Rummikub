@@ -28,18 +28,15 @@ void affiche_tuile(TUILE tuile, int numTuiles) {
  * Joueur *
  * *******/
 
-void init_joueurs(int nbJoueur) {
+void init_joueurs(int nbJoueurs) {
     int i,j;
-    for(i = 0;i<nbJoueur;i++) 
+    for(i = 0;i<nbJoueurs;i++) 
     {
         joueurs[i].numJoueur = i+1;
         joueurs[i].score = 0;
         joueurs[i].chevalet.nbTuiles = 0;
-        for (j = 0; j < PIOCHE_DEPART; j++) 
-        {
+        for (j = 0; j < PIOCHE_DEPART; j++)
             joueurs[i].chevalet.pile[j] = piocher(i);
-        }
-        
     }
 }
 
@@ -47,10 +44,7 @@ void affiche_joueur(JOUEUR joueur) {
     int i;
     printf("Joueur n°%d, Score : %d \n",joueur.numJoueur,joueur.score);
     printf("CHEVALET : \n");
-    for (i = 0; i<joueur.chevalet.nbTuiles;i++) 
-    {
-        affiche_tuile(joueur.chevalet.pile[i], i);
-    }
+    affiche_liste_tuiles(joueur.chevalet);
 }
 
 void affiche_joueurs() {
@@ -81,14 +75,13 @@ void init_pioche() {
         pioche->pile[pioche->nbTuiles].clr=NOIR;
         pioche->nbTuiles++;
     }
+    melanger_pioche();
 }
 
-void affiche_pioche() {
+void affiche_liste_tuiles(CHEVALET liste_tuiles) {
     int i;
-    for (i = 0; i <= pioche->nbTuiles; i++) 
-    {
-        affiche_tuile(pioche->pile[i], i);
-    }
+    for (i = 0; i <= liste_tuiles.nbTuiles; i++) 
+        affiche_tuile(liste_tuiles.pile[i], i);
 }
 
 void melanger_pioche() {
@@ -123,7 +116,7 @@ void affiche_plateau () {
     {
        for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-            printf("%d\t",plateau[i][j].chiffre);
+            printf("%d  ",plateau[i][j].chiffre);
         }
         printf("\n");
     }
