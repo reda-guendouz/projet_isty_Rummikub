@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <time.h>
 
 #define MAX_CHIFFRE 13
 #define MAX_TUILES 106
@@ -12,9 +13,9 @@ typedef enum{
     NOIR,ORANGE,ROUGE,BLEU
 }COULT;
 
-/************************
- * Structure des Tuiles *
- * *********************/
+/**********
+ * TUILE  *
+ * *******/
 
 typedef struct TUILE
 {
@@ -22,13 +23,15 @@ typedef struct TUILE
 	int chiffre;
 }TUILE;
 
+void affiche_tuile(TUILE tuile);
+
 /*********************************
  * Structure des chevalet/pioche *
  * ******************************/
 
 typedef struct CHEVALET
 {
-    TUILE pile[107];
+    TUILE pile[106];
     int nbTuiles;
 }CHEVALET;
 
@@ -59,3 +62,7 @@ CHEVALET pioche[106];
 void affiche_pioche();
 
 void init_pioche();
+
+void melanger_pioche();
+
+TUILE piocher();
