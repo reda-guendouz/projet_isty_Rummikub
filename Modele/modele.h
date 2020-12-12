@@ -52,7 +52,7 @@ JOUEUR joueurs[4];
 
 void init_joueurs(int nbJoueur);
 
-void affiche_joueur();
+void affiche_joueur(JOUEUR joueur);
 
 void affiche_joueurs(int nbJoueur);
 
@@ -74,4 +74,4 @@ void init_pioche();
 
 void melanger_pioche();
 
-TUILE piocher();
+TUILE piocher(int numJoueur);

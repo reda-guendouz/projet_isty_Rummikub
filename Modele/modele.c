@@ -24,7 +24,6 @@ void affiche_tuile(TUILE tuile) {
     }
 }
 
-
 /**********
  * Joueur *
  * *******/
@@ -38,8 +37,7 @@ void init_joueurs(int nbJoueur) {
         joueurs[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++) 
         {
-            joueurs[i].chevalet.pile[j] = piocher();
-            joueurs[i].chevalet.nbTuiles++;
+            joueurs[i].chevalet.pile[j] = piocher(i);
         }
         
     }
@@ -69,26 +67,26 @@ void affiche_joueurs(int nbJoueur) {
 
 void init_pioche() {
     int i,j,k;
-    pioche->nbTuiles=-1;
+    pioche->nbTuiles=0;
     for (i=0;i<2;i++) {
         for (j = 1; j <= MAX_CHIFFRE; j++) 
         {
             for (k = NOIR; k <= BLEU; k++) 
             {
-                pioche->nbTuiles++;
                 pioche->pile[pioche->nbTuiles].chiffre=j;
                 pioche->pile[pioche->nbTuiles].clr=k;
+                pioche->nbTuiles++;
             }
         }
-        pioche->nbTuiles++;
         pioche->pile[pioche->nbTuiles].chiffre=-1;
         pioche->pile[pioche->nbTuiles].clr=NOIR;
+        pioche->nbTuiles++;
     }
 }
 
 void affiche_pioche() {
     int i;
-    for (i = 0; i < MAX_TUILES; i++) 
+    for (i = 0; i <= pioche->nbTuiles; i++) 
     {
         affiche_tuile(pioche->pile[i]);
     }
@@ -108,8 +106,9 @@ void melanger_pioche() {
     }
 }
 
-TUILE piocher() {
+TUILE piocher(int numJoueur) {
     TUILE tuile = pioche->pile[pioche->nbTuiles];
     pioche->nbTuiles--;
+    joueurs[numJoueur].chevalet.nbTuiles++;
     return tuile;
 }
