@@ -22,14 +22,16 @@ int main(void) {
     affiche_tuile(tuile);*/
 
     
-    init_joueurs(1);
-    affiche_joueur(joueurs[0]);
-    printf("%d\n",joueurs[0].chevalet.nbTuiles);
-    piocher(0);
-    affiche_joueur(joueurs[0]);
-    printf("%d\n",joueurs[0].chevalet.nbTuiles);
+    //init_joueurs(1);
+    //affiche_joueur(joueurs[0]);
+    //printf("%d\n",joueurs[0].chevalet.nbTuiles);
+    //piocher(0);
+    //affiche_joueur(joueurs[0]);
+    //printf("%d\n",joueurs[0].chevalet.nbTuiles);
     //printf("=========\n");*/
     //affiche_pioche();
     //printf("%d\n",pioche->nbTuiles);
+
+    affiche_plateau();
     return 0;
 }

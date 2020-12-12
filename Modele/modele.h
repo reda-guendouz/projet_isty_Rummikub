@@ -5,6 +5,8 @@
 #define MAX_CHIFFRE 13
 #define MAX_TUILES 106
 #define PIOCHE_DEPART 14
+#define DIM_PLATEAU_W 22
+#define DIM_PLATEAU_H 8
 
 /**********************
  * Couleur des Tuiles *
@@ -60,7 +62,7 @@ void affiche_joueurs();
  * Plateau de jeu *
  * ***************/
 
-TUILE plateau[8][22];
+TUILE plateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
 
 void affiche_plateau();
 

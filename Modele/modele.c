@@ -118,7 +118,13 @@ TUILE piocher(int numJoueur) {
  * ********/
 
 void affiche_plateau () {
-
-
-
+    int i,j;
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+       for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+            printf("%d\t",plateau[i][j].chiffre);
+        }
+        printf("\n");
+    }
 }
