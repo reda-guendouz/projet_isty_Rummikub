@@ -5,9 +5,9 @@ int main(void) {
     init_pioche();
     //affiche_pioche();
     //melanger_pioche();
-    affiche_pioche();
-    printf("%d\n",pioche->nbTuiles);
-    printf("=========\n");
+    //affiche_pioche();
+    //printf("%d\n",pioche->nbTuiles);
+    //printf("=========\n");
     /*
     printf("=========\n");
     TUILE tuile = piocher(2);
@@ -23,14 +23,13 @@ int main(void) {
 
     
     init_joueurs(1);
-    //affiche_joueur(joueurs[0]);
-    int choix;
-    printf("Piochez : 1 or 2 \n");
-    scanf("%d",&choix);
-    piocher(2);
     affiche_joueur(joueurs[0]);
-    printf("=========\n");
-    affiche_pioche();
-    printf("%d\n",pioche->nbTuiles);
+    printf("%d\n",joueurs[0].chevalet.nbTuiles);
+    piocher(0);
+    affiche_joueur(joueurs[0]);
+    printf("%d\n",joueurs[0].chevalet.nbTuiles);
+    //printf("=========\n");*/
+    //affiche_pioche();
+    //printf("%d\n",pioche->nbTuiles);
     return 0;
 }
