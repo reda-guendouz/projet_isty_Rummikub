@@ -4,6 +4,7 @@
 
 #define MAX_CHIFFRE 13
 #define MAX_TUILES 106
+#define PIOCHE_DEPART 14
 
 /**********************
  * Couleur des Tuiles *
@@ -36,9 +37,9 @@ typedef struct CHEVALET
 }CHEVALET;
 
 
-/*************************
- * Structure des joueurs *
- * **********************/
+/***********
+ * Joueurs *
+ * ********/
 
 typedef struct JOUEUR
 {
@@ -46,6 +47,14 @@ typedef struct JOUEUR
 	int score;
     CHEVALET chevalet;
 }JOUEUR;
+
+JOUEUR joueurs[4];
+
+void init_joueurs(int nbJoueur);
+
+void affiche_joueur();
+
+void affiche_joueurs(int nbJoueur);
 
 /******************
  * Plateau de jeu *
