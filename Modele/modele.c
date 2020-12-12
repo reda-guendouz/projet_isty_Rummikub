@@ -49,7 +49,7 @@ void affiche_joueur(JOUEUR joueur) {
 
 void affiche_joueurs() {
     int i = 0;
-    for (i = 0; i<4;i++) {
+    for (i = 0; i<JOUEURS_MAX;i++) {
         affiche_joueur(joueurs[i]);
     }
 }

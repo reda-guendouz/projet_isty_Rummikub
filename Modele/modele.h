@@ -27,6 +27,11 @@ typedef struct TUILE
 	int chiffre;
 }TUILE;
 
+/*
+Cette fonction permet d'afficher une tuile dans un terminal
+exemple pour la tuile 5 rouge dans la liste à l'indice X : 
+Tuile n°<X> : 5 ROUGE
+*/
 void affiche_tuile(TUILE tuile, int numTuiles);
 
 /*********************************
@@ -53,10 +58,21 @@ typedef struct JOUEUR
 
 JOUEUR joueurs[JOUEURS_MAX];
 
+/*
+Initialise le tableau global de type JOUEUR avec "nbJoueurs" joueurs
+*/
 void init_joueurs(int nbJoueurs);
 
+
+/*
+affiche le numero du joueur, son score ainsi que son chevalet
+*/
 void affiche_joueur(JOUEUR joueur);
 
+/*
+affiche l'ensemble des joueurs
+ERREUR POTENTIEL (non testé): l'affichage d'un joueur non existant
+*/
 void affiche_joueurs();
 
 /******************
@@ -65,18 +81,37 @@ void affiche_joueurs();
 
 TUILE plateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
 
+/*
+affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
+*/
 void affiche_plateau();
 
 /**********
  * Pioche *
  * *******/
 
+/*
+la pioche est un encemble de tuiles pas un chevalet
+(a faire: renommer le nom de la structure chevalet)
+*/
 CHEVALET pioche[MAX_TUILES];
 
-void affiche_pioche();
+/*
+afficher
+*/
+void affiche_liste_tuiles();
 
+/*
+initialise la pioche puis la melange
+*/
 void init_pioche();
 
+/*
+melange la pioche de facon aleatoire
+*/
 void melanger_pioche();
 
+/*
+tire une carte au hasard dans la pioche et met a jour la pioche
+*/
 TUILE piocher(int numJoueur);
