@@ -32,7 +32,7 @@ void affiche_tuile(TUILE tuile);
 
 typedef struct CHEVALET
 {
-    TUILE pile[106];
+    TUILE pile[MAX_TUILES];
     int nbTuiles;
 }CHEVALET;
 
@@ -66,7 +66,7 @@ TUILE plateau[8][22];
  * Pioche *
  * *******/
 
-CHEVALET pioche[106];
+CHEVALET pioche[MAX_TUILES];
 
 void affiche_pioche();
 
