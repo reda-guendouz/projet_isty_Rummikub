@@ -1,39 +1,61 @@
-#ifndef H_GRAPHICS
-#define H_GRAPHICS
-    #include "graphics.h"
-#endif
+#include <stdlib.h>
+#include <stdio.h>
 
-#define H_MODELE
+#define MAX_CHIFFRE 13
+#define MAX_TUILES 106
 
-#include<stdlib.h>
-#include<stdio.h>
-
-typedef enum{
-    VIDE,PION,DAME
-}TYPEP;
+/**********************
+ * Couleur des Tuiles *
+ * *******************/
 
 typedef enum{
-    NOIR,BLANC
-}COULP;
+    NOIR,ORANGE,ROUGE,BLEU
+}COULT;
 
-typedef struct PIECE
+/************************
+ * Structure des Tuiles *
+ * *********************/
+
+typedef struct TUILE
 {
-    TYPEP typeP;
-    COULP coulP;
-}PIECE;
+	COULT clr;
+	int chiffre;
+}TUILE;
 
-PIECE tabDamier[10][10];
+/*********************************
+ * Structure des chevalet/pioche *
+ * ******************************/
 
-typedef struct numCase
+typedef struct CHEVALET
 {
-	int l;
-	int c;
-}numCase;
+    TUILE pile[107];
+    int nbTuiles;
+}CHEVALET;
 
-int absol(int a);
 
-/*******************************
-*        Creation Damier       *
-*******************************/
+/*************************
+ * Structure des joueurs *
+ * **********************/
 
-void init_tabDamier();
+typedef struct JOUEUR
+{
+	int numJoueur;
+	int score;
+    CHEVALET chevalet;
+}JOUEUR;
+
+/******************
+ * Plateau de jeu *
+ * ***************/
+
+TUILE plateau[8][22];
+
+/**********
+ * Pioche *
+ * *******/
+
+TUILE pioche[106];
+
+void affiche_pioche();
+
+void init_pioche();
