@@ -3,7 +3,7 @@
 int main(void) {
     srand(time(NULL));
     init_pioche();
-    affiche_pioche();
+    affiche_liste_tuiles(pioche);
     //printf("%d\n",pioche->nbTuiles);
     //printf("=========\n");
     /*

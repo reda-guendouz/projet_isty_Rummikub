@@ -38,11 +38,11 @@ void affiche_tuile(TUILE tuile, int numTuiles);
  * Structure des chevalet/pioche *
  * ******************************/
 
-typedef struct CHEVALET
+typedef struct LISTE_TUILES
 {
     TUILE pile[MAX_TUILES];
     int nbTuiles;
-}CHEVALET;
+}LISTE_TUILES;
 
 
 /***********
@@ -53,7 +53,7 @@ typedef struct JOUEUR
 {
 	int numJoueur;
 	int score;
-    CHEVALET chevalet;
+    LISTE_TUILES chevalet;
 }JOUEUR;
 
 JOUEUR joueurs[JOUEURS_MAX];
@@ -94,7 +94,7 @@ void affiche_plateau();
 la pioche est un encemble de tuiles pas un chevalet
 (a faire: renommer le nom de la structure chevalet)
 */
-CHEVALET pioche[MAX_TUILES];
+LISTE_TUILES pioche[MAX_TUILES];
 
 /*
 afficher

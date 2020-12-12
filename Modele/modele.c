@@ -78,7 +78,7 @@ void init_pioche() {
     melanger_pioche();
 }
 
-void affiche_liste_tuiles(CHEVALET liste_tuiles) {
+void affiche_liste_tuiles(LISTE_TUILES liste_tuiles) {
     int i;
     for (i = 0; i <= liste_tuiles.nbTuiles; i++) 
         affiche_tuile(liste_tuiles.pile[i], i);
