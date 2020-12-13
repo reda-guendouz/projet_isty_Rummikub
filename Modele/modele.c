@@ -29,6 +29,16 @@ void affiche_tuile(TUILE tuile, int numTuiles) {
     
 }
 
+/****************
+ * LISTE_TUILE  *
+ * *************/
+
+void ajouter_tuile(LISTE_TUILES* liste, TUILE tuile){
+    liste->pile[liste->nbTuiles] = tuile;
+    liste->nbTuiles++;
+}
+
+
 /**********
  * Joueur *
  * *******/
@@ -45,7 +55,7 @@ void init_joueurs(int nbJoueurs) {
         scanf("%s",joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
-            piocher(i);
+            piocher(joueurs.js[i].chevalet);
     }
     for (i = 0; i < nbJoueurs; i++)
         printf("Le joueur %d est %s !\n",i+1,joueurs.js[i].pseudo);
@@ -108,12 +118,12 @@ void melanger_pioche() {
     }
 }
 
-void piocher(int numJoueur) {
+void piocher(LISTE_TUILES* liste) {
     pioche.nbTuiles--;
     TUILE tuile = pioche.pile[pioche.nbTuiles];
-    affiche_tuile(tuile,55);
-    joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
-    joueurs.js[numJoueur].chevalet.nbTuiles++;
+    ajouter_tuile(&liste,tuile);
+    /*joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
+    joueurs.js[numJoueur].chevalet.nbTuiles++;*/
 }
 
 

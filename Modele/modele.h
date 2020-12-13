@@ -53,6 +53,7 @@ typedef struct LISTE_TUILES
     int nbTuiles;
 }LISTE_TUILES;
 
+void ajouter_tuile(LISTE_TUILES* liste, TUILE tuile);
 
 /***********
  * Joueurs *
@@ -130,4 +131,4 @@ void melanger_pioche();
 /*
 tire une carte au hasard dans la pioche et met a jour la pioche
 */
-void piocher(int numJoueur);
+void piocher(LISTE_TUILES* liste);
