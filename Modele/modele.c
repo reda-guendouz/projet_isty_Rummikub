@@ -60,20 +60,20 @@ void affiche_joueurs() {
 
 void init_pioche() {
     int i,j,k;
-    pioche->nbTuiles=0;
+    pioche.nbTuiles=0;
     for (i=0;i<2;i++) {
         for (j = 1; j <= MAX_CHIFFRE; j++) 
         {
             for (k = NOIR; k <= BLEU; k++) 
             {
-                pioche->pile[pioche->nbTuiles].chiffre=j;
-                pioche->pile[pioche->nbTuiles].clr=k;
-                pioche->nbTuiles++;
+                pioche.pile[pioche.nbTuiles].chiffre=j;
+                pioche.pile[pioche.nbTuiles].clr=k;
+                pioche.nbTuiles++;
             }
         }
-        pioche->pile[pioche->nbTuiles].chiffre=-1;
-        pioche->pile[pioche->nbTuiles].clr=NOIR;
-        pioche->nbTuiles++;
+        pioche.pile[pioche.nbTuiles].chiffre=-1;
+        pioche.pile[pioche.nbTuiles].clr=NOIR;
+        pioche.nbTuiles++;
     }
     melanger_pioche();
 }
@@ -91,16 +91,16 @@ void melanger_pioche() {
     {
         TUILE tmp;
         int index = rand()%nb2;
-        tmp = pioche->pile[index];
-        pioche->pile[index] = pioche->pile[nb2-1];
-        pioche->pile[MAX_TUILES-i-1] = tmp;
+        tmp = pioche.pile[index];
+        pioche.pile[index] = pioche.pile[nb2-1];
+        pioche.pile[MAX_TUILES-i-1] = tmp;
         nb2--;
     }
 }
 
 TUILE piocher(int numJoueur) {
-    TUILE tuile = pioche->pile[pioche->nbTuiles];
-    pioche->nbTuiles--;
+    TUILE tuile = pioche.pile[pioche.nbTuiles];
+    pioche.nbTuiles--;
     joueurs[numJoueur].chevalet.nbTuiles++;
     return tuile;
 }

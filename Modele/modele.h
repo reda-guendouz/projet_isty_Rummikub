@@ -94,7 +94,7 @@ void affiche_plateau();
 la pioche est un encemble de tuiles pas un chevalet
 (a faire: renommer le nom de la structure chevalet)
 */
-LISTE_TUILES pioche[MAX_TUILES];
+LISTE_TUILES pioche;
 
 /*
 afficher
