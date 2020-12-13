@@ -5,23 +5,28 @@
  * *******/
 
 void affiche_tuile(TUILE tuile, int numTuiles) {
-    switch (tuile.clr) 
-    {
-    case 0 :
-        printf("Tuile n°%d : %d NOIR\n",numTuiles,tuile.chiffre);
-        break;
-    case 1 :
-        printf("Tuile n°%d : %d ORANGE\n",numTuiles,tuile.chiffre);
-        break;
-    case 2 :
-        printf("Tuile n°%d : %d ROUGE \n",numTuiles,tuile.chiffre);
-        break;
-    case 3 :
-        printf("Tuile n°%d : %d BLEU\n",numTuiles,tuile.chiffre);
-        break;
-    default:
-        break;
+    if(tuile.chiffre==-1)
+         printf("Tuile n°%d : JOKER\n",numTuiles);
+    else {
+        switch (tuile.clr) 
+        {
+        case NOIR:
+            printf("Tuile n°%d : %d NOIR\n",numTuiles,tuile.chiffre);
+            break;
+        case ORANGE:
+            printf("Tuile n°%d : %d ORANGE\n",numTuiles,tuile.chiffre);
+            break;
+        case ROUGE:
+            printf("Tuile n°%d : %d ROUGE \n",numTuiles,tuile.chiffre);
+            break;
+        case BLEU:
+            printf("Tuile n°%d : %d BLEU\n",numTuiles,tuile.chiffre);
+            break;
+        default:
+            break;
+        }
     }
+    
 }
 
 /**********
@@ -41,7 +46,6 @@ void init_joueurs(int nbJoueurs) {
 }
 
 void affiche_joueur(JOUEUR joueur) {
-    int i;
     printf("Joueur n°%d, Score : %d \n",joueur.numJoueur,joueur.score);
     printf("CHEVALET : \n");
     affiche_liste_tuiles(joueur.chevalet);
@@ -111,13 +115,68 @@ TUILE piocher(int numJoueur) {
  * ********/
 
 void affiche_plateau () {
-    int i,j;
+    int i,j,k;
+
+    // partie test
+    TUILE t1;
+    t1.clr=ROUGE;
+    t1.chiffre=9;
+    TUILE t2;
+    t2.clr=NOIR;
+    t2.chiffre=11;
+    TUILE t3;
+    t3.clr=BLEU;
+    t3.chiffre=-1;
+    TUILE t4;
+    t4.clr=ORANGE;
+    t4.chiffre=7;
+
+    plateau[0][0]=t1;
+    plateau[1][1]=t2;
+    plateau[2][2]=t3;
+    plateau[0][21]=t2;
+    plateau[7][0]=t3;
+    plateau[7][21]=t4;
+    
+    printf("\nPlateau:\n ");
+    for(k=0;k<88;k++)
+        printf("-");
+    printf("\n");
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
+       printf("|");
        for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-            printf("%d  ",plateau[i][j].chiffre);
+            if(plateau[i][j].chiffre==0 && plateau[i][j].clr==NOIR)
+                printf("    ");
+            else if(plateau[i][j].chiffre==-1)
+                printf(" JO ");
+            else {
+                if(plateau[i][j].chiffre<10)
+                    printf(" %d",plateau[i][j].chiffre);
+                else
+                    printf("%d",plateau[i][j].chiffre);
+                switch (plateau[i][j].clr) 
+                {
+                case NOIR:
+                    printf("N ");
+                    break;
+                case ORANGE:
+                    printf("O ");
+                    break;
+                case ROUGE:
+                    printf("R ");
+                    break;
+                case BLEU:
+                    printf("B ");
+                    break;
+                }
+            }
         }
-        printf("\n");
+        printf("|\n");
     }
+    printf(" ");
+    for(k=0;k<88;k++)
+        printf("-");
+    printf("\n");
 }
