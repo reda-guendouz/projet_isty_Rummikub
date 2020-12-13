@@ -34,28 +34,32 @@ void affiche_tuile(TUILE tuile, int numTuiles) {
  * *******/
 
 void init_joueurs(int nbJoueurs) {
-    int i,j;
+    joueurs.nbJs = nbJoueurs;
+    int i,j,tmp;
     for(i = 0;i<nbJoueurs;i++) 
     {
-        joueurs[i].numJoueur = i+1;
-        joueurs[i].score = 0;
-        joueurs[i].chevalet.nbTuiles = 0;
+        tmp=i+1;
+        joueurs.js[i].numJoueur = tmp;
+        joueurs.js[i].score = 0;
+        printf("Entrez le pseudonyme du joueur %d : ",tmp);
+        scanf("%s",joueurs.js[i].pseudo);
+        printf("Le joueur %d est %s !\n",tmp,joueurs.js[i].pseudo);
+        joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
-            joueurs[i].chevalet.pile[j] = piocher(i);
+            joueurs.js[i].chevalet.pile[j] = piocher(i);
     }
 }
 
 void affiche_joueur(JOUEUR joueur) {
-    printf("Joueur n°%d, Score : %d \n",joueur.numJoueur,joueur.score);
+    printf("Joueur n°%d: Pseudo \"%s\" & Score actuel : %d \n",joueur.numJoueur,joueur.pseudo,joueur.score);
     printf("CHEVALET : \n");
-    affiche_liste_tuiles(joueur.chevalet);
+    //affiche_liste_tuiles(joueur.chevalet);
 }
 
 void affiche_joueurs() {
-    int i = 0;
-    for (i = 0; i<JOUEURS_MAX;i++) {
-        affiche_joueur(joueurs[i]);
-    }
+    int i;
+    for (i = 0; i<joueurs.nbJs;i++)
+        affiche_joueur(joueurs.js[i]);
 }
 
 /**********
@@ -105,7 +109,7 @@ void melanger_pioche() {
 TUILE piocher(int numJoueur) {
     TUILE tuile = pioche.pile[pioche.nbTuiles];
     pioche.nbTuiles--;
-    joueurs[numJoueur].chevalet.nbTuiles++;
+    joueurs.js[numJoueur].chevalet.nbTuiles++;
     return tuile;
 }
 

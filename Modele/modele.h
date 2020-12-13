@@ -8,6 +8,10 @@
 #define PIOCHE_DEPART 14
 #define DIM_PLATEAU_W 22
 #define DIM_PLATEAU_H 8
+#define MAX_PSEUDONYME 25
+
+#define TRUE 1
+#define FALSE 0
 
 /**********************
  * Couleur des Tuiles *
@@ -53,10 +57,17 @@ typedef struct JOUEUR
 {
 	int numJoueur;
 	int score;
+    char pseudo[MAX_PSEUDONYME];
     LISTE_TUILES chevalet;
 }JOUEUR;
 
-JOUEUR joueurs[JOUEURS_MAX];
+typedef struct LISTE_JOUEURS
+{
+	JOUEUR js[JOUEURS_MAX];
+    int nbJs;
+}LISTE_JOUEURS;
+
+LISTE_JOUEURS joueurs;
 
 /*
 Initialise le tableau global de type JOUEUR avec "nbJoueurs" joueurs
