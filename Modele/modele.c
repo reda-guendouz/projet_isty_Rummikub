@@ -45,17 +45,17 @@ void init_joueurs(int nbJoueurs) {
         scanf("%s",joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
-            joueurs.js[i].chevalet.pile[j] = piocher(i);
+            piocher(i);
     }
     for (i = 0; i < nbJoueurs; i++)
-        printf("Le joueur %d est %s !\n",tmp,joueurs.js[i].pseudo);
+        printf("Le joueur %d est %s !\n",i+1,joueurs.js[i].pseudo);
     
 }
 
 void affiche_joueur(JOUEUR joueur) {
     printf("Joueur n°%d: \033[32;1m %s \033[0m\n - Score : %d \n",joueur.numJoueur,joueur.pseudo,joueur.score);
     printf("CHEVALET : \n");
-    //affiche_liste_tuiles(joueur.chevalet);
+    affiche_liste_tuiles(joueur.chevalet);
 }
 
 void affiche_joueurs() {
@@ -90,7 +90,7 @@ void init_pioche() {
 
 void affiche_liste_tuiles(LISTE_TUILES liste_tuiles) {
     int i;
-    for (i = 0; i <= liste_tuiles.nbTuiles; i++) 
+    for (i = 0; i < liste_tuiles.nbTuiles; i++) 
         affiche_tuile(liste_tuiles.pile[i], i);
 }
 
@@ -108,11 +108,12 @@ void melanger_pioche() {
     }
 }
 
-TUILE piocher(int numJoueur) {
-    TUILE tuile = pioche.pile[pioche.nbTuiles];
+void piocher(int numJoueur) {
     pioche.nbTuiles--;
+    TUILE tuile = pioche.pile[pioche.nbTuiles];
+    affiche_tuile(tuile,55);
+    joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
     joueurs.js[numJoueur].chevalet.nbTuiles++;
-    return tuile;
 }
 
 
@@ -124,7 +125,7 @@ void affiche_plateau () {
     int i,j,k;
 
     // partie test
-    TUILE t1;
+    /*TUILE t1;
     t1.clr=ROUGE;
     t1.chiffre=9;
     TUILE t2;
@@ -142,7 +143,7 @@ void affiche_plateau () {
     plateau[2][2]=t3;
     plateau[0][21]=t2;
     plateau[7][0]=t3;
-    plateau[7][21]=t4;
+    plateau[7][21]=t4;*/
     
     printf("\nPlateau:\n ");
     for(k=0;k<88;k++)

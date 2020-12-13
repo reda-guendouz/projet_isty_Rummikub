@@ -130,4 +130,4 @@ void melanger_pioche();
 /*
 tire une carte au hasard dans la pioche et met a jour la pioche
 */
-TUILE piocher(int numJoueur);
+void piocher(int numJoueur);
