@@ -128,7 +128,7 @@ void affiche_plateau () {
     t1.clr=ROUGE;
     t1.chiffre=9;
     TUILE t2;
-    t2.clr=NOIR;
+    t2.clr=BLEU;
     t2.chiffre=11;
     TUILE t3;
     t3.clr=BLEU;
@@ -159,22 +159,20 @@ void affiche_plateau () {
                 printf(" JO ");
             else {
                 if(plateau[i][j].chiffre<10)
-                    printf(" %d",plateau[i][j].chiffre);
-                else
-                    printf("%d",plateau[i][j].chiffre);
+                    printf(" ");
                 switch (plateau[i][j].clr) 
                 {
                 case NOIR:
-                    printf("N ");
+                    printf(" %d ",plateau[i][j].chiffre);
                     break;
                 case ORANGE:
-                    printf("O ");
+                    printf(ORA" %d "RESET,plateau[i][j].chiffre);
                     break;
                 case ROUGE:
-                    printf("R ");
+                    printf(ROU" %d "RESET,plateau[i][j].chiffre);
                     break;
                 case BLEU:
-                    printf("B ");
+                    printf(BLE" %d "RESET,plateau[i][j].chiffre);
                     break;
                 }
             }

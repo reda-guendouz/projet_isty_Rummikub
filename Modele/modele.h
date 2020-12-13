@@ -13,6 +13,11 @@
 #define TRUE 1
 #define FALSE 0
 
+#define ROU   "\x1B[31m"
+#define ORA   "\x1b[33m"
+#define BLE   "\x1B[34m"
+#define RESET "\x1B[0m"
+
 /**********************
  * Couleur des Tuiles *
  * *******************/

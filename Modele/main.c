@@ -6,6 +6,20 @@ int main(void) {
     affiche_liste_tuiles(pioche);
     init_joueurs(2);
     affiche_joueurs();
+    affiche_plateau();
+
+    // TOUR DE LA PARTIE
+    unsigned char partie=TRUE;
+    unsigned char tour=TRUE;
+    while (partie)
+    {
+        while (tour)
+        {
+            tour=FALSE;
+        }
+        partie=FALSE;
+    }
+    
     //printf("%d\n",pioche->nbTuiles);
     //printf("=========\n");
     /*
@@ -32,6 +46,5 @@ int main(void) {
     //affiche_pioche();
     //printf("%d\n",pioche->nbTuiles);
 
-    affiche_plateau();
     return 0;
 }
