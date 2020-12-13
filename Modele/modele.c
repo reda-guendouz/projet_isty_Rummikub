@@ -43,15 +43,17 @@ void init_joueurs(int nbJoueurs) {
         joueurs.js[i].score = 0;
         printf("Entrez le pseudonyme du joueur %d : ",tmp);
         scanf("%s",joueurs.js[i].pseudo);
-        printf("Le joueur %d est %s !\n",tmp,joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
             joueurs.js[i].chevalet.pile[j] = piocher(i);
     }
+    for (i = 0; i < nbJoueurs; i++)
+        printf("Le joueur %d est %s !\n",tmp,joueurs.js[i].pseudo);
+    
 }
 
 void affiche_joueur(JOUEUR joueur) {
-    printf("Joueur n°%d: Pseudo \"%s\" & Score actuel : %d \n",joueur.numJoueur,joueur.pseudo,joueur.score);
+    printf("Joueur n°%d: \033[32;1m %s \033[0m\n - Score : %d \n",joueur.numJoueur,joueur.pseudo,joueur.score);
     printf("CHEVALET : \n");
     //affiche_liste_tuiles(joueur.chevalet);
 }

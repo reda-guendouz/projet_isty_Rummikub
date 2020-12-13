@@ -4,6 +4,8 @@ int main(void) {
     srand(time(NULL));
     init_pioche();
     affiche_liste_tuiles(pioche);
+    init_joueurs(2);
+    affiche_joueurs();
     //printf("%d\n",pioche->nbTuiles);
     //printf("=========\n");
     /*
