@@ -1,59 +1,56 @@
 #include "modele.h"
 
+
 int main(void) {
     srand(time(NULL));
+    int nbJoueurs ;
+    int choixJoueur;
+    int joueurActuel = 1;
+    int choix = -2;
+    unsigned char tour=TRUE;
+    unsigned char partie=TRUE;
     init_pioche();
-    /*affiche_liste_tuiles(pioche);
-    init_joueurs(2);
-    affiche_joueurs();
-    affiche_plateau();*/
 
-    LISTE_TUILES liste;
-    liste.nbTuiles=4;
-    TUILE t1;
-    t1.clr=ROUGE;
-    t1.chiffre=10;
-    TUILE t2;
-    t2.clr=ROUGE;
-    t2.chiffre=10;
-    TUILE t3;
-    t3.clr=ROUGE;
-    t3.chiffre=10;
-    TUILE t4;
-    t4.clr=ROUGE;
-    t4.chiffre=10;
-
-    liste.pile[0]=t1;
-    liste.pile[1]=t2;
-    liste.pile[2]=t3;
-    liste.pile[3]=t4;
+    // SELECTION DES JOUEURS
+    do{
+        nbJoueurs = -1;
+        printf("Combien de joueurs jouent ?\n");
+        scanf(" %d",&nbJoueurs);
+    }while(nbJoueurs < 2 && nbJoueurs > 4);
+    init_joueurs(nbJoueurs);
+    affiche_liste_tuiles(joueurs.js[0].chevalet);
     
-    printf("%d\n",triplon_quadruplon(&liste));
-    //printf("%d\n",pioche->nbTuiles);
-    //printf("=========\n");
-    /*
-    printf("=========\n");
-    TUILE tuile = piocher(2);
-    affiche_tuile(tuile);
-    tuile = piocher(2);
-    affiche_tuile(tuile);
-    tuile = piocher(2);
-    affiche_tuile(tuile);
-    tuile = piocher(2);
-    affiche_tuile(tuile);
-    tuile = piocher(2);
-    affiche_tuile(tuile);*/
-
+    // PARTIE EN COURS
+    while (partie)
+    {
+        while (tour)
+        {
+            do{
+                choixJoueur = -1;
+                printf("Voulez-vous posez une combinaison ou piocher ?\n");
+                printf("1. Jouer \n");
+                printf("2. Piocher \n");
+                scanf(" %d",&choixJoueur);
+            }while(choixJoueur!= 1 && choixJoueur != 2);
+            if (choixJoueur == 1) {
+                printf("JOUEUR JOUE\n");
+                LISTE_TUILES combinaisons;
+                combinaisons.nbTuiles = 0;
+                choix = -2;
+                do{
+                    affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
+                    printf("Quelle tuile voulez-vous jouez dans votre chevalet ?\n");
+                    scanf(" %d",&choix);
+                }while(choix < -2 && choix > 13);
+            }
+            if (choixJoueur == 2 || choix == -1) {
+                piocher(joueurs.js[joueurActuel-1].chevalet);
+                affiche_joueur(joueurs.js[joueurActuel-1]);
+            }
+            tour=FALSE;
+        }
+        partie=FALSE;
+    }
     
-    //init_joueurs(1);
-    //affiche_joueur(joueurs[0]);
-    //printf("%d\n",joueurs[0].chevalet.nbTuiles);
-    //piocher(0);
-    //affiche_joueur(joueurs[0]);
-    //printf("%d\n",joueurs[0].chevalet.nbTuiles);
-    //printf("=========\n");*/
-    //affiche_pioche();
-    //printf("%d\n",pioche->nbTuiles);
-
     return 0;
 }

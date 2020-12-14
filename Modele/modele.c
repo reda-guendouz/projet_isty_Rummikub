@@ -30,6 +30,16 @@ void affiche_tuile(TUILE tuile, int numTuiles)
     }
 }
 
+/****************
+ * LISTE_TUILE  *
+ * *************/
+
+void ajouter_tuile(LISTE_TUILES* liste, TUILE tuile){
+    liste->pile[liste->nbTuiles] = tuile;
+    liste->nbTuiles++;
+}
+
+
 /**********
  * Joueur *
  * *******/
@@ -47,17 +57,18 @@ void init_joueurs(int nbJoueurs)
         scanf("%s", joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
-            joueurs.js[i].chevalet.pile[j] = piocher(i);
+            piocher(joueurs.js[i].chevalet);
     }
     for (i = 0; i < nbJoueurs; i++)
-        printf("Le joueur %d est %s !\n", tmp, joueurs.js[i].pseudo);
+        printf("Le joueur %d est %s !\n",i+1,joueurs.js[i].pseudo);
+    
 }
 
 void affiche_joueur(JOUEUR joueur)
 {
     printf("Joueur n°%d: \033[32;1m %s \033[0m\n - Score : %d \n", joueur.numJoueur, joueur.pseudo, joueur.score);
     printf("CHEVALET : \n");
-    //affiche_liste_tuiles(joueur.chevalet);
+    affiche_liste_tuiles(joueur.chevalet);
 }
 
 void affiche_joueurs()
@@ -96,7 +107,7 @@ void init_pioche()
 void affiche_liste_tuiles(LISTE_TUILES liste_tuiles)
 {
     int i;
-    for (i = 0; i <= liste_tuiles.nbTuiles; i++)
+    for (i = 0; i < liste_tuiles.nbTuiles; i++) 
         affiche_tuile(liste_tuiles.pile[i], i);
 }
 
@@ -115,12 +126,12 @@ void melanger_pioche()
     }
 }
 
-TUILE piocher(int numJoueur)
-{
-    TUILE tuile = pioche.pile[pioche.nbTuiles];
+void piocher(LISTE_TUILES* liste) {
     pioche.nbTuiles--;
-    joueurs.js[numJoueur].chevalet.nbTuiles++;
-    return tuile;
+    TUILE tuile = pioche.pile[pioche.nbTuiles];
+    ajouter_tuile(&liste,tuile);
+    /*joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
+    joueurs.js[numJoueur].chevalet.nbTuiles++;*/
 }
 
 /***********

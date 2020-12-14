@@ -53,6 +53,7 @@ typedef struct LISTE_TUILES
     int nbTuiles;
 }LISTE_TUILES;
 
+void ajouter_tuile(LISTE_TUILES* liste, TUILE tuile);
 
 /***********
  * Joueurs *
