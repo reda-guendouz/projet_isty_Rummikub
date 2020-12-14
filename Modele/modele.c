@@ -16,13 +16,13 @@ void affiche_tuile(TUILE tuile, int numTuiles)
             printf("Tuile n°%d : %d NOIR\n", numTuiles, tuile.chiffre);
             break;
         case ORANGE:
-            printf("Tuile n°%d : %d ORANGE\n", numTuiles, tuile.chiffre);
+            printf("Tuile n°%d : " ORA " %d ORANGE" RESET "\n", numTuiles, tuile.chiffre);
             break;
         case ROUGE:
-            printf("Tuile n°%d : %d ROUGE \n", numTuiles, tuile.chiffre);
+            printf("Tuile n°%d : " ROU " %d ROUGE " RESET "\n", numTuiles, tuile.chiffre);
             break;
         case BLEU:
-            printf("Tuile n°%d : %d BLEU\n", numTuiles, tuile.chiffre);
+            printf("Tuile n°%d : " BLE " %d BLEU " RESET"\n", numTuiles, tuile.chiffre);
             break;
         default:
             break;
@@ -66,7 +66,7 @@ void init_joueurs(int nbJoueurs)
 
 void affiche_joueur(JOUEUR joueur)
 {
-    printf("Joueur n°%d: \033[32;1m %s \033[0m\n - Score : %d \n", joueur.numJoueur, joueur.pseudo, joueur.score);
+    printf("Joueur n°%d: \033[32;1m %s \033[0m - Score : %d \n", joueur.numJoueur, joueur.pseudo, joueur.score);
     printf("CHEVALET : \n");
     affiche_liste_tuiles(joueur.chevalet);
 }
