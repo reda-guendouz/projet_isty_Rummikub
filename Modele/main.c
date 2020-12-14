@@ -44,7 +44,7 @@ int main(void) {
                 }while(choix < -2 && choix > 13);
             }
             if (choixJoueur == 2 || choix == -1) {
-                piocher(joueurs.js[joueurActuel-1].chevalet);
+                piocher(&joueurs.js[joueurActuel-1].chevalet);
                 affiche_joueur(joueurs.js[joueurActuel-1]);
             }
             tour=FALSE;

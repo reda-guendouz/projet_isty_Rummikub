@@ -131,7 +131,7 @@ void melanger_pioche();
 /*
 tire une carte au hasard dans la pioche et met a jour la pioche
 */
-TUILE piocher(int numJoueur);
+void piocher(LISTE_TUILES *l);
 
 int suite(LISTE_TUILES *l);
 void tri_liste(LISTE_TUILES *l);
