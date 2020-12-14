@@ -43,5 +43,7 @@
 **Warnings :**
 
 *1. autoriser espace dans les pseudonymes*
+
 *2. eviter les redondances dans les pseudonymes*
+
 *3. scanf bug: lorsqu'il ne reçoit pas ce qu'il attend (caracteres speciaux,espaces...)*
