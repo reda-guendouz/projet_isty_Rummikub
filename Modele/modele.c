@@ -55,7 +55,7 @@ void init_joueurs(int nbJoueurs) {
         scanf("%s",joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
-            piocher(joueurs.js[i].chevalet);
+            piocher(&joueurs.js[i].chevalet);
     }
     for (i = 0; i < nbJoueurs; i++)
         printf("Le joueur %d est %s !\n",i+1,joueurs.js[i].pseudo);
@@ -121,7 +121,7 @@ void melanger_pioche() {
 void piocher(LISTE_TUILES* liste) {
     pioche.nbTuiles--;
     TUILE tuile = pioche.pile[pioche.nbTuiles];
-    ajouter_tuile(&liste,tuile);
+    ajouter_tuile(liste,tuile);
     /*joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
     joueurs.js[numJoueur].chevalet.nbTuiles++;*/
 }
