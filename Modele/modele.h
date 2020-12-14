@@ -131,4 +131,9 @@ void melanger_pioche();
 /*
 tire une carte au hasard dans la pioche et met a jour la pioche
 */
-void piocher(LISTE_TUILES* liste);
+void piocher(LISTE_TUILES *l);
+
+int suite(LISTE_TUILES *l);
+void tri_liste(LISTE_TUILES *l);
+int triplon_quadruplon(LISTE_TUILES *l);
+int test_combinaison(LISTE_TUILES *l);
