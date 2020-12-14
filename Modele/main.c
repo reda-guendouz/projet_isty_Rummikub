@@ -3,23 +3,32 @@
 int main(void) {
     srand(time(NULL));
     init_pioche();
-    affiche_liste_tuiles(pioche);
+    /*affiche_liste_tuiles(pioche);
     init_joueurs(2);
     affiche_joueurs();
-    affiche_plateau();
+    affiche_plateau();*/
 
-    // TOUR DE LA PARTIE
-    unsigned char partie=TRUE;
-    unsigned char tour=TRUE;
-    while (partie)
-    {
-        while (tour)
-        {
-            tour=FALSE;
-        }
-        partie=FALSE;
-    }
+    LISTE_TUILES liste;
+    liste.nbTuiles=4;
+    TUILE t1;
+    t1.clr=ROUGE;
+    t1.chiffre=10;
+    TUILE t2;
+    t2.clr=ROUGE;
+    t2.chiffre=10;
+    TUILE t3;
+    t3.clr=ROUGE;
+    t3.chiffre=10;
+    TUILE t4;
+    t4.clr=ROUGE;
+    t4.chiffre=10;
+
+    liste.pile[0]=t1;
+    liste.pile[1]=t2;
+    liste.pile[2]=t3;
+    liste.pile[3]=t4;
     
+    printf("%d\n",triplon_quadruplon(&liste));
     //printf("%d\n",pioche->nbTuiles);
     //printf("=========\n");
     /*
