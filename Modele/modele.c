@@ -273,3 +273,33 @@ void tri_liste(LISTE_TUILES *l)
 int test_combinaison(LISTE_TUILES *l){
     return triplon_quadruplon(l)+suite(l);
 }
+
+int est_placable(int taille_liste,int ligne,int colonne){
+    int i,j,taille_dispo=0,depart=0;
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+            if (i==ligne && j == colonne) depart=1;
+            if (depart)
+            {
+                if (plateau[i][j].chiffre==0) taille_dispo++;
+                if (taille_dispo==taille_liste) return TRUE;
+                if (plateau[i][j].chiffre!=0) return FALSE;
+            }
+        }
+    }
+    
+    return FALSE;
+}
+
+int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination) {
+    // verifier ici d'abord que les lignes et colonnes sont bonnes
+    // sinon retourner false
+    int i,j;
+    TUILE temp;
+    temp = plateau[ligneSource][colonneSource];
+    plateau[ligneSource][colonneSource]= plateau[ligneDestination][colonneDestination];
+    plateau[ligneDestination][colonneDestination]=temp;
+    return TRUE
+}

@@ -62,7 +62,6 @@ void ajouter_tuile(LISTE_TUILES* liste, TUILE tuile);
 typedef struct JOUEUR
 {
 	int numJoueur;
-	int score;
     char pseudo[MAX_PSEUDONYME];
     LISTE_TUILES chevalet;
 }JOUEUR;
@@ -70,6 +69,7 @@ typedef struct JOUEUR
 typedef struct LISTE_JOUEURS
 {
 	JOUEUR js[JOUEURS_MAX];
+    int scores[JOUEURS_MAX];
     int nbJs;
 }LISTE_JOUEURS;
 
@@ -103,6 +103,8 @@ affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
 */
 void affiche_plateau();
 
+int est_placable(int taille_liste,int ligne,int colonne);
+
 /**********
  * Pioche *
  * *******/
@@ -116,7 +118,7 @@ LISTE_TUILES pioche;
 /*
 afficher
 */
-void affiche_liste_tuiles();
+void affiche_liste_tuiles(LISTE_TUILES liste_tuiles);
 
 /*
 initialise la pioche puis la melange
@@ -137,3 +139,4 @@ int suite(LISTE_TUILES *l);
 void tri_liste(LISTE_TUILES *l);
 int triplon_quadruplon(LISTE_TUILES *l);
 int test_combinaison(LISTE_TUILES *l);
+int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
