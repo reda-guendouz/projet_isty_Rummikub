@@ -53,7 +53,13 @@ typedef struct LISTE_TUILES
     int nbTuiles;
 }LISTE_TUILES;
 
-void ajouter_tuile(LISTE_TUILES* liste, TUILE tuile);
+int ajouter_tuile(LISTE_TUILES* liste, TUILE tuile);
+
+int suite(LISTE_TUILES *l);
+void tri_liste(LISTE_TUILES *l);
+int triplon_quadruplon(LISTE_TUILES *l);
+int test_combinaison(LISTE_TUILES *l);
+int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
 
 /***********
  * Joueurs *
@@ -134,9 +140,3 @@ void melanger_pioche();
 tire une carte au hasard dans la pioche et met a jour la pioche
 */
 void piocher(LISTE_TUILES *l);
-
-int suite(LISTE_TUILES *l);
-void tri_liste(LISTE_TUILES *l);
-int triplon_quadruplon(LISTE_TUILES *l);
-int test_combinaison(LISTE_TUILES *l);
-int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);

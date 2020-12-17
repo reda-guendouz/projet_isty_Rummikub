@@ -11,6 +11,7 @@ int main(void)
     unsigned char tour = TRUE;
     unsigned char partie = TRUE;
     LISTE_TUILES tuiles_selectionnes;
+    TUILE selectionne;
     init_pioche();
 
     // SELECTION DES JOUEURS
@@ -31,6 +32,7 @@ int main(void)
             do
             {
                 choixJoueur = -1;
+                affiche_plateau();
                 printf("Voulez-vous posez une combinaison ou piocher ?\n");
                 printf("1. Jouer \n");
                 printf("2. Piocher \n");
@@ -39,41 +41,51 @@ int main(void)
             } while (choixJoueur < 1 || choixJoueur > 3);
             if (choixJoueur == 1)
             {
-                printf("JOUEUR JOUE\n");
+                printf("JOUEUR %d JOUE\n",joueurActuel);
                 choix = -3;
                 tuiles_selectionnes.pile[MAX_TUILES]; 
                 tuiles_selectionnes.nbTuiles = 0;
                 do
                 {
-                    affiche_joueur(joueurs.js[joueurActuel]);
+                    if (choix==-3) affiche_joueur(joueurs.js[joueurActuel]);
+                    
                     printf("Quelle tuile voulez-vous jouez dans votre chevalet ?\n");
                     printf("-1. Finalement, je pioche et je finis mon tour\n");
                     if (choix>=0)
                         printf("-2. Valider les tuiles selectionnees\n");
                     scanf(" %d", &choix);
-                    if (choix != -1)
+                    if (choix != -1 && choix != -2)
                      {
-                        TUILE selectionne = joueurs.js[joueurActuel].chevalet.pile[choix];
-                        ajouter_tuile(&tuiles_selectionnes,selectionne);
+                        selectionne = joueurs.js[joueurActuel].chevalet.pile[choix];
+                        if (ajouter_tuile(&tuiles_selectionnes,selectionne)) {
+                            printf("\nTuile selectionne : \n");
+                            affiche_tuile(selectionne,555);
+                            printf("\n\n");
+                        }
+                        else 
+                            printf("\nVous avez déjà sélectionné cette tuile\n\n");
+
                         // creer copie
 
                         /* algo clement */
                     }
-                } while (choix < -2 || choix > 13);
+                    if(choix!=-2) affiche_joueur(joueurs.js[joueurActuel]);
+                } while (choix >= 0 && choix < 13);
                 if (choix==-2)
                 {
                     tri_liste(&tuiles_selectionnes);
                     
                     // choisir place de mes tuiles
+                    printf("Tuiles selectionnees : \n");
                     affiche_liste_tuiles(tuiles_selectionnes);
                     affiche_plateau();
                     do
                     {
-                        printf("Où voulez-vous placer vos tuiles ?\n ligne : ");
+                        printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
                         scanf(" %d", &l);
                         printf("colonne : ");
                         scanf(" %d", &c);
-                    } while (est_placable(tuiles_selectionnes.nbTuiles,l,c));
+                    } while (!est_placable(tuiles_selectionnes.nbTuiles,l,c));
 
                     // modifie plateau oui ou  non ?
                     do
@@ -99,7 +111,7 @@ int main(void)
                             } while (intervertion_tuiles(l,c,l2,c2));
                         }
                         
-                    } while (choixModifPlateau!=0 || choixModifPlateau!=1);
+                    } while (choixModifPlateau!=2 || choixModifPlateau!=1); // le while n'est pas bon "2" ne fonctionne pas 
                     
                 }
                 
