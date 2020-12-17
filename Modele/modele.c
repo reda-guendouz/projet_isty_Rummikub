@@ -34,9 +34,11 @@ void affiche_tuile(TUILE tuile, int numTuiles)
  * LISTE_TUILE  *
  * *************/
 
-int ajouter_tuile(LISTE_TUILES* liste, TUILE tuile){int i;
+int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
+{
+    int i;
     for (i = 0; i < liste->nbTuiles; i++)
-        if (tuile.chiffre==liste->pile[i].chiffre && tuile.clr==liste->pile[i].clr)
+        if (tuile.chiffre == liste->pile[i].chiffre && tuile.clr == liste->pile[i].clr)
             return FALSE;
     liste->pile[liste->nbTuiles] = tuile;
     liste->nbTuiles++;
@@ -315,13 +317,15 @@ int test_combinaison(LISTE_TUILES *l)
     return triplon_quadruplon(l) + suite(l);
 }
 
-int est_victorieux(JOUEUR j) {
-    if(j.chevalet.nbTuiles==0)
+int est_victorieux(JOUEUR j)
+{
+    if (j.chevalet.nbTuiles == 0)
         return TRUE;
     return FALSE;
 }
 
-void affiche_victoire(JOUEUR j){
+void affiche_victoire(JOUEUR j)
+{
     int k;
     for (k = 0; k < 44; k++)
         printf("/\\");
@@ -338,32 +342,61 @@ void affiche_victoire(JOUEUR j){
     printf("\n");
 }
 
-int est_placable(int taille_liste,int ligne,int colonne){
-    int i,j,taille_dispo=0,depart=FALSE;
+int est_placable(int taille_liste, int ligne, int colonne)
+{
+    int i, j, taille_dispo = 0, depart = FALSE;
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-            if (i==ligne && j == colonne) depart=TRUE;
+            if (i == ligne && j == colonne)
+                depart = TRUE;
             if (depart)
             {
-                if (plateau[i][j].chiffre==0) taille_dispo++;
-                if (taille_dispo==taille_liste) return TRUE;
-                if (plateau[i][j].chiffre!=0) return FALSE;
+                if (plateau[i][j].chiffre == 0)
+                    taille_dispo++;
+                if (taille_dispo == taille_liste)
+                    return TRUE;
+                if (plateau[i][j].chiffre != 0)
+                    return FALSE;
             }
         }
     }
-    
+
     return FALSE;
 }
 
-int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination) {
+int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination)
+{
     // verifier ici d'abord que les lignes et colonnes sont bonnes
     // sinon retourner false
-    if (ligneSource > DIM_PLATEAU_H || ligneSource < 0 || colonneDestination > DIM_PLATEAU_W || colonneDestination < 0 ) return FALSE;
+    if (ligneSource > DIM_PLATEAU_H || ligneSource < 0 || colonneDestination > DIM_PLATEAU_W || colonneDestination < 0)
+        return FALSE;
     TUILE temp;
     temp = plateau[ligneSource][colonneSource];
-    plateau[ligneSource][colonneSource]= plateau[ligneDestination][colonneDestination];
-    plateau[ligneDestination][colonneDestination]=temp;
+    plateau[ligneSource][colonneSource] = plateau[ligneDestination][colonneDestination];
+    plateau[ligneDestination][colonneDestination] = temp;
     return TRUE;
+}
+
+void score_fin_partie(int indice)
+{
+
+    int score[JOUEURS_MAX];
+    int i, j;
+    for (i = 0; i < joueurs.nbJs; i++)
+    {
+        if (i != indice)
+        {
+            for (j = 0; j < joueurs.js[i].chevalet.nbTuiles; j++)
+            {
+                score[indice] += joueurs.js[i].chevalet.pile[j].chiffre;
+                score[i] -= joueurs.js[i].chevalet.pile[j].chiffre;
+            }
+        }
+    }
+    for (i = 0; i < joueurs.nbJs; i++)
+    {
+        joueurs.scores[i] += score[i];
+    }
 }

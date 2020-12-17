@@ -150,4 +150,4 @@ LISTE_TUILES supprime_liste(LISTE_TUILES l, int indice);
 LISTE_TUILES copie_liste(LISTE_TUILES l);
 int est_victorieux(JOUEUR j);
 void affiche_victoire(JOUEUR j);
-
+void score_fin_partie(int indice);

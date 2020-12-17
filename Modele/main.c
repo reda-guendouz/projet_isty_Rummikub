@@ -5,7 +5,7 @@ int main(void)
     srand(time(NULL));
     int nbJoueurs, choixJoueur;
     int joueurActuel = 0;
-    int choix = -2;
+    int choix = -3;
     int l,c,l2,c2;
     int choixModifPlateau=-1;
     unsigned char tour = TRUE;
@@ -23,6 +23,25 @@ int main(void)
     } while (nbJoueurs < 2 || nbJoueurs > 4);
     init_joueurs(nbJoueurs);
     affiche_joueur(joueurs.js[joueurActuel]);
+
+    /* TEST SCORE
+    
+    LISTE_TUILES jeu;
+    jeu.nbTuiles=0;
+    joueurs.js[0].chevalet=jeu;
+
+    affiche_joueurs();
+    score_fin_partie(0);
+
+    int i;
+    for(i=0;i<3;i++) {
+        score_fin_partie(0);
+    }
+    for(i=0;i<joueurs.nbJs;i++) {
+        printf("Joueur %d : score = %d\n",i,joueurs.scores[i]);
+    }*/
+    
+    
 
     // PARTIE EN COURS
     while (partie)
@@ -67,7 +86,7 @@ int main(void)
 
                         // creer copie
 
-                        /* algo clement */
+                         //algo clement
                     }
                     if(choix!=-2) affiche_joueur(joueurs.js[joueurActuel]);
                 } while (choix >= 0 && choix < 13);
