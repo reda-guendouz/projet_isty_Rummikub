@@ -137,3 +137,9 @@ int suite(LISTE_TUILES *l);
 void tri_liste(LISTE_TUILES *l);
 int triplon_quadruplon(LISTE_TUILES *l);
 int test_combinaison(LISTE_TUILES *l);
+
+LISTE_TUILES supprime_liste(LISTE_TUILES l, int indice);
+LISTE_TUILES copie_liste(LISTE_TUILES l);
+int est_victorieux(JOUEUR j);
+void affiche_victoire(JOUEUR j);
+
