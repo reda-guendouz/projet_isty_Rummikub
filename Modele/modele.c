@@ -34,10 +34,13 @@ void affiche_tuile(TUILE tuile, int numTuiles)
  * LISTE_TUILE  *
  * *************/
 
-void ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
-{
+int ajouter_tuile(LISTE_TUILES* liste, TUILE tuile){int i;
+    for (i = 0; i < liste->nbTuiles; i++)
+        if (tuile.chiffre==liste->pile[i].chiffre && tuile.clr==liste->pile[i].clr)
+            return FALSE;
     liste->pile[liste->nbTuiles] = tuile;
     liste->nbTuiles++;
+    return TRUE;
 }
 
 /**********
@@ -52,7 +55,6 @@ void init_joueurs(int nbJoueurs)
     {
         tmp = i + 1;
         joueurs.js[i].numJoueur = tmp;
-        joueurs.js[i].score = 0;
         printf("Entrez le pseudonyme du joueur %d : ", tmp);
         scanf("%s", joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
@@ -65,7 +67,7 @@ void init_joueurs(int nbJoueurs)
 
 void affiche_joueur(JOUEUR joueur)
 {
-    printf("Joueur n°%d: \033[32;1m %s \033[0m - Score : %d \n", joueur.numJoueur, joueur.pseudo, joueur.score);
+    printf("Joueur n°%d: \033[32;1m %s \033[0m\n", joueur.numJoueur, joueur.pseudo);
     printf("CHEVALET : \n");
     affiche_liste_tuiles(joueur.chevalet);
 }
@@ -137,12 +139,12 @@ void piocher(LISTE_TUILES *liste)
 /***********
  * Plateau *
  * ********/
-
 void affiche_plateau()
 {
     int i, j, k;
 
     // partie test
+    /*
     TUILE t1;
     t1.clr = ROUGE;
     t1.chiffre = 9;
@@ -161,7 +163,7 @@ void affiche_plateau()
     plateau[2][2] = t3;
     plateau[0][21] = t2;
     plateau[7][0] = t3;
-    plateau[7][21] = t4;
+    plateau[7][21] = t4;*/
 
     printf("\nPlateau:\n  ");
     for (k = 0; k < 22; k++)
@@ -327,9 +329,7 @@ void affiche_victoire(JOUEUR j){
     for (k = 0; k < 44; k++)
         printf("/\\");
     printf("\n                                 ");
-    printf("Joueur n°%d: \033[32;1m %s \033[0m", j.numJoueur, j.pseudo);
-    printf("\n                                     ");
-    printf("Score : %d \n",j.score);
+    printf("Joueur n°%d: \033[32;1m %s \033[0m\n", j.numJoueur, j.pseudo);
     for (k = 0; k < 44; k++)
         printf("/\\");
     printf("\n");
@@ -338,3 +338,32 @@ void affiche_victoire(JOUEUR j){
     printf("\n");
 }
 
+int est_placable(int taille_liste,int ligne,int colonne){
+    int i,j,taille_dispo=0,depart=FALSE;
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+            if (i==ligne && j == colonne) depart=TRUE;
+            if (depart)
+            {
+                if (plateau[i][j].chiffre==0) taille_dispo++;
+                if (taille_dispo==taille_liste) return TRUE;
+                if (plateau[i][j].chiffre!=0) return FALSE;
+            }
+        }
+    }
+    
+    return FALSE;
+}
+
+int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination) {
+    // verifier ici d'abord que les lignes et colonnes sont bonnes
+    // sinon retourner false
+    if (ligneSource > DIM_PLATEAU_H || ligneSource < 0 || colonneDestination > DIM_PLATEAU_W || colonneDestination < 0 ) return FALSE;
+    TUILE temp;
+    temp = plateau[ligneSource][colonneSource];
+    plateau[ligneSource][colonneSource]= plateau[ligneDestination][colonneDestination];
+    plateau[ligneDestination][colonneDestination]=temp;
+    return TRUE;
+}
