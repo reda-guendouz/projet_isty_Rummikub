@@ -6,11 +6,14 @@ int main(void)
     int nbJoueurs, choixJoueur;
     int joueurActuel = 0;
     int choix = -3;
-    int l,c,l2,c2;
+    char l,l2;
+    int c,c2;
     int choixModifPlateau=-1;
+    int choixContinuer;
     unsigned char tour = TRUE;
     unsigned char partie = TRUE;
     LISTE_TUILES tuiles_selectionnes;
+    TUILE temp[DIM_PLATEAU_H][DIM_PLATEAU_W];
     TUILE selectionne;
     init_pioche();
 
@@ -22,7 +25,6 @@ int main(void)
         scanf(" %d", &nbJoueurs);
     } while (nbJoueurs < 2 || nbJoueurs > 4);
     init_joueurs(nbJoueurs);
-    affiche_joueur(joueurs.js[joueurActuel]);
 
     /* TEST SCORE
     
@@ -41,8 +43,6 @@ int main(void)
         printf("Joueur %d : score = %d\n",i,joueurs.scores[i]);
     }*/
     
-    
-
     // PARTIE EN COURS
     while (partie)
     {
@@ -51,7 +51,8 @@ int main(void)
             do
             {
                 choixJoueur = -1;
-                affiche_plateau();
+                affiche_joueur(joueurs.js[joueurActuel]);
+                affiche_plateau(plateau[0]);
                 printf("Voulez-vous posez une combinaison ou piocher ?\n");
                 printf("1. Jouer \n");
                 printf("2. Piocher \n");
@@ -96,41 +97,51 @@ int main(void)
                     
                     // choisir place de mes tuiles
                     printf("Tuiles selectionnees : \n");
-                    affiche_liste_tuiles(tuiles_selectionnes);
-                    affiche_plateau();
+                    affiche_liste_tuiles(tuiles_selectionnes);  
+                    copie_plateau(temp[0],plateau[0]);
+                    //memcpy(temp,plateau,DIM_PLATEAU_H*DIM_PLATEAU_H*sizeof(TUILE));
+                    affiche_plateau(temp[0]);
                     do
                     {
                         printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
-                        scanf(" %d", &l);
+                        scanf(" %c", &l);
                         printf("colonne : ");
                         scanf(" %d", &c);
-                    } while (!est_placable(tuiles_selectionnes.nbTuiles,l,c));
-
+                    } while (!est_placable(tuiles_selectionnes.nbTuiles,char_to_int(l),c));
+                    // disposer tuiles dans temp
+                    placer_tuiles(tuiles_selectionnes,temp[0],char_to_int(l),c);
                     // modifie plateau oui ou  non ?
                     do
                     {
-                        affiche_plateau();
+                        affiche_plateau(temp[0]);
                         printf("Voulez-vous modifier le plateau actuel ?\n");
                         printf("1. oui\n");
                         printf("2. non\n");
                         scanf(" %d",&choixModifPlateau);
                         if (choixModifPlateau==1)
                         {
-
                             do
                             {
                                 printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
-                                scanf(" %d", &l);
+                                scanf(" %c", &l);
                                 printf("colonne : ");
                                 scanf(" %d", &c);
                                 printf("tuile destination :\nligne : ");
-                                scanf(" %d", &l2);
+                                scanf(" %c", &l2);
                                 printf("colonne : ");
                                 scanf(" %d", &c2);
-                            } while (intervertion_tuiles(l,c,l2,c2));
+                                if (!intervertion_tuiles(temp[0],char_to_int(l),c,char_to_int(l2),c2))
+                                {
+                                    printf("Err: mauvaises positions\n");
+                                }
+                                affiche_plateau(temp[0]);
+                                printf("Voulez-vous continuer ?\n0. non\n1. oui\n");
+                                scanf(" %d", &choixContinuer);
+                                
+                            } while (choixContinuer);
                         }
                         
-                    } while (choixModifPlateau!=2 || choixModifPlateau!=1); // le while n'est pas bon "2" ne fonctionne pas 
+                    } while (choixModifPlateau!=2); // le while n'est pas bon "2" ne fonctionne pas 
                     
                 }
                 
@@ -140,10 +151,13 @@ int main(void)
                 piocher(&joueurs.js[joueurActuel].chevalet);
                 affiche_joueur(joueurs.js[joueurActuel]);
             }
+            // tour valide uniquement
+            copie_plateau(plateau[0],temp[0]);
             joueurActuel = (joueurActuel + 1) % (joueurs.nbJs);
+            printf("fin de tour\n");
+            // fin tour valide uniquement
             if (choixJoueur == 3)
                 tour = FALSE;
-            printf("fin de tour\n");
         }
         partie = FALSE;
     }

@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include <time.h>
 
 #define MAX_CHIFFRE 13
@@ -59,7 +60,8 @@ int suite(LISTE_TUILES *l);
 void tri_liste(LISTE_TUILES *l);
 int triplon_quadruplon(LISTE_TUILES *l);
 int test_combinaison(LISTE_TUILES *l);
-int intervertion_tuiles(int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
+int intervertion_tuiles(TUILE* copie_plateau,int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
+
 
 /***********
  * Joueurs *
@@ -103,13 +105,16 @@ void affiche_joueurs();
  * ***************/
 
 TUILE plateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
-
 /*
 affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
 */
-void affiche_plateau();
+void affiche_plateau(TUILE *plateau_a_afficher);
 
 int est_placable(int taille_liste,int ligne,int colonne);
+
+void placer_tuiles(LISTE_TUILES selection,TUILE *copie_plateau,int l, int c);
+
+void copie_plateau(TUILE* dest, TUILE* src);
 
 /**********
  * Pioche *
@@ -147,7 +152,11 @@ int triplon_quadruplon(LISTE_TUILES *l);
 int test_combinaison(LISTE_TUILES *l);
 
 LISTE_TUILES supprime_liste(LISTE_TUILES l, int indice);
-LISTE_TUILES copie_liste(LISTE_TUILES l);
 int est_victorieux(JOUEUR j);
 void affiche_victoire(JOUEUR j);
 void score_fin_partie(int indice);
+
+/******
+ * DIVERS
+ * *****/
+int char_to_int(char l);
