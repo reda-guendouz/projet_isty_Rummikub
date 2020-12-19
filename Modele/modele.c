@@ -38,8 +38,6 @@ int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
 {
     int i;
     for (i = 0; i < liste->nbTuiles; i++)
-        if (tuile.chiffre == liste->pile[i].chiffre && tuile.clr == liste->pile[i].clr)
-            return FALSE;
     liste->pile[liste->nbTuiles] = tuile;
     liste->nbTuiles++;
     return TRUE;
@@ -58,11 +56,14 @@ void init_joueurs(int nbJoueurs)
         tmp = i + 1;
         joueurs.js[i].numJoueur = tmp;
         printf("Entrez le pseudonyme du joueur %d : ", tmp);
-        scanf("%s", joueurs.js[i].pseudo);
+        scanf(" %s", joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
         joueurs.js[i].chevalet.pile[MAX_TUILES];
         for (j = 0; j < PIOCHE_DEPART; j++)
+        {
             piocher(&joueurs.js[i].chevalet);
+            affiche_tuile(pioche.pile[pioche.nbTuiles],j);
+        }
     }
 }
 

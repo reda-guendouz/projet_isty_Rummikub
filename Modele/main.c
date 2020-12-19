@@ -7,7 +7,8 @@ int main(void)
     unsigned char jeu = TRUE;
     unsigned char partie, tour, selectionTuiles, placerTuile, modifPlateau, victoire;
     int jouer, nbJoueurs, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
-        ligneSource, colonneSource, ligneDestination, colonneDestination;
+         colonneSource,  colonneDestination;
+    char ligneSource, ligneDestination;
     LISTE_TUILES tuilesSelectionnes;
     tuilesSelectionnes.pile[MAX_TUILES];
     tuilesSelectionnes.nbTuiles = 0;
@@ -40,9 +41,9 @@ int main(void)
             victoire = FALSE;
             init_pioche();
             // SELECTION DES JOUEURS
+            nbJoueurs = -1;
             do
             {
-                nbJoueurs = -1;
                 printf("Combien de joueurs jouent ?\n");
                 scanf(" %d", &nbJoueurs);
             } while (nbJoueurs < 2 || nbJoueurs > 4);
