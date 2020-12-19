@@ -2,12 +2,15 @@
 
 int main(void)
 {
+
     srand(time(NULL));
     unsigned char jeu = TRUE;
-    unsigned char partie, tour, selectionTuiles, placerTuile, modifPlateau;
+    unsigned char partie, tour, selectionTuiles, placerTuile, modifPlateau, victoire;
     int jouer, nbJoueurs, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
-    ligneSource, colonneSource, ligneDestination, colonneDestination;
+        ligneSource, colonneSource, ligneDestination, colonneDestination;
     LISTE_TUILES tuilesSelectionnes;
+    tuilesSelectionnes.pile[MAX_TUILES];
+    tuilesSelectionnes.nbTuiles = 0;
     TUILE copiePlateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
     TUILE selectionne;
 
@@ -16,6 +19,7 @@ int main(void)
 
         //LANCEMENT DU JEU
         partie = FALSE;
+        system("clear");
         do
         {
             printf("Groupe : 8 Rummikub \n");
@@ -33,6 +37,7 @@ int main(void)
         {
             joueurActuel = 0;
             partie = TRUE;
+            victoire = FALSE;
             init_pioche();
             // SELECTION DES JOUEURS
             do
@@ -42,10 +47,11 @@ int main(void)
                 scanf(" %d", &nbJoueurs);
             } while (nbJoueurs < 2 || nbJoueurs > 4);
             init_joueurs(nbJoueurs);
+            system("clear");
         }
 
         //DANS UNE PARTIE
-        while (partie)
+        while (partie && !victoire)
         {
             //DANS UN TOUR
             affiche_joueur(joueurs.js[joueurActuel]);
@@ -67,23 +73,27 @@ int main(void)
             else if (choixJoueur == 1)
             {
                 tour = TRUE;
+                selectionTuiles = TRUE;
                 while (tour)
                 {
-                    selectionTuiles = TRUE;
-                    tuilesSelectionnes.pile[MAX_TUILES];
-                    tuilesSelectionnes.nbTuiles = 0;
-                    placerTuile = FALSE;
                     //SELECTION DE TUILE A METTRE SUR LE PLATEAU
                     while (selectionTuiles)
                     {
+                        placerTuile = FALSE;
                         do
                         {
                             numTuileChoisis = -3;
+                            system("clear");
+                            affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
+                            affiche_plateau(plateau[0]);
+                            printf("\nTuile selectionne : \n");
+                            affiche_liste_tuiles(tuilesSelectionnes);
+                            printf("\n\n");
                             printf("Quelle tuile voulez-vous jouez dans votre chevalet ?\n");
                             printf("-1. Valider la selection\n");
                             printf("-2. Piochez et passer son tour\n");
                             scanf(" %d", &numTuileChoisis);
-                        } while (numTuileChoisis < -2 || numTuileChoisis > joueurs.js[joueurActuel].chevalet.nbTuiles);
+                        } while (numTuileChoisis < -2 || numTuileChoisis > joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
                         //ARRETE SON TOUR ET PASSER A LA PIOCHE
                         if (numTuileChoisis == -2)
                         {
@@ -106,26 +116,21 @@ int main(void)
                         else
                         {
                             selectionne = joueurs.js[joueurActuel].chevalet.pile[numTuileChoisis];
-                            if (ajouter_tuile(&tuilesSelectionnes, selectionne))
-                            {
-                                printf("\nTuile selectionne : \n");
-                                affiche_tuile(selectionne, 555);
-                                printf("\n\n");
-                            }
-                            else
-                                printf("\nVous avez déjà sélectionné cette tuile\n\n");
+                            ajouter_tuile(&tuilesSelectionnes, selectionne);
                         }
                     }
                     //PLACER LES TUILES SELECTIONNEES
                     while (placerTuile)
                     {
+                        system("clear");
+                        affiche_plateau(plateau[0]);
                         tri_liste(&tuilesSelectionnes);
                         printf("Tuiles selectionnees : \n");
                         affiche_liste_tuiles(tuilesSelectionnes);
                         do
                         {
                             choixPlacement = -3;
-                            printf("Que voulez-vous faire ?\n");
+                            printf("\nQue voulez-vous faire ?\n");
                             printf("0. Piochez et passer son tour\n");
                             printf("1. Refaire sa selection\n");
                             printf("2. Placer les tuiles sur le plateau\n");
@@ -143,6 +148,8 @@ int main(void)
                         {
                             placerTuile = FALSE;
                             selectionTuiles = TRUE;
+                            tuilesSelectionnes.pile[MAX_TUILES];
+                            tuilesSelectionnes.nbTuiles = 0;
                         }
                         //PLACER LES TUILES DANS LE PLATEAU
                         else
@@ -151,6 +158,10 @@ int main(void)
                             affiche_plateau(copiePlateau[0]);
                             do
                             {
+                                system("clear");
+                                affiche_plateau(plateau[0]);
+                                printf("Tuiles selectionnees : \n");
+                                affiche_liste_tuiles(tuilesSelectionnes);
                                 printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
                                 scanf(" %c", &ligneSource);
                                 printf("colonne : ");
@@ -188,6 +199,8 @@ int main(void)
                         {
                             modifPlateau = FALSE;
                             selectionTuiles = TRUE;
+                            tuilesSelectionnes.pile[MAX_TUILES];
+                            tuilesSelectionnes.nbTuiles = 0;
                         }
                         //REFAIRE LE PLACEMENT DES TUILES
                         else if (choixModifPlateau == 2)
@@ -200,22 +213,28 @@ int main(void)
                         else if (choixModifPlateau == 3)
                         {
                             printf("VALIDATION EN COURS\n\n");
-                            if (analyse_plateau(copiePlateau[0])){
-                                copie_plateau(plateau[0],copiePlateau[0]);
-                                printf("copie bien passé\n\n");
-                                mettre_a_jour(&joueurs.js[joueurActuel].chevalet,tuilesSelectionnes);
-                                printf("mise a jour passée du chevalet\n\n");
+                            if (analyse_plateau(copiePlateau[0]))
+                            {
+                                copie_plateau(plateau[0], copiePlateau[0]);
+                                printf("Copie bien passé\n\n");
+                                mettre_a_jour(&joueurs.js[joueurActuel].chevalet, tuilesSelectionnes);
+                                printf("Mise a jour du chevalet bien passé\n\n");
                                 modifPlateau = FALSE;
                                 tour = FALSE;
                             }
-                            else 
+                            else
+                            {
+                                system("clear");
                                 printf("le plateau n'est pas valide\n");
+                            }
                         }
                         //MODIFIER LE PLATEAU
                         else if (choixModifPlateau == 4)
                         {
                             do
                             {
+                                system("clear");
+                                affiche_plateau(plateau[0]);
                                 printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
                                 scanf(" %c", &ligneSource);
                                 printf("colonne : ");
@@ -242,12 +261,27 @@ int main(void)
             //PIOCHER
             if (choixJoueur == 2)
             {
-                system("cls");
                 piocher(&joueurs.js[joueurActuel].chevalet);
-                affiche_joueur(joueurs.js[joueurActuel]);
+                system("clear");
             }
             //TOUR AU PROCHAIN JOUEUR
-            joueurActuel = (joueurActuel + 1) % (joueurs.nbJs);
+            if (!est_victorieux(joueurs.js[joueurActuel]))
+            {
+                joueurActuel = (joueurActuel + 1) % (joueurs.nbJs);
+                tuilesSelectionnes.pile[MAX_TUILES];
+                tuilesSelectionnes.nbTuiles = 0;
+            }
+            else
+            {
+                system("clear");
+                affiche_victoire(joueurs.js[joueurActuel]);
+                do
+                {
+                    printf("Appuyer sur 0 pour revenir au menu\n");
+                    scanf(" %d", &choixJoueur);
+                } while (choixJoueur != 0);
+                victoire = FALSE;
+            }
         }
     }
     return 0;

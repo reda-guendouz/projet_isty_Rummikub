@@ -14,18 +14,22 @@
 #define TRUE 1
 #define FALSE 0
 
-#define ROU   "\x1B[31m"
-#define ORA   "\x1b[33m"
-#define BLE   "\x1B[34m"
+#define ROU "\x1B[31m"
+#define ORA "\x1b[33m"
+#define BLE "\x1B[34m"
 #define RESET "\x1B[0m"
 
 /**********************
  * Couleur des Tuiles *
  * *******************/
 
-typedef enum{
-    NOIR,ORANGE,ROUGE,BLEU
-}COULT;
+typedef enum
+{
+    NOIR,
+    ORANGE,
+    ROUGE,
+    BLEU
+} COULT;
 
 /**********
  * TUILE  *
@@ -33,9 +37,9 @@ typedef enum{
 
 typedef struct TUILE
 {
-	COULT clr;
-	int chiffre;
-}TUILE;
+    COULT clr;
+    int chiffre;
+} TUILE;
 
 /*
 Cette fonction permet d'afficher une tuile dans un terminal
@@ -52,16 +56,15 @@ typedef struct LISTE_TUILES
 {
     TUILE pile[MAX_TUILES];
     int nbTuiles;
-}LISTE_TUILES;
+} LISTE_TUILES;
 
-int ajouter_tuile(LISTE_TUILES* liste, TUILE tuile);
+int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile);
 
 int suite(LISTE_TUILES *l);
 void tri_liste(LISTE_TUILES *l);
 int triplon_quadruplon(LISTE_TUILES *l);
 int test_combinaison(LISTE_TUILES *l);
-int intervertion_tuiles(TUILE* copie_plateau,int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
-
+int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
 
 /***********
  * Joueurs *
@@ -69,17 +72,17 @@ int intervertion_tuiles(TUILE* copie_plateau,int ligneSource, int colonneSource,
 
 typedef struct JOUEUR
 {
-	int numJoueur;
+    int numJoueur;
     char pseudo[MAX_PSEUDONYME];
     LISTE_TUILES chevalet;
-}JOUEUR;
+} JOUEUR;
 
 typedef struct LISTE_JOUEURS
 {
-	JOUEUR js[JOUEURS_MAX];
+    JOUEUR js[JOUEURS_MAX];
     int scores[JOUEURS_MAX];
     int nbJs;
-}LISTE_JOUEURS;
+} LISTE_JOUEURS;
 
 LISTE_JOUEURS joueurs;
 
@@ -87,7 +90,6 @@ LISTE_JOUEURS joueurs;
 Initialise le tableau global de type JOUEUR avec "nbJoueurs" joueurs
 */
 void init_joueurs(int nbJoueurs);
-
 
 /*
 affiche le numero du joueur, son score ainsi que son chevalet
@@ -110,11 +112,11 @@ affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
 */
 void affiche_plateau(TUILE *plateau_a_afficher);
 
-int est_placable(int taille_liste,int ligne,int colonne);
+int est_placable(int taille_liste, int ligne, int colonne);
 
-void placer_tuiles(LISTE_TUILES selection,TUILE *copie_plateau,int l, int c);
+void placer_tuiles(LISTE_TUILES selection, TUILE *copie_plateau, int l, int c);
 
-void copie_plateau(TUILE* dest, TUILE* src);
+void copie_plateau(TUILE *dest, TUILE *src);
 
 /**********
  * Pioche *

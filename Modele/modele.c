@@ -64,8 +64,6 @@ void init_joueurs(int nbJoueurs)
         for (j = 0; j < PIOCHE_DEPART; j++)
             piocher(&joueurs.js[i].chevalet);
     }
-    for (i = 0; i < nbJoueurs; i++)
-        printf("Le joueur %d est %s !\n", i + 1, joueurs.js[i].pseudo);
 }
 
 void affiche_joueur(JOUEUR joueur)
@@ -151,23 +149,16 @@ void affiche_plateau(TUILE *plateau_a_afficher)
     TUILE t1;
     t1.clr = ROUGE;
     t1.chiffre = 9;
-    plateau_a_afficher[(int unsigned)(0)]=t1;
     TUILE t2;
     t2.clr = BLEU;
-    t2.chiffre = 11;
+    t2.chiffre = 9;
     TUILE t3;
-    t3.clr = BLEU;
-    t3.chiffre = -1;
-    TUILE t4;
-    t4.clr = ORANGE;
-    t4.chiffre = 7;
+    t3.clr = ORANGE;
+    t3.chiffre = 9;
 
     plateau[0][0] = t1;
-    plateau[1][1] = t2;
-    plateau[2][2] = t3;
-    plateau[0][21] = t2;
-    plateau[7][0] = t3;
-    plateau[7][21] = t4;*/
+    plateau[0][1] = t2;
+    plateau[0][2] = t3;*/
 
     printf("\nPlateau:\n  ");
     for (k = 0; k < 22; k++)
@@ -187,27 +178,27 @@ void affiche_plateau(TUILE *plateau_a_afficher)
         printf("%c|", lettre);
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-            if (plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre == 0 && plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].clr == NOIR)
+            if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre == 0 && plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].clr == NOIR)
                 printf("    ");
-            else if (plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre == -1)
+            else if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre == -1)
                 printf(" JK ");
             else
             {
-                if (plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre < 10)
+                if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre < 10)
                     printf(" ");
-                switch (plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].clr)
+                switch (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].clr)
                 {
                 case NOIR:
-                    printf(" %d ", plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre);
+                    printf(" %d ", plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre);
                     break;
                 case ORANGE:
-                    printf(ORA " %d " RESET, plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre);
+                    printf(ORA " %d " RESET, plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre);
                     break;
                 case ROUGE:
-                    printf(ROU " %d " RESET, plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre);
+                    printf(ROU " %d " RESET, plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre);
                     break;
                 case BLEU:
-                    printf(BLE " %d " RESET, plateau_a_afficher[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre);
+                    printf(BLE " %d " RESET, plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre);
                     break;
                 }
             }
@@ -221,18 +212,19 @@ void affiche_plateau(TUILE *plateau_a_afficher)
     printf("\n");
 }
 
-void copie_plateau(TUILE* dest, TUILE* src){
-    int i,j;
+void copie_plateau(TUILE *dest, TUILE *src)
+{
+    int i, j;
     for (i = 0; i < DIM_PLATEAU_H; i++)
         for (j = 0; j < DIM_PLATEAU_W; j++)
-            dest[(int unsigned)(i*DIM_PLATEAU_W + j)] = src[(int unsigned)(i*DIM_PLATEAU_W + j)];
+            dest[(int unsigned)(i * DIM_PLATEAU_W + j)] = src[(int unsigned)(i * DIM_PLATEAU_W + j)];
 }
 
-void placer_tuiles(LISTE_TUILES selection,TUILE *copie_plateau,int l, int c){
+void placer_tuiles(LISTE_TUILES selection, TUILE *copie_plateau, int l, int c)
+{
     int i;
     for (i = 0; i < selection.nbTuiles; i++)
-        copie_plateau[(int unsigned)(l*DIM_PLATEAU_W + c + i)] = selection.pile[i];      
-    
+        copie_plateau[(int unsigned)(l * DIM_PLATEAU_W + c + i)] = selection.pile[i];
 }
 
 int suite(LISTE_TUILES *l)
@@ -302,11 +294,12 @@ void supprime_liste(LISTE_TUILES *l, TUILE tuile)
 {
     int i;
     unsigned char trouve = FALSE;
-    for (i = 0; i < l->nbTuiles; i++) {
+    for (i = 0; i < l->nbTuiles; i++)
+    {
         if (l->pile[i].chiffre == tuile.chiffre && l->pile[i].clr == tuile.clr && !trouve)
             trouve = TRUE;
         else
-            ajouter_tuile(l,l->pile[i]);
+            ajouter_tuile(l, l->pile[i]);
     }
 }
 
@@ -324,20 +317,26 @@ int est_victorieux(JOUEUR j)
 
 void affiche_victoire(JOUEUR j)
 {
-    int k;
-    for (k = 0; k < 44; k++)
+    int i;
+    for (i = 0; i < 44; i++)
         printf("/\\");
     printf("\n");
-    for (k = 0; k < 44; k++)
+    for (i = 0; i < 44; i++)
         printf("/\\");
     printf("\n                                 ");
     printf("Joueur n°%d: \033[32;1m %s \033[0m\n", j.numJoueur, j.pseudo);
-    for (k = 0; k < 44; k++)
+    for (i = 0; i < 44; i++)
         printf("/\\");
     printf("\n");
-    for (k = 0; k < 44; k++)
+    for (i = 0; i < 44; i++)
         printf("/\\");
     printf("\n");
+    printf("\n");
+    printf("TABLE DES SCORES\n");
+    for (i = 0; i < joueurs.nbJs; i++)
+    {
+        printf("%s : 999\n", joueurs.js[i].pseudo);
+    }
 }
 
 int est_placable(int taille_liste, int ligne, int colonne)
@@ -364,19 +363,19 @@ int est_placable(int taille_liste, int ligne, int colonne)
     return FALSE;
 }
 
-int intervertion_tuiles(TUILE* copie_plateau,int ligneSource, int colonneSource, int ligneDestination, int colonneDestination)
+int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource, int ligneDestination, int colonneDestination)
 {
     // verifier ici d'abord que les lignes et colonnes sont bonnes
     // sinon retourner false
-    if (ligneSource > DIM_PLATEAU_H && ligneSource < 0 && colonneDestination > DIM_PLATEAU_W && colonneDestination < 0)
+    if (ligneSource < 0 && ligneSource >= DIM_PLATEAU_H && colonneDestination < 0 && colonneDestination >= DIM_PLATEAU_W)
         return FALSE;
     TUILE temp;
-    temp.chiffre = copie_plateau[ligneSource*DIM_PLATEAU_W + colonneSource].chiffre;
-    temp.clr = copie_plateau[ligneSource*DIM_PLATEAU_W + colonneSource].clr;
-    copie_plateau[ligneSource*DIM_PLATEAU_W + colonneSource].chiffre = copie_plateau[ligneDestination*DIM_PLATEAU_W + colonneDestination].chiffre;
-    copie_plateau[ligneSource*DIM_PLATEAU_W + colonneSource].clr = copie_plateau[ligneDestination*DIM_PLATEAU_W + colonneDestination].clr;
-    copie_plateau[ligneDestination*DIM_PLATEAU_W + colonneDestination].chiffre = temp.chiffre;
-    copie_plateau[ligneDestination*DIM_PLATEAU_W + colonneDestination].clr = temp.clr;
+    temp.chiffre = copie_plateau[ligneSource * DIM_PLATEAU_W + colonneSource].chiffre;
+    temp.clr = copie_plateau[ligneSource * DIM_PLATEAU_W + colonneSource].clr;
+    copie_plateau[ligneSource * DIM_PLATEAU_W + colonneSource].chiffre = copie_plateau[ligneDestination * DIM_PLATEAU_W + colonneDestination].chiffre;
+    copie_plateau[ligneSource * DIM_PLATEAU_W + colonneSource].clr = copie_plateau[ligneDestination * DIM_PLATEAU_W + colonneDestination].clr;
+    copie_plateau[ligneDestination * DIM_PLATEAU_W + colonneDestination].chiffre = temp.chiffre;
+    copie_plateau[ligneDestination * DIM_PLATEAU_W + colonneDestination].clr = temp.clr;
     return TRUE;
 }
 
@@ -402,7 +401,8 @@ void score_fin_partie(int indice)
     }
 }
 
-int char_to_int(char l){
+int char_to_int(char l)
+{
     switch (l)
     {
     case 'a':
@@ -435,30 +435,36 @@ int char_to_int(char l){
     return -1;
 }
 
-
-int analyse_plateau(TUILE *plateau) {
-    int i,j;
-    unsigned char test=FALSE;
+int analyse_plateau(TUILE *plateau)
+{
+    int i, j;
+    unsigned char test = FALSE;
     LISTE_TUILES analyse;
-    for(i = 0;i<DIM_PLATEAU_H;i++){
-        for(j=0;j<DIM_PLATEAU_W;j++){
-            if (plateau[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre != 0){
-                ajouter_tuile(&analyse,plateau[(int unsigned)(i*DIM_PLATEAU_W + j)]);
-                test=TRUE;
+    analyse.nbTuiles = 0;
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+            if (plateau[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre != 0)
+            {
+                ajouter_tuile(&analyse, plateau[(int unsigned)(i * DIM_PLATEAU_W + j)]);
+                test = TRUE;
             }
-            else if (plateau[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre == 0 && test){
+            else if (plateau[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre == 0 && test)
+            {
                 if (!test_combinaison(&analyse))
                     return FALSE;
                 test = FALSE;
-            }            
+            }
         }
     }
 
     return TRUE;
 }
 
-void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees){
-    int i,j;
-    for (i = 0; i<tuilesSelectionnees.nbTuiles;i++)
-       supprime_liste(chevalet,tuilesSelectionnees.pile[i]);
+void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
+{
+    int i, j;
+    for (i = 0; i < tuilesSelectionnees.nbTuiles; i++)
+        supprime_liste(chevalet, tuilesSelectionnees.pile[i]);
 }
