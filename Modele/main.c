@@ -234,7 +234,7 @@ int main(void)
                             do
                             {
                                 system("clear");
-                                affiche_plateau(plateau[0]);
+                                affiche_plateau(copiePlateau[0]);
                                 printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
                                 scanf(" %c", &ligneSource);
                                 printf("colonne : ");
