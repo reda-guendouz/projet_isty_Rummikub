@@ -148,11 +148,6 @@ tire une carte au hasard dans la pioche et met a jour la pioche
 */
 void piocher(LISTE_TUILES *l);
 
-int suite(LISTE_TUILES *l);
-void tri_liste(LISTE_TUILES *l);
-int triplon_quadruplon(LISTE_TUILES *l);
-int test_combinaison(LISTE_TUILES *l);
-
 void supprime_liste(LISTE_TUILES *l, TUILE tuile);
 int est_victorieux(JOUEUR j);
 void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
