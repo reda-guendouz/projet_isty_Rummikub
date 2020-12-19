@@ -274,7 +274,7 @@ int main(void)
             else
             {
                 system("clear");
-                affiche_victoire(joueurs.js[joueurActuel]);
+                affiche_victoire(joueurs.js[joueurActuel], joueurActuel);
                 do
                 {
                     printf("Appuyer sur 0 pour revenir au menu\n");

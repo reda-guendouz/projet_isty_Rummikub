@@ -155,8 +155,8 @@ int test_combinaison(LISTE_TUILES *l);
 
 void supprime_liste(LISTE_TUILES *l, TUILE tuile);
 int est_victorieux(JOUEUR j);
-void affiche_victoire(JOUEUR j);
-void score_fin_partie(int indice);
+void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
+void score_fin_partie(int indiceJoueurGagnant);
 
 int analyse_plateau(TUILE *plateau);
 

@@ -315,7 +315,7 @@ int est_victorieux(JOUEUR j)
     return FALSE;
 }
 
-void affiche_victoire(JOUEUR j)
+void affiche_victoire(JOUEUR j, int indiceJoueurGagnant)
 {
     int i;
     for (i = 0; i < 44; i++)
@@ -333,9 +333,10 @@ void affiche_victoire(JOUEUR j)
     printf("\n");
     printf("\n");
     printf("TABLE DES SCORES\n");
+    score_fin_partie(indiceJoueurGagnant);
     for (i = 0; i < joueurs.nbJs; i++)
     {
-        printf("%s : 999\n", joueurs.js[i].pseudo);
+        printf("%s : %d\n", joueurs.js[i].pseudo, joueurs.scores[i]);
     }
 }
 
@@ -379,18 +380,17 @@ int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource
     return TRUE;
 }
 
-void score_fin_partie(int indice)
+void score_fin_partie(int indiceJoueurGagnant)
 {
-
     int score[JOUEURS_MAX];
     int i, j;
     for (i = 0; i < joueurs.nbJs; i++)
     {
-        if (i != indice)
+        if (i != indiceJoueurGagnant)
         {
             for (j = 0; j < joueurs.js[i].chevalet.nbTuiles; j++)
             {
-                score[indice] += joueurs.js[i].chevalet.pile[j].chiffre;
+                score[indiceJoueurGagnant] += joueurs.js[i].chevalet.pile[j].chiffre;
                 score[i] -= joueurs.js[i].chevalet.pile[j].chiffre;
             }
         }
