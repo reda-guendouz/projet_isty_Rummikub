@@ -151,12 +151,15 @@ void tri_liste(LISTE_TUILES *l);
 int triplon_quadruplon(LISTE_TUILES *l);
 int test_combinaison(LISTE_TUILES *l);
 
-LISTE_TUILES supprime_liste(LISTE_TUILES l, int indice);
+void supprime_liste(LISTE_TUILES *l, TUILE tuile);
 int est_victorieux(JOUEUR j);
 void affiche_victoire(JOUEUR j);
 void score_fin_partie(int indice);
+
+int analyse_plateau(TUILE *plateau);
 
 /******
  * DIVERS
  * *****/
 int char_to_int(char l);
+void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees);

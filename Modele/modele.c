@@ -60,6 +60,7 @@ void init_joueurs(int nbJoueurs)
         printf("Entrez le pseudonyme du joueur %d : ", tmp);
         scanf("%s", joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
+        joueurs.js[i].chevalet.pile[MAX_TUILES];
         for (j = 0; j < PIOCHE_DEPART; j++)
             piocher(&joueurs.js[i].chevalet);
     }
@@ -297,20 +298,16 @@ void tri_liste(LISTE_TUILES *l)
     }
 }
 
-LISTE_TUILES supprime_liste(LISTE_TUILES l, int indice)
+void supprime_liste(LISTE_TUILES *l, TUILE tuile)
 {
     int i;
-    LISTE_TUILES reponse;
-    reponse.nbTuiles = 0;
-    if (indice < l.nbTuiles)
-    {
-        for (i = 0; i < indice + 1; i++)
-            reponse.pile[i] = l.pile[i];
-        for (i = indice + 1; i < l.nbTuiles; i++)
-            reponse.pile[i - 1] = l.pile[i];
-        reponse.nbTuiles = l.nbTuiles - 1;
+    unsigned char trouve = FALSE;
+    for (i = 0; i < l->nbTuiles; i++) {
+        if (l->pile[i].chiffre == tuile.chiffre && l->pile[i].clr == tuile.clr && !trouve)
+            trouve = TRUE;
+        else
+            ajouter_tuile(l,l->pile[i]);
     }
-    return reponse;
 }
 
 int test_combinaison(LISTE_TUILES *l)
@@ -436,4 +433,32 @@ int char_to_int(char l){
         break;
     }
     return -1;
+}
+
+
+int analyse_plateau(TUILE *plateau) {
+    int i,j;
+    unsigned char test=FALSE;
+    LISTE_TUILES analyse;
+    for(i = 0;i<DIM_PLATEAU_H;i++){
+        for(j=0;j<DIM_PLATEAU_W;j++){
+            if (plateau[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre != 0){
+                ajouter_tuile(&analyse,plateau[(int unsigned)(i*DIM_PLATEAU_W + j)]);
+                test=TRUE;
+            }
+            else if (plateau[(int unsigned)(i*DIM_PLATEAU_W + j)].chiffre == 0 && test){
+                if (!test_combinaison(&analyse))
+                    return FALSE;
+                test = FALSE;
+            }            
+        }
+    }
+
+    return TRUE;
+}
+
+void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees){
+    int i,j;
+    for (i = 0; i<tuilesSelectionnees.nbTuiles;i++)
+       supprime_liste(chevalet,tuilesSelectionnees.pile[i]);
 }
