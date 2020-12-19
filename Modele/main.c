@@ -89,7 +89,7 @@ int main(void)
                             printf("\nTuile selectionne : \n");
                             affiche_liste_tuiles(tuilesSelectionnes);
                             printf("\n\n");
-                            printf("Quelle tuile voulez-vous jouez dans votre chevalet ?\n");
+                            printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
                             printf("-1. Valider la selection\n");
                             printf("-2. Piochez et passer son tour\n");
                             scanf(" %d", &numTuileChoisis);
