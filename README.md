@@ -1,49 +1,18 @@
 # Projet Isty Rummikub
 
-## Formations des groupes ##
+GROUPE 4 
 
-**Modèle :** Lucas + Clément
+## Contenu du dossier ##
 
-**Vue :** Achraf + Réda + Marwane
+Le pré-rapport demandé et un prototype ou l’état courant de notre programmation.
 
-## Liste des choses à faire ##
+Ce rapport contient l'avancement dans notre réflexionet dans la modélisation de notre projet
 
-**VUE :**
+Le code présent dans ce dossier est notre version terminal, il manque certaines fonctionnalités :
+- il n'y a pas la règle des 30 points pour commencer la partie
+- l'IA n'a pas été développé comme énnocé dans notre rapport.
 
-*1.Refaire une librairie*
+## Lancer le programme ##
 
-*2.Trouver une interface ergonomique du plateau*
-
-**MODELE :**
-
-*1.Fonction pour créer le plateau*
-
-<table border="1px">
-  <tr>
-    <td>
-      <strong>26/11/2020</strong>
-    </td>
-    <td>
-      <strong>Vue :</strong> Revoir la librairie
-      <br/>
-      <strong>Modele :</strong> Commencer les classes + quelques tests 
-    </td>
-  </tr>
-  <tr>
-     <td>
-      <strong>03/12/2020</stong>
-    </td>
-    <td>
-      <strong>Vue :</stong>
-      <strong>Modele :</stong>
-    </td>
-  </tr>  
-</table>
-
-**Warnings :**
-
-*1. autoriser espace dans les pseudonymes*
-
-*2. eviter les redondances dans les pseudonymes*
-
-*3. scanf bug: lorsqu'il ne reçoit pas ce qu'il attend (caracteres speciaux,espaces...)*
+Tapez la commande suivante dans l'invit de commmande :
+**make**
