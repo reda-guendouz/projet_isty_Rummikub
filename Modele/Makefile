@@ -4,6 +4,7 @@ exec=exec
 
 all:
 	$(CC) $(fichiers) -o $(exec)
+	./exec
 
 clean:
 	rm -f $(exec)
