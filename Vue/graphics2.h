@@ -61,9 +61,6 @@
 	/// J'aime bien ça, c'est interessant pour avoir des points bonus :
 	POINT wait_clic_GMD(char *button);
 
-	/// Remplissage de tout l'ecran
-	void fill_screen(COULEUR color);
-
 	/// Dessine un pixel
 	void draw_pixel(POINT p, COULEUR color);
 

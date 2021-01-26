@@ -10,6 +10,7 @@ int verdana_ok = FALSE;
 	// 1.1 La variable dans laquelle
 	// l'image finale est �crite
 	SDL_Window *screen;
+    SDL_Renderer *renderer;
 
 	// 1.2 Pour ne pas oublier l'appel � init_graphics()
 	int __init_graphics_est_deja_appele = FALSE;
@@ -34,14 +35,15 @@ void init_graphics()
 			printf("Impossible de charger la librairie SDL: %s\n", SDL_GetError());
 			exit(EXIT_FAILURE);
 		}
-
-	screen = SDL_CreateWindow("Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie",SDL_WINDOWPOS_CENTERED,SDL_WINDOWPOS_CENTERED,WIDTH, HEIGHT, SDL_WINDOW_OPENGL|SDL_WINDOW_MOUSE_FOCUS|SDL_WINDOW_SHOWN);
+    //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie",
+	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_OPENGL|SDL_WINDOW_MOUSE_FOCUS|SDL_WINDOW_SHOWN, &screen, &renderer);
 	if ( screen == NULL )
 		{
-		fprintf(stderr, "Impossible de passer en %dx%d en 32 bits: %s\n", WIDTH, HEIGHT, SDL_GetError());
+		fprintf(stderr, "Impossible de passer en %dx%d: %s\n", WIDTH, HEIGHT, SDL_GetError());
 		exit(EXIT_FAILURE);
 		}
-
+    SDL_SetRenderDrawColor(renderer,0,0,0,0);
+    SDL_RenderClear(renderer);
 	/// a voir avec les pseudos des joueurs
 	// Autorise la prise en compte de repetition lors d'un appui
 	// long sur une touche
@@ -246,14 +248,6 @@ POINT wait_clic_GMD(char *button)
 	return P;
 	}
 
-void fill_screen(COULEUR color)
-	{
-	int i,j;
-	for (i=0;i<WIDTH;i++)
-		for (j=0;j<HEIGHT;j++) *((COULEUR *)SDL_screen->pixels + (HEIGHT-j-1) * WIDTH + i) = color;
-	if (SDL_AFFICHE_AUTO) affiche_all();
-	}
-
 /// obligatoire pour le dessin (a comprendre, ainsi que le define "add_pix")
 int dans_ecran(int x, int y)
 	{
@@ -266,7 +260,7 @@ int dans_ecran(int x, int y)
 
 	// 4.x.2 Macro qui permet d'ajouter un pixel � la SDL_surface
 	// Inverse l'ordonn�e entre haut et bas
-#define add_pix(x,y,color)  if (dans_ecran((x),(y))) *((COULEUR *)SDL_screen->pixels + (HEIGHT-(y)-1) * WIDTH + (x)) = (color)
+#define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_RenderDrawPoint(renderer, x, y); SDL_RenderPresent(renderer); }
 
 void draw_pixel(POINT p, COULEUR color)
 	{
