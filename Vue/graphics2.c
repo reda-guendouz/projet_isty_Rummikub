@@ -145,7 +145,7 @@ void wait_escape()
 					}
 			}
 		}
-	
+	IMG_Quit();
 	TTF_Quit();
 	SDL_Quit();
 	}
@@ -219,7 +219,7 @@ void draw_rectangle(POINT p1, POINT p2, COULEUR color)
 	int ggg = ((color >> 8) & 0xFF);
 	int bbb = ((color) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
-	SDL_Rect testas= {50,50,50,50};
+	SDL_Rect testas= {p1.x,p1.y,p2.x,p2.y};
 	SDL_RenderDrawRect(renderer, &testas);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
@@ -231,12 +231,22 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	int ggg = ((color >> 8) & 0xFF);
 	int bbb = ((color) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
-	SDL_Rect testas= {50,50,50,50};
+	SDL_Rect testas= {p1.x,p1.y,p2.x,p2.y};
 	SDL_RenderFillRect(renderer, &testas);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 void load_img(char *fic,POINT emplacement, POINT dimensions){
-	
+	IMG_Init(IMG_INIT_PNG);
+	int png1 = dimensions.x; int png2 = dimensions.y;
+	SDL_Surface *image = IMG_Load(fic);
+	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
+	SDL_QueryTexture(texture,NULL,NULL,&png1,&png2);		
+	SDL_Rect position = {emplacement.x, emplacement.y, png1, png2};
+	SDL_RenderCopy(renderer, texture, NULL, &position);
+	SDL_RenderPresent(renderer);
+	if (SDL_AFFICHE_AUTO) affiche_all();
+	SDL_DestroyTexture(texture);
+	SDL_FreeSurface(image);
 }
