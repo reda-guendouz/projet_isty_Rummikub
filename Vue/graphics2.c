@@ -33,13 +33,13 @@ void init_graphics()
 			exit(EXIT_FAILURE);
 		}
     //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie",
-	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE, &screen, &renderer);
+	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL, &screen, &renderer);
 	if ( screen == NULL )
 		{
 		fprintf(stderr, "Impossible de passer en %dx%d: %s\n", WIDTH, HEIGHT, SDL_GetError());
 		exit(EXIT_FAILURE);
 		}
-    SDL_SetRenderDrawColor(renderer,0,255,0,0);
+    SDL_SetRenderDrawColor(renderer,0,0,0,255);
     SDL_RenderClear(renderer);
 	/// a voir avec les pseudos des joueurs
 	// Autorise la prise en compte de repetition lors d'un appui
@@ -92,9 +92,11 @@ COULEUR couleur_RGB(int r, int g, int b)
 
 /// si ne fonctionne pas, mettre position = {0, 0, X, X}
 void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
-	int texteW = 0; int texteH = 0;
+	int texteW = 0;   int texteH = 0;
+	int texteX = p.x; int texteY = HEIGHT - p.y;
 	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color"
-	SDL_Color color = {((C >> 16) & 0xFF) / 255.0,((C >> 8) & 0xFF) / 255.0,((C) & 0xFF) / 255.0};
+	SDL_Color color = {255,255,255};
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	SDL_Surface *texte = NULL;
 	TTF_Font *police;
 
@@ -107,7 +109,7 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
 			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
 			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
-			SDL_Rect position = {0, 0, texteW, texteH};
+			SDL_Rect position = {texteX, texteY, texteW, texteH};
 			SDL_RenderCopy(renderer, texture, NULL, &position);
 			SDL_RenderPresent(renderer);
 			if (SDL_AFFICHE_AUTO) affiche_all();
@@ -116,6 +118,7 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 			}
 	else printf("%s\n",texte_affichable);
 	TTF_CloseFont(police);
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 }
 
 void wait_escape()
@@ -125,7 +128,7 @@ void wait_escape()
 	POINT p;
 	p.x = WIDTH/2 - 170;
 	p.y = 25;
-	affiche_texte("Appuyer sur Echap pour terminer",20,p,gris);
+	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
 	affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
@@ -191,7 +194,7 @@ int dans_ecran(int x, int y)
 
 	// 4.x.2 Macro qui permet d'ajouter un pixel � la SDL_surface
 	// Inverse l'ordonn�e entre haut et bas
-#define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_RenderDrawPoint(renderer, x, y); SDL_RenderPresent(renderer); }
+#define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_RenderDrawPoint(renderer, x, y); }
 
 void draw_pixel(POINT p, COULEUR color)
 	{
@@ -201,74 +204,35 @@ void draw_pixel(POINT p, COULEUR color)
 
 void draw_line(POINT p1, POINT p2, COULEUR color)
 	{
-	int xmin, xmax;
-	int ymin, ymax;
-	int i,j;
-	float a,b,ii,jj;
-
-	if (p1.x < p2.x) {xmin=p1.x; xmax=p2.x;} else{xmin=p2.x; xmax=p1.x;}
-	if (p1.y < p2.y) {ymin=p1.y; ymax=p2.y;} else{ymin=p2.y; ymax=p1.y;}
-
-	if (xmin==xmax) for (j=ymin;j<=ymax;j++) add_pix(xmin,j,color);
-	if (ymin==ymax) for (i=xmin;i<=xmax;i++) add_pix(i,ymin,color);
-
-
-	// La variation la plus grande est en x
-	if ((xmax-xmin >= ymax-ymin) && (ymax-ymin>0))
-		{
-		a = (float)(p1.y-p2.y) / ((float)(p1.x-p2.x));
-		b = p1.y - a*p1.x;
-		for (i=xmin;i<=xmax;i++)
-			{
-			jj = a*i+b;
-			j = jj;
-			if (((jj-j) > 0.5) && (j < HEIGHT-1)) j++;
-			add_pix(i,j,color);
-			}
-		}
-
-	// La variation la plus grande est en y
-	if ((ymax-ymin > xmax-xmin) && (xmax-xmin>0))
-		{
-		a = (float)(p1.y-p2.y) / ((float)(p1.x-p2.x));
-		b = p1.y - a*p1.x;
-		for (j=ymin;j<=ymax;j++)
-			{
-			ii = (j-b)/a;
-			i = ii;
-			if (((ii-i) > 0.5) && (i < WIDTH-1)) i++;
-			add_pix(i,j,color);
-			}
-		}
-		if (SDL_AFFICHE_AUTO) affiche_all();
+	int rrr = ((color >> 16) & 0xFF) / 255.0;
+	int ggg = ((color >> 8) & 0xFF) / 255.0;
+	int bbb = ((color) & 0xFF) / 255.0;
+	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
+	SDL_RenderDrawLine(renderer,p1.x,p1.y,p2.x,p2.y);
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 void draw_rectangle(POINT p1, POINT p2, COULEUR color)
 	{
-	int xmin, xmax;
-	int ymin, ymax;
-	int i,j;
-
-	if (p1.x < p2.x) {xmin=p1.x; xmax=p2.x;} else{xmin=p2.x; xmax=p1.x;}
-	if (p1.y < p2.y) {ymin=p1.y; ymax=p2.y;} else{ymin=p2.y; ymax=p1.y;}
-
-	for (i=xmin;i<=xmax;i++) add_pix(i,ymin,color);
-	for (i=xmin;i<=xmax;i++) add_pix(i,ymax,color);
-
-	for (j=ymin;j<=ymax;j++) add_pix(xmin,j,color);
-	for (j=ymin;j<=ymax;j++) add_pix(xmax,j,color);
+	int rrr = ((color >> 16) & 0xFF);
+	int ggg = ((color >> 8) & 0xFF);
+	int bbb = ((color) & 0xFF);
+	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
+	SDL_Rect testas= {50,50,50,50};
+	SDL_RenderDrawRect(renderer, &testas);
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	{
-	int xmin, xmax;
-	int ymin, ymax;
-	int i,j;
-
-	if (p1.x < p2.x) {xmin=p1.x; xmax=p2.x;} else{xmin=p2.x; xmax=p1.x;}
-	if (p1.y < p2.y) {ymin=p1.y; ymax=p2.y;} else{ymin=p2.y; ymax=p1.y;}
-
-	for (i=xmin;i<=xmax;i++) for (j=ymin;j<=ymax;j++) add_pix(i,j,color);
+	int rrr = ((color >> 16) & 0xFF);
+	int ggg = ((color >> 8) & 0xFF);
+	int bbb = ((color) & 0xFF);
+	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
+	SDL_Rect testas= {50,50,50,50};
+	SDL_RenderFillRect(renderer, &testas);
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}

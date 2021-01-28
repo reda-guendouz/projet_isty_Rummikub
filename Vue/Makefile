@@ -8,7 +8,7 @@ all: graphics2.o main.c
 	$(CC) $(CFLAGS) graphics2.o  main.c -o $(EXE) $(LIBS)
 
 graphics2.o: graphics2.c graphics2.h
-	$(CC) $(CFLAGS) -c graphics2.c
+	$(CC) $(CFLAGS) -c graphics2.c $(LIBS)
 
 clean:
 	rm -f *core
