@@ -250,3 +250,8 @@ void load_img(char *fic,POINT emplacement, POINT dimensions){
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(image);
 }
+
+void affiche_menu_debut(){
+	SDL_RenderClear(renderer);
+	POINT rect1,rect2;
+}

@@ -77,3 +77,5 @@
 
 	/// affiche une image
 	void load_img(char *fic,POINT emplacement, POINT dimensions);
+
+	void affiche_menu_debut();
