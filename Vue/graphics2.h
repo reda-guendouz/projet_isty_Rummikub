@@ -6,8 +6,9 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
-#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_image.h>
 #include "couleur.h" // Constantes de couleur
 
 	//  type POINT
@@ -73,3 +74,6 @@
 
 	/// Dessine un rectangle rempli
 	void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color);
+
+	/// affiche une image
+	void load_img(char *fic,POINT emplacement, POINT dimensions);

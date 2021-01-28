@@ -236,3 +236,7 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
+
+void load_img(char *fic,POINT emplacement, POINT dimensions){
+	
+}
