@@ -1,16 +1,17 @@
 CC=gcc
 CFLAGS=-O2 -Wall `sdl2-config --cflags`
-LIBS=`sdl2-config --libs` -lm -lSDL_ttf
+LIBS=`sdl2-config --libs` -lSDL2 -lSDL2_image -lSDL2_ttf
+EXE=rummikub
 
-all: graphics.o main.c
-	rm -f main
-	$(CC) $(CFLAGS) graphics.o  main.c -o main $(LIBS)
+all: graphics2.o main.c
+	rm -f $(EXE)
+	$(CC) $(CFLAGS) graphics2.o  main.c -o $(EXE) $(LIBS)
 
-graphics.o: graphics2.c graphics2.h
+graphics2.o: graphics2.c graphics2.h
 	$(CC) $(CFLAGS) -c graphics2.c
 
 clean:
 	rm -f *core
 	rm -f *.o
-	rm -f main
+	rm -f $(EXE)
 	rm -f *.tar

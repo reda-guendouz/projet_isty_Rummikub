@@ -5,13 +5,10 @@ int main(void) {
     init_graphics();
     
     POINT carre1,carre2;
-    int hauteur,largeur;
-    hauteur = largeur = 0;
     carre1.x = carre1.y = 20;
     carre2.x = carre2.y = 40;
     draw_rectangle(carre1,carre2,white);
    
     wait_escape();
-
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <unistd.h>
 #include <time.h>
 #include <math.h>
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL.h>
 #include "couleur.h" // Constantes de couleur
 
@@ -50,6 +51,9 @@
 	/// Creation de couleur (0 .. 255)
 	COULEUR couleur_RGB(int r, int g, int b);
 
+	/// bah tout est dans le titre ^^
+	void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C);
+
 	/// ttend que l'on tape Echap et quitte
 	// Instruction bloquante
 	void wait_escape();
@@ -57,9 +61,6 @@
 	/// fonction obligatoire :
 	// Instruction bloquante
 	POINT wait_clic();
-
-	/// J'aime bien ça, c'est interessant pour avoir des points bonus :
-	POINT wait_clic_GMD(char *button);
 
 	/// Dessine un pixel
 	void draw_pixel(POINT p, COULEUR color);

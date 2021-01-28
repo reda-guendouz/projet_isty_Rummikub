@@ -1,14 +1,11 @@
 #include "police.h"
 #include "graphics2.h"
 /// previously here : #ifdef SDL_ttf_OK
-#include <SDL/SDL_ttf.h>
+
 #define POLICE_NAME "verdana.ttf"
-TTF_Font *police[256];
 int verdana_ok = FALSE;
 /// fin de "previously"
 
-	// 1.1 La variable dans laquelle
-	// l'image finale est �crite
 	SDL_Window *screen;
     SDL_Renderer *renderer;
 
@@ -36,38 +33,35 @@ void init_graphics()
 			exit(EXIT_FAILURE);
 		}
     //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie",
-	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_OPENGL|SDL_WINDOW_MOUSE_FOCUS|SDL_WINDOW_SHOWN, &screen, &renderer);
+	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_RESIZABLE, &screen, &renderer);
 	if ( screen == NULL )
 		{
 		fprintf(stderr, "Impossible de passer en %dx%d: %s\n", WIDTH, HEIGHT, SDL_GetError());
 		exit(EXIT_FAILURE);
 		}
-    SDL_SetRenderDrawColor(renderer,0,0,0,0);
+    SDL_SetRenderDrawColor(renderer,0,255,0,0);
     SDL_RenderClear(renderer);
 	/// a voir avec les pseudos des joueurs
 	// Autorise la prise en compte de repetition lors d'un appui
 	// long sur une touche
 	///////SDL_EnableKeyRepeat(1,0);
 
-	// Le titre de la fenetre
-	SDL_WM_SetCaption("Rummikub",NULL);
-
 	__init_graphics_est_deja_appele = TRUE;
 	///printf("Fenetre de %d x %d\n",WIDTH,HEIGHT);
     printf("SDL_ttf OK, ");
     /// Initialise la police (fichier police.h)
     TTF_Init();
-    police[50] = TTF_OpenFont(POLICE_NAME, 10);
-    if (police[50]) {
+    TTF_Font *test = TTF_OpenFont(POLICE_NAME, 10);
+    if (test) {
         verdana_ok=TRUE;
         printf("police %s OK : affichage graphique OK.\n",POLICE_NAME);
+		TTF_CloseFont(test);
     }
     else {
         verdana_ok = 0;
-        printf("police %s absente : affichage dans la console.\n",POLICE_NAME);
+        printf("police %s absente.\n",POLICE_NAME);
+		exit(EXIT_FAILURE);
     }
-	// Remplit la fen�tre de noir
-	fill_screen(noir);
 	affiche_auto_on();
 	affiche_all();
 	}
@@ -80,18 +74,10 @@ void affiche_auto_off() { SDL_AFFICHE_AUTO = 0; }
 void affiche_all()
 	{
 	SDL_Event event;
-	if (SDL_PollEvent(&event)) if (event.type == SDL_QUIT) exit(0);
-	if (__init_graphics_est_deja_appele) SDL_Flip(SDL_screen);
-		else {
-		     init_graphics(380,80);
-		     write_text("init_graphics() n'a pas �t� appel�e.");
-		     write_text("");
-		     write_text("           Cliquer pour terminer.");
-		     fprintf(stderr,"init_graphics() n'a pas �t� appel�e.\n");
-		     fprintf(stderr,"Cliquer pour terminer.\n");
-		     wait_clic();
-		     exit(1);
-		     }
+	if (SDL_PollEvent(&event)) 
+		if (event.type == SDL_QUIT) exit(0);
+	if (__init_graphics_est_deja_appele) SDL_RenderPresent(renderer);
+		else wait_escape();
 	}
 
 	// La fonction synchro est la fonction historique
@@ -104,6 +90,34 @@ COULEUR couleur_RGB(int r, int g, int b)
 	return C;
 	}
 
+/// si ne fonctionne pas, mettre position = {0, 0, X, X}
+void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
+	int texteW = 0; int texteH = 0;
+	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color"
+	SDL_Color color = {((C >> 16) & 0xFF) / 255.0,((C >> 8) & 0xFF) / 255.0,((C) & 0xFF) / 255.0};
+	SDL_Surface *texte = NULL;
+	TTF_Font *police;
+
+	/// Initialisation de la librairie "TTF" necessitant SDL_ttf.h
+	TTF_Init();
+	police = TTF_OpenFont(POLICE_NAME, taille);
+	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
+	if (police) texte = TTF_RenderText_Blended(police, texte_affichable, color); else texte = NULL;
+	if (texte)  {
+			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
+			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
+			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
+			SDL_Rect position = {0, 0, texteW, texteH};
+			SDL_RenderCopy(renderer, texture, NULL, &position);
+			SDL_RenderPresent(renderer);
+			if (SDL_AFFICHE_AUTO) affiche_all();
+			SDL_DestroyTexture(texture);
+			SDL_FreeSurface(texte);
+			}
+	else printf("%s\n",texte_affichable);
+	TTF_CloseFont(police);
+}
+
 void wait_escape()
 	{
 	int display = 1;
@@ -111,7 +125,7 @@ void wait_escape()
 	POINT p;
 	p.x = WIDTH/2 - 170;
 	p.y = 25;
-	aff_pol("Appuyer sur Echap pour terminer",20,p,gris);
+	affiche_texte("Appuyer sur Echap pour terminer",20,p,gris);
 	affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
@@ -128,12 +142,8 @@ void wait_escape()
 					}
 			}
 		}
-	/* Fermeture de la police */
-	#ifdef SDL_TTF_OK
-		int i;
-		if (verdana_ok) for (i=0;i<256;i++) if (police[i]) TTF_CloseFont(police[i]);
-		TTF_Quit();
-	#endif
+	
+	TTF_Quit();
 	SDL_Quit();
 	}
 
@@ -145,15 +155,6 @@ POINT wait_clic()
 	SDL_Event event;
 	P.x = 0;
 	P.y = 0;
-#ifdef EN_LOCAL
-// A ne mettre que si on est en local, sur les ordi des �tudiants, c'est trop lent
-	#ifdef SDL_TTF_OK
-		POINT E,F;
-		char S[16];
-		E.x = WIDTH - 55; E.y = 15;
-		F.x = WIDTH; F.y = 0;
-	#endif
-#endif
 	while (SDL_WaitEvent(&event) && encore)
 		{
 		/* Si l'utilisateur clique avec la souris */
@@ -166,18 +167,6 @@ POINT wait_clic()
 		/* Si l'utilisateur d�place la souris */
 		if (event.type == SDL_MOUSEMOTION)
 			{
-#ifdef EN_LOCAL
-// A ne mettre que si on est en local, sur les ordi des �tudiants, c'est trop lent
-			#ifdef SDL_TTF_OK
-				if (police[10])
-					{
-					draw_fill_rectangle(E,F,noir);
-					sprintf(S,"%4d %4d",event.motion.x,HEIGHT - event.motion.y);
-					aff_pol(S,10,E,gris);
-					affiche_all();
-					}
-			#endif
-#endif
 			printf("%cEn attente de clic ... %4d %4d           %c",13,event.motion.x,HEIGHT - event.motion.y,13);
 			fflush(stdout);
 			}
@@ -185,66 +174,8 @@ POINT wait_clic()
 		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		}
-#ifdef EN_LOCAL
-// A ne mettre que si on est en local, sur les ordi des �tudiants, c'est trop lent
-	#ifdef SDL_TTF_OK
-		aff_pol(S,10,E,noir);
-		//draw_fill_rectangle(E,F,jaune);
-		affiche_all();
-	#endif
-#endif
 	printf("%cClic en %4d %4d                                           \n",13,P.x,P.y);
 	___MOUSE_POSITION = P;
-	return P;
-	}
-
-
-POINT wait_clic_GMD(char *button)
-	{
-	int encore = 1;
-	POINT P;
-	SDL_Event event;
-	P.x = 0;
-	P.y = 0;
-	#ifdef SDL_TTF_OK
-		POINT E,F;
-		char S[16];
-		E.x = WIDTH - 55; E.y = 15;
-		F.x = WIDTH; F.y = 0;
-	#endif
-	affiche_all();
-	printf("Cliquer dans la fen�tre...");
-	while (SDL_WaitEvent(&event) && encore)
-		{
-		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
-
-		/* Si l'utilisateur a cliqu� avec la souris */
-		if ((event.type == SDL_MOUSEBUTTONDOWN))
-			{
-			#ifdef SDL_TTF_OK
-				if (!police[10])
-					{
-					draw_fill_rectangle(E,F,noir);
-					sprintf(S,"%4d %4d",event.motion.x,HEIGHT - event.motion.y);
-					aff_pol(S,10,E,gris);
-					affiche_all();
-					}
-			#endif
-			printf("%cCliquer dans la fen�tre ... %4d %4d           %c",13,event.motion.x,HEIGHT - event.motion.y,13);
-			fflush(stdout);
-			encore=0;
-			P.x = event.button.x;
-			P.y = HEIGHT-event.button.y;
-			if (event.button.button == SDL_BUTTON_LEFT)   *button = 'G';
-			if (event.button.button == SDL_BUTTON_MIDDLE) *button = 'M';
-			if (event.button.button == SDL_BUTTON_RIGHT)  *button = 'D';
-			}
-		}
-	#ifdef SDL_TTF_OK
-		draw_fill_rectangle(E,F,noir);
-	#endif
-	printf("Clic '%c' en %4d %4d                                           \n",*button,P.x,P.y);
 	return P;
 	}
 
