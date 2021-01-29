@@ -152,7 +152,7 @@ void affiche_plateau(TUILE *plateau_a_afficher)
     int i, j, k;
 
     // partie test
-    /*
+    
     TUILE t1;
     t1.clr = ROUGE;
     t1.chiffre = 9;
@@ -164,8 +164,8 @@ void affiche_plateau(TUILE *plateau_a_afficher)
     t3.chiffre = 9;
 
     plateau[0][0] = t1;
-    plateau[0][1] = t2;
-    plateau[0][2] = t3;*/
+    plateau[1][1] = t2;
+    plateau[5][20] = t3;
 
     printf("\nPlateau:\n  ");
     for (k = 0; k < 22; k++)

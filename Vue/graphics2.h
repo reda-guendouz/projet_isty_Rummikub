@@ -10,6 +10,8 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "couleur.h" // Constantes de couleur
+#include "../Modele/modele.h"
+
 
 	//  type POINT
 	typedef struct point {int x,y;} POINT;
@@ -79,3 +81,9 @@
 	void load_img(char *fic,POINT emplacement, POINT dimensions);
 
 	void affiche_menu_debut();
+
+	void converti_int_en_str(int nb, char *p);
+	void transforme_tuile_en_path(TUILE t, char *p);
+	void affiche_plateau_graphique();
+
+	

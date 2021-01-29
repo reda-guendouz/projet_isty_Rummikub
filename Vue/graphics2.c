@@ -1,5 +1,9 @@
 #include "police.h"
 #include "graphics2.h"
+
+
+
+
 /// previously here : #ifdef SDL_ttf_OK
 
 #define POLICE_NAME "assets/verdana.ttf"
@@ -52,6 +56,7 @@ void init_graphics()
     printf("SDL_ttf OK, ");
     /// Initialise la police (fichier police.h)
     TTF_Init();
+	IMG_Init(IMG_INIT_PNG);
     TTF_Font *test = TTF_OpenFont(POLICE_NAME, 10);
     if (test) {
         verdana_ok=TRUE;
@@ -239,7 +244,6 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	}
 
 void load_img(char *fic,POINT emplacement, POINT dimensions){
-	IMG_Init(IMG_INIT_PNG);
 	int png1 = 5; int png2 = 5;
 	SDL_Surface *image = IMG_Load(fic);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -252,5 +256,79 @@ void load_img(char *fic,POINT emplacement, POINT dimensions){
 
 void affiche_menu_debut(){
 	SDL_RenderClear(renderer);
-	POINT rect1,rect2;
+	//POINT rect1,rect2;
 }
+
+void converti_int_en_str(int nb, char *p)
+{
+	int unite = nb%10;
+	if(nb<10) {
+		p[0] = unite+'0';
+		p[1] = '\0';
+	}
+	else {
+		p[0] = 1 + '0';
+		p[1] = unite+'0';
+		p[2] = '\0';
+	}
+}
+
+void transforme_tuile_en_path(TUILE t,char *p2) {
+    char p[23];
+    strcpy(p,"assets/Tuiles/");
+    switch (t.clr)
+        {
+        case NOIR:
+            strcat(p,"N/");
+            break;
+        case ORANGE:
+            strcat(p,"O/");
+            break;
+        case ROUGE:
+            strcat(p,"R/");
+            break;
+        case BLEU:
+            strcat(p,"B/");
+            break;
+        }
+    int taille;
+    if(t.chiffre<10)
+		taille=2;
+	else
+		taille = 3;
+	char numero[taille];
+	converti_int_en_str(t.chiffre,numero);
+    strcat(p,numero);
+    strcat(p,".png\0");
+    strcpy(p2,p);
+}
+
+void affiche_plateau_graphique() {
+	POINT l1,l2;
+    l1.x = 75; l2.x = 0;
+    l1.y = 75; l2.y = 0;
+	int i,j;
+	TUILE t;
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+			if (plateau[i][j].chiffre == -1)
+                printf(" JK ");
+            else
+            {
+				t = plateau[i][j];
+				char chaine[23];
+    			transforme_tuile_en_path(t,chaine);
+				printf("%s\n",chaine);
+				load_img(chaine,l1,l2);
+				l1.x+=50;
+			}
+    	}
+		l1.x=75;
+        l1.y+=75;
+	}
+}
+
+
+
