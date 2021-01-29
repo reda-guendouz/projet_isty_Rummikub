@@ -3,6 +3,12 @@
 
 int main(int argc, char const *argv[])
 {
-    /* code */
+    init_pioche();
+    init_joueurs(2);
+    init_graphics();
+
+
+
+    wait_escape();
     return 0;
 }

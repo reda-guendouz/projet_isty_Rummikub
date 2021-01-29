@@ -2,7 +2,7 @@
 #include "graphics2.h"
 /// previously here : #ifdef SDL_ttf_OK
 
-#define POLICE_NAME "verdana.ttf"
+#define POLICE_NAME "assets/verdana.ttf"
 int verdana_ok = FALSE;
 /// fin de "previously"
 
