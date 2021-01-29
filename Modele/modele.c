@@ -58,7 +58,6 @@ void init_joueurs(int nbJoueurs)
         printf("Entrez le pseudonyme du joueur %d : ", tmp);
         scanf(" %s", joueurs.js[i].pseudo);
         joueurs.js[i].chevalet.nbTuiles = 0;
-        joueurs.js[i].chevalet.pile[MAX_TUILES];
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
             piocher(&joueurs.js[i].chevalet);
@@ -465,7 +464,7 @@ int analyse_plateau(TUILE *plateau)
 
 void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
 {
-    int i, j;
+    int i;
     for (i = 0; i < tuilesSelectionnees.nbTuiles; i++)
         supprime_liste(chevalet, tuilesSelectionnees.pile[i]);
 }
