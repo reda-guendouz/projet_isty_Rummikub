@@ -3,26 +3,17 @@
 
 int main(int argc, char const *argv[])
 {
-    init_pioche();
-    init_joueurs(2);
     init_graphics();
 
- 
-    POINT carre1,carre2,l1,l2;
-    carre1.x = carre1.y = 20;
-    carre2.x = carre2.y = 40;
-    l1.x = 75; l2.x = 0;
-    l1.y = 75; l2.y = 0;
-    draw_fill_rectangle(carre1,carre2,blanc);
-    int i,j;
-    for(i=0;i<8;i++){
-        for(j=0;j<30;j++){
-            load_img("assets/Tuiles/O/13.png",l1,l2);l1.x +=50;
-        }
-        l1.x=75;
-        l1.y+=75;
-    }
-    affiche_all();
+    POINT welcomeText,IA1,IA2,PVP1,PVP2;
+    welcomeText.y=25; welcomeText.x=800;
+    IA1.x = IA1.y = 100;
+    IA2.x = 600;
+    IA2.y = 500;
+    draw_rectangle(IA1,IA2,blanc);
+    IA1.x += 30; IA1.y += 190;
+    affiche_texte_special("Player(s) VS IA",70,IA1,rouge,"assets/verdana.ttf");
+
 
 
     wait_escape();

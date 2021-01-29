@@ -79,3 +79,5 @@
 	void load_img(char *fic,POINT emplacement, POINT dimensions);
 
 	void affiche_menu_debut();
+
+	void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR C, char *ttf_file);

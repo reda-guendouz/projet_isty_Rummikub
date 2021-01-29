@@ -52,6 +52,7 @@ void init_graphics()
     printf("SDL_ttf OK, ");
     /// Initialise la police (fichier police.h)
     TTF_Init();
+	IMG_Init(IMG_INIT_PNG);
     TTF_Font *test = TTF_OpenFont(POLICE_NAME, 10);
     if (test) {
         verdana_ok=TRUE;
@@ -94,18 +95,19 @@ COULEUR couleur_RGB(int r, int g, int b)
 /// si ne fonctionne pas, mettre position = {0, 0, X, X}
 void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	int texteW = 0;   int texteH = 0;
-	int texteX = p.x; int texteY = HEIGHT - p.y;
-	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color"
-	SDL_Color color = {255,255,255};
-	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+	int texteX = p.x; int texteY = p.y;
+	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color".
+	int rrr = ((C >> 16) & 0xFF);
+	int ggg = ((C >> 8) & 0xFF);
+	int bbb = ((C ) & 0xFF);
+	SDL_Color color = {rrr,ggg,bbb};
+	//SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_Surface *texte = NULL;
 	TTF_Font *police;
 
-	/// Initialisation de la librairie "TTF" necessitant SDL_ttf.h
-	TTF_Init();
 	police = TTF_OpenFont(POLICE_NAME, taille);
 	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
-	if (police) texte = TTF_RenderText_Blended(police, texte_affichable, color); else texte = NULL;
+	if (police) texte = TTF_RenderText_Blended(police, texte_affichable, color);
 	if (texte)  {
 			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
 			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
@@ -122,15 +124,48 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 }
 
+/// si ne fonctionne pas, mettre position = {0, 0, X, X}
+void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR C, char *ttf_file){
+	int texteW = 0;   int texteH = 0;
+	int texteX = p.x; int texteY = p.y;
+	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color".
+	int rrr = ((C >> 16) & 0xFF);
+	int ggg = ((C >> 8) & 0xFF);
+	int bbb = ((C ) & 0xFF);
+	SDL_Color color = {rrr,ggg,bbb};
+	//SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
+	SDL_Surface *texte = NULL;
+	TTF_Font *police;
+
+	police = TTF_OpenFont(ttf_file, taille);
+	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
+	if (police) texte = TTF_RenderText_Blended(police, texte_affichable, color);
+	if (texte)  {
+			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
+			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
+			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
+			SDL_Rect position = {texteX, texteY, texteW, texteH};
+			SDL_RenderCopy(renderer, texture, NULL, &position);
+			SDL_RenderPresent(renderer);
+			if (SDL_AFFICHE_AUTO) affiche_all();
+			SDL_DestroyTexture(texture);
+			SDL_FreeSurface(texte);
+			}
+	else printf("%s\n",texte_affichable);
+	TTF_CloseFont(police);
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+}
+
+
 void wait_escape()
 	{
 	int display = 1;
 	SDL_Event event;
 	POINT p;
 	p.x = WIDTH/2 - 170;
-	p.y = 25;
+	p.y = HEIGHT - 25;
 	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
-	affiche_all();
+	//affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
@@ -193,9 +228,9 @@ int dans_ecran(int x, int y)
 	return 1;
 	}
 
-	// 4.x.2 Macro qui permet d'ajouter un pixel � la SDL_surface
+	// 4.x.2 Macro qui permet d'ajouter un pixel
 	// Inverse l'ordonn�e entre haut et bas
-#define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_RenderDrawPoint(renderer, x, y); }
+#define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_SetRenderDrawColor(renderer,((color >> 16) & 0xFF),((color >> 8) & 0xFF),((color) & 0xFF),0);SDL_RenderDrawPoint(renderer, x, y);SDL_SetRenderDrawColor(renderer,255,255,255,0); }
 
 void draw_pixel(POINT p, COULEUR color)
 	{
@@ -239,7 +274,6 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	}
 
 void load_img(char *fic,POINT emplacement, POINT dimensions){
-	IMG_Init(IMG_INIT_PNG);
 	int png1 = 5; int png2 = 5;
 	SDL_Surface *image = IMG_Load(fic);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -253,4 +287,5 @@ void load_img(char *fic,POINT emplacement, POINT dimensions){
 void affiche_menu_debut(){
 	SDL_RenderClear(renderer);
 	POINT rect1,rect2;
+
 }
