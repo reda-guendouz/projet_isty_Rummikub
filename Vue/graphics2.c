@@ -33,7 +33,7 @@ void init_graphics()
 			exit(EXIT_FAILURE);
 		}
     //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie"
-	screen=SDL_CreateWindow("TITLE",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WIDTH,HEIGHT,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+	screen=SDL_CreateWindow("Rummikub",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WIDTH,HEIGHT,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
     renderer = SDL_CreateRenderer(screen,-1,SDL_RENDERER_ACCELERATED);
 	if ( screen == NULL )
 		{
@@ -249,13 +249,13 @@ void draw_line(POINT p1, POINT p2, COULEUR color)
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
-void draw_rectangle(POINT p1, POINT p2, COULEUR color)
+void draw_rectangle(POINT emplacement, POINT dimensions, COULEUR color)
 	{
 	int rrr = ((color >> 16) & 0xFF);
 	int ggg = ((color >> 8) & 0xFF);
 	int bbb = ((color) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
-	SDL_Rect testas= {p1.x,p1.y,p2.x,p2.y};
+	SDL_Rect testas= {emplacement.x,emplacement.y,dimensions.x,dimensions.y};
 	SDL_RenderDrawRect(renderer, &testas);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
