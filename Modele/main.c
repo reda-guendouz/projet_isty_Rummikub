@@ -1,4 +1,5 @@
 #include "modele.h"
+#include <unistd.h>
 
 int main(void)
 {
@@ -6,7 +7,7 @@ int main(void)
     srand(time(NULL));
     unsigned char jeu = TRUE;
     unsigned char partie, tour, selectionTuiles, placerTuile, modifPlateau, victoire;
-    int jouer, nbJoueurs, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
+    int jouer, nbJoueurs,nbJoueursH, nbJoueursIA, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
          colonneSource,  colonneDestination;
     char ligneSource, ligneDestination;
     LISTE_TUILES tuilesSelectionnes;
@@ -47,7 +48,13 @@ int main(void)
                 printf("Combien de joueurs jouent ?\n");
                 scanf(" %d", &nbJoueurs);
             } while (nbJoueurs < 2 || nbJoueurs > 4);
-            init_joueurs(nbJoueurs);
+            do
+            {
+                printf("Combien de humains jouent ?\n");
+                scanf(" %d", &nbJoueursH);
+            } while (nbJoueursH < 1 || nbJoueursH > nbJoueurs);
+            nbJoueursIA = nbJoueurs - nbJoueursH;
+            init_joueurs(nbJoueurs,nbJoueursH);
             system("clear");
         }
 
@@ -57,208 +64,217 @@ int main(void)
             //DANS UN TOUR
             affiche_joueur(joueurs.js[joueurActuel]);
             affiche_plateau(plateau[0]);
-            printf("JOUEUR %d JOUE\n", joueurActuel);
-            do
-            {
-                choixJoueur = -1;
-                printf("Voulez-vous posez une combinaison ou piocher ?\n");
-                printf("0. Fin de partie\n");
-                printf("1. Jouer \n");
-                printf("2. Piocher \n");
-                scanf(" %d", &choixJoueur);
-            } while (choixJoueur < 0 || choixJoueur > 2);
-
-            //FIN DE PARTIE PREMATURE
-            if (choixJoueur == 0)
-                partie = FALSE;
-            else if (choixJoueur == 1)
-            {
-                tour = TRUE;
-                selectionTuiles = TRUE;
-                while (tour)
+            printf("JOUEUR %d JOUE\n", joueurActuel+1);
+            if (joueurActuel + 1 - nbJoueursH  <= 0 ){
+                do
                 {
-                    //SELECTION DE TUILE A METTRE SUR LE PLATEAU
-                    while (selectionTuiles)
+                    choixJoueur = -1;
+                    printf("Voulez-vous posez une combinaison ou piocher ?\n");
+                    printf("0. Fin de partie\n");
+                    printf("1. Jouer \n");
+                    printf("2. Piocher \n");
+                    scanf(" %d", &choixJoueur);
+                } while (choixJoueur < 0 || choixJoueur > 2);
+
+                //FIN DE PARTIE PREMATURE
+                if (choixJoueur == 0)
+                    partie = FALSE;
+                else if (choixJoueur == 1)
+                {
+                    tour = TRUE;
+                    selectionTuiles = TRUE;
+                    while (tour)
                     {
-                        placerTuile = FALSE;
-                        do
-                        {
-                            numTuileChoisis = -3;
-                            system("clear");
-                            affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
-                            affiche_plateau(plateau[0]);
-                            printf("\nTuile selectionne : \n");
-                            affiche_liste_tuiles(tuilesSelectionnes);
-                            printf("\n\n");
-                            printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
-                            printf("-1. Valider la selection\n");
-                            printf("-2. Piochez et passer son tour\n");
-                            scanf(" %d", &numTuileChoisis);
-                        } while (numTuileChoisis < -2 || numTuileChoisis > joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
-                        //ARRETE SON TOUR ET PASSER A LA PIOCHE
-                        if (numTuileChoisis == -2)
-                        {
-                            tour = FALSE;
-                            selectionTuiles = FALSE;
-                            choixJoueur = 2;
-                        }
-                        //PLACER LES TUILES SELECTIONNEES
-                        else if (numTuileChoisis == -1)
-                        {
-                            if (tuilesSelectionnes.nbTuiles > 0)
-                            {
-                                selectionTuiles = FALSE;
-                                placerTuile = TRUE;
-                            }
-                            else
-                                printf("Selectionner au moins une tuile avant de valider la selection\n");
-                        }
-                        //RECUPERER LA TUILE SELECTIONNEE
-                        else
-                        {
-                            selectionne = joueurs.js[joueurActuel].chevalet.pile[numTuileChoisis];
-                            ajouter_tuile(&tuilesSelectionnes, selectionne);
-                        }
-                    }
-                    //PLACER LES TUILES SELECTIONNEES
-                    while (placerTuile)
-                    {
-                        system("clear");
-                        affiche_plateau(plateau[0]);
-                        tri_liste(&tuilesSelectionnes);
-                        printf("Tuiles selectionnees : \n");
-                        affiche_liste_tuiles(tuilesSelectionnes);
-                        do
-                        {
-                            choixPlacement = -3;
-                            printf("\nQue voulez-vous faire ?\n");
-                            printf("0. Piochez et passer son tour\n");
-                            printf("1. Refaire sa selection\n");
-                            printf("2. Placer les tuiles sur le plateau\n");
-                            scanf(" %d", &choixPlacement);
-                        } while (choixPlacement < 0 || choixPlacement > 2);
-                        //ARRETE SON TOUR ET PASSER A LA PIOCHE
-                        if (choixPlacement == 0)
+                        //SELECTION DE TUILE A METTRE SUR LE PLATEAU
+                        while (selectionTuiles)
                         {
                             placerTuile = FALSE;
-                            tour = FALSE;
-                            choixJoueur = 2;
-                        }
-                        //RECOMMENCER LA SELECTION DE TUILE
-                        else if (choixPlacement == 1)
-                        {
-                            placerTuile = FALSE;
-                            selectionTuiles = TRUE;
-                            tuilesSelectionnes.pile[MAX_TUILES];
-                            tuilesSelectionnes.nbTuiles = 0;
-                        }
-                        //PLACER LES TUILES DANS LE PLATEAU
-                        else
-                        {
-                            copie_plateau(copiePlateau[0], plateau[0]);
-                            affiche_plateau(copiePlateau[0]);
                             do
                             {
+                                numTuileChoisis = -3;
                                 system("clear");
+                                affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
                                 affiche_plateau(plateau[0]);
-                                printf("Tuiles selectionnees : \n");
+                                printf("\nTuile selectionne : \n");
                                 affiche_liste_tuiles(tuilesSelectionnes);
-                                printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
-                                scanf(" %c", &ligneSource);
-                                printf("colonne : ");
-                                scanf(" %d", &colonneSource);
-                            } while (!est_placable(tuilesSelectionnes.nbTuiles, char_to_int(ligneSource), colonneSource));
-                            placer_tuiles(tuilesSelectionnes, copiePlateau[0], char_to_int(ligneSource), colonneSource);
-                            placerTuile = FALSE;
-                            modifPlateau = TRUE;
-                        }
-                    }
-                    //MODIFIER LE PLATEAU
-                    while (modifPlateau)
-                    {
-                        affiche_plateau(copiePlateau[0]);
-                        do
-                        {
-                            choixModifPlateau = -3;
-                            printf("Que voulez-vous faire ?\n");
-                            printf("0. Piochez et passer son tour\n");
-                            printf("1. Refaire sa selection\n");
-                            printf("2. Replacer les tuiles sur le plateau\n");
-                            printf("3. Valider le plateau et passer son tour\n");
-                            printf("4. Modifier le plateau\n");
-                            scanf(" %d", &choixModifPlateau);
-                        } while (choixPlacement < 0 || choixPlacement > 4);
-                        //ARRETE SON TOUR ET PASSER A LA PIOCHE
-                        if (choixModifPlateau == 0)
-                        {
-                            modifPlateau = FALSE;
-                            tour = FALSE;
-                            choixJoueur = 2;
-                        }
-                        //RECOMMENCER LA SELECTION DE TUILE
-                        else if (choixModifPlateau == 1)
-                        {
-                            modifPlateau = FALSE;
-                            selectionTuiles = TRUE;
-                            tuilesSelectionnes.pile[MAX_TUILES];
-                            tuilesSelectionnes.nbTuiles = 0;
-                        }
-                        //REFAIRE LE PLACEMENT DES TUILES
-                        else if (choixModifPlateau == 2)
-                        {
-                            modifPlateau = FALSE;
-                            selectionTuiles = FALSE;
-                            placerTuile = TRUE;
-                        }
-                        //VALIDER ET TESTER LE PLATEAU
-                        else if (choixModifPlateau == 3)
-                        {
-                            printf("VALIDATION EN COURS\n\n");
-                            if (analyse_plateau(copiePlateau[0]))
+                                printf("\n\n");
+                                printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
+                                printf("-1. Valider la selection\n");
+                                printf("-2. Piochez et passer son tour\n");
+                                scanf(" %d", &numTuileChoisis);
+                            } while (numTuileChoisis < -2 || numTuileChoisis > joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
+                            //ARRETE SON TOUR ET PASSER A LA PIOCHE
+                            if (numTuileChoisis == -2)
                             {
-                                copie_plateau(plateau[0], copiePlateau[0]);
-                                printf("Copie bien passé\n\n");
-                                mettre_a_jour(&joueurs.js[joueurActuel].chevalet, tuilesSelectionnes);
-                                printf("Mise a jour du chevalet bien passé\n\n");
-                                modifPlateau = FALSE;
                                 tour = FALSE;
+                                selectionTuiles = FALSE;
+                                choixJoueur = 2;
                             }
+                            //PLACER LES TUILES SELECTIONNEES
+                            else if (numTuileChoisis == -1)
+                            {
+                                if (tuilesSelectionnes.nbTuiles > 0)
+                                {
+                                    selectionTuiles = FALSE;
+                                    placerTuile = TRUE;
+                                }
+                                else
+                                    printf("Selectionner au moins une tuile avant de valider la selection\n");
+                            }
+                            //RECUPERER LA TUILE SELECTIONNEE
                             else
                             {
-                                system("clear");
-                                printf("le plateau n'est pas valide\n");
+                                selectionne = joueurs.js[joueurActuel].chevalet.pile[numTuileChoisis];
+                                ajouter_tuile(&tuilesSelectionnes, selectionne);
+                            }
+                        }
+                        //PLACER LES TUILES SELECTIONNEES
+                        while (placerTuile)
+                        {
+                            system("clear");
+                            affiche_plateau(plateau[0]);
+                            tri_liste(&tuilesSelectionnes);
+                            printf("Tuiles selectionnees : \n");
+                            affiche_liste_tuiles(tuilesSelectionnes);
+                            do
+                            {
+                                choixPlacement = -3;
+                                printf("\nQue voulez-vous faire ?\n");
+                                printf("0. Piochez et passer son tour\n");
+                                printf("1. Refaire sa selection\n");
+                                printf("2. Placer les tuiles sur le plateau\n");
+                                scanf(" %d", &choixPlacement);
+                            } while (choixPlacement < 0 || choixPlacement > 2);
+                            //ARRETE SON TOUR ET PASSER A LA PIOCHE
+                            if (choixPlacement == 0)
+                            {
+                                placerTuile = FALSE;
+                                tour = FALSE;
+                                choixJoueur = 2;
+                            }
+                            //RECOMMENCER LA SELECTION DE TUILE
+                            else if (choixPlacement == 1)
+                            {
+                                placerTuile = FALSE;
+                                selectionTuiles = TRUE;
+                                tuilesSelectionnes.pile[MAX_TUILES];
+                                tuilesSelectionnes.nbTuiles = 0;
+                            }
+                            //PLACER LES TUILES DANS LE PLATEAU
+                            else
+                            {
+                                copie_plateau(copiePlateau[0], plateau[0]);
+                                affiche_plateau(copiePlateau[0]);
+                                do
+                                {
+                                    system("clear");
+                                    affiche_plateau(plateau[0]);
+                                    printf("Tuiles selectionnees : \n");
+                                    affiche_liste_tuiles(tuilesSelectionnes);
+                                    printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
+                                    scanf(" %c", &ligneSource);
+                                    printf("colonne : ");
+                                    scanf(" %d", &colonneSource);
+                                } while (!est_placable(tuilesSelectionnes.nbTuiles, char_to_int(ligneSource), colonneSource));
+                                placer_tuiles(tuilesSelectionnes, copiePlateau[0], char_to_int(ligneSource), colonneSource);
+                                placerTuile = FALSE;
+                                modifPlateau = TRUE;
                             }
                         }
                         //MODIFIER LE PLATEAU
-                        else if (choixModifPlateau == 4)
+                        while (modifPlateau)
                         {
+                            affiche_plateau(copiePlateau[0]);
                             do
                             {
-                                system("clear");
-                                affiche_plateau(copiePlateau[0]);
-                                printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
-                                scanf(" %c", &ligneSource);
-                                printf("colonne : ");
-                                scanf(" %d", &colonneSource);
-                                printf("tuile destination :\nligne : ");
-                                scanf(" %c", &ligneDestination);
-                                printf("colonne : ");
-                                scanf(" %d", &colonneDestination);
-                                if (!intervertion_tuiles(copiePlateau[0], char_to_int(ligneSource), colonneSource, char_to_int(ligneDestination), colonneDestination))
-                                {
-                                    printf("Err: mauvaises positions\n");
-                                }
-                                affiche_plateau(copiePlateau[0]);
-                                printf("Voulez-vous continuer ?\n");
-                                printf("0. Non\n");
-                                printf("1. Oui\n");
+                                choixModifPlateau = -3;
+                                printf("Que voulez-vous faire ?\n");
+                                printf("0. Piochez et passer son tour\n");
+                                printf("1. Refaire sa selection\n");
+                                printf("2. Replacer les tuiles sur le plateau\n");
+                                printf("3. Valider le plateau et passer son tour\n");
+                                printf("4. Modifier le plateau\n");
                                 scanf(" %d", &choixModifPlateau);
-                            } while (choixModifPlateau);
+                            } while (choixPlacement < 0 || choixPlacement > 4);
+                            //ARRETE SON TOUR ET PASSER A LA PIOCHE
+                            if (choixModifPlateau == 0)
+                            {
+                                modifPlateau = FALSE;
+                                tour = FALSE;
+                                choixJoueur = 2;
+                            }
+                            //RECOMMENCER LA SELECTION DE TUILE
+                            else if (choixModifPlateau == 1)
+                            {
+                                modifPlateau = FALSE;
+                                selectionTuiles = TRUE;
+                                tuilesSelectionnes.pile[MAX_TUILES];
+                                tuilesSelectionnes.nbTuiles = 0;
+                            }
+                            //REFAIRE LE PLACEMENT DES TUILES
+                            else if (choixModifPlateau == 2)
+                            {
+                                modifPlateau = FALSE;
+                                selectionTuiles = FALSE;
+                                placerTuile = TRUE;
+                            }
+                            //VALIDER ET TESTER LE PLATEAU
+                            else if (choixModifPlateau == 3)
+                            {
+                                printf("VALIDATION EN COURS\n\n");
+                                if (analyse_plateau(copiePlateau[0]))
+                                {
+                                    copie_plateau(plateau[0], copiePlateau[0]);
+                                    printf("Copie bien passé\n\n");
+                                    mettre_a_jour(&joueurs.js[joueurActuel].chevalet, tuilesSelectionnes);
+                                    printf("Mise a jour du chevalet bien passé\n\n");
+                                    modifPlateau = FALSE;
+                                    tour = FALSE;
+                                }
+                                else
+                                {
+                                    system("clear");
+                                    printf("le plateau n'est pas valide\n");
+                                }
+                            }
+                            //MODIFIER LE PLATEAU
+                            else if (choixModifPlateau == 4)
+                            {
+                                do
+                                {
+                                    system("clear");
+                                    affiche_plateau(copiePlateau[0]);
+                                    printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
+                                    scanf(" %c", &ligneSource);
+                                    printf("colonne : ");
+                                    scanf(" %d", &colonneSource);
+                                    printf("tuile destination :\nligne : ");
+                                    scanf(" %c", &ligneDestination);
+                                    printf("colonne : ");
+                                    scanf(" %d", &colonneDestination);
+                                    if (!intervertion_tuiles(copiePlateau[0], char_to_int(ligneSource), colonneSource, char_to_int(ligneDestination), colonneDestination))
+                                    {
+                                        printf("Err: mauvaises positions\n");
+                                    }
+                                    affiche_plateau(copiePlateau[0]);
+                                    printf("Voulez-vous continuer ?\n");
+                                    printf("0. Non\n");
+                                    printf("1. Oui\n");
+                                    scanf(" %d", &choixModifPlateau);
+                                } while (choixModifPlateau);
+                            }
                         }
                     }
                 }
             }
-
+            else {
+                system("clear");
+                printf("TOUR DE l'IA\n");
+                affiche_joueur(joueurs.js[joueurActuel]);
+                affiche_plateau(plateau[0]);
+                choixJoueur = action_tour_ia(joueurs.js[joueurActuel]);
+                sleep(50);
+            }
             //PIOCHER
             if (choixJoueur == 2)
             {

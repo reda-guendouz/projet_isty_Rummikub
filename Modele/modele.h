@@ -89,7 +89,7 @@ LISTE_JOUEURS joueurs;
 /*
 Initialise le tableau global de type JOUEUR avec "nbJoueurs" joueurs
 */
-void init_joueurs(int nbJoueurs);
+void init_joueurs(int nbJoueurs, int nbJoueursH);
 
 /*
 affiche le numero du joueur, son score ainsi que son chevalet
@@ -154,6 +154,13 @@ void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
 void score_fin_partie(int indiceJoueurGagnant);
 
 int analyse_plateau(TUILE *plateau);
+
+
+
+/*
+Joue le tour de l'ia
+*/
+int action_tour_ia(JOUEUR j);
 
 /******
  * DIVERS

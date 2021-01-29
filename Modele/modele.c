@@ -13,7 +13,7 @@ void affiche_tuile(TUILE tuile, int numTuiles)
         switch (tuile.clr)
         {
         case NOIR:
-            printf("Tuile n°%d : %d NOIR\n", numTuiles, tuile.chiffre);
+            printf("Tuile n°%d :  %d NOIR\n", numTuiles, tuile.chiffre);
             break;
         case ORANGE:
             printf("Tuile n°%d : " ORA " %d ORANGE" RESET "\n", numTuiles, tuile.chiffre);
@@ -47,7 +47,7 @@ int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
  * Joueur *
  * *******/
 
-void init_joueurs(int nbJoueurs)
+void init_joueurs(int nbJoueurs, int nbJoueursH)
 {
     joueurs.nbJs = nbJoueurs;
     int i, j, tmp;
@@ -55,8 +55,15 @@ void init_joueurs(int nbJoueurs)
     {
         tmp = i + 1;
         joueurs.js[i].numJoueur = tmp;
-        printf("Entrez le pseudonyme du joueur %d : ", tmp);
-        scanf(" %s", joueurs.js[i].pseudo);
+        if (nbJoueursH > 0) {
+            printf("Entrez le pseudonyme du joueur %d : ", tmp);
+            scanf(" %s", joueurs.js[i].pseudo);
+            nbJoueursH--;
+        }
+        else {
+            printf("IA 1\n");
+            strcpy(joueurs.js[i].pseudo, "IA"); 
+        }  
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
@@ -467,4 +474,11 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
     int i;
     for (i = 0; i < tuilesSelectionnees.nbTuiles; i++)
         supprime_liste(chevalet, tuilesSelectionnees.pile[i]);
+}
+
+
+int action_tour_ia(JOUEUR ia)
+{
+
+    return 2;
 }
