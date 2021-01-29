@@ -75,7 +75,7 @@
 	/// Dessine un rectangle rempli
 	void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color);
 
-	/// affiche une image
+	/// charge une image sans l'afficher (besoin d'un affiche_all() pour la voir)
 	void load_img(char *fic,POINT emplacement, POINT dimensions);
 
 	void affiche_menu_debut();

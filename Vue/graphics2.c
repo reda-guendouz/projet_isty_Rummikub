@@ -32,8 +32,9 @@ void init_graphics()
 			printf("Impossible de charger la librairie SDL: %s\n", SDL_GetError());
 			exit(EXIT_FAILURE);
 		}
-    //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie",
-	SDL_CreateWindowAndRenderer(WIDTH, HEIGHT, SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL, &screen, &renderer);
+    //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie"
+	screen=SDL_CreateWindow("TITLE",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WIDTH,HEIGHT,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+    renderer = SDL_CreateRenderer(screen,-1,SDL_RENDERER_ACCELERATED);
 	if ( screen == NULL )
 		{
 		fprintf(stderr, "Impossible de passer en %dx%d: %s\n", WIDTH, HEIGHT, SDL_GetError());
@@ -239,14 +240,12 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 
 void load_img(char *fic,POINT emplacement, POINT dimensions){
 	IMG_Init(IMG_INIT_PNG);
-	int png1 = dimensions.x; int png2 = dimensions.y;
+	int png1 = 5; int png2 = 5;
 	SDL_Surface *image = IMG_Load(fic);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
 	SDL_QueryTexture(texture,NULL,NULL,&png1,&png2);		
 	SDL_Rect position = {emplacement.x, emplacement.y, png1, png2};
 	SDL_RenderCopy(renderer, texture, NULL, &position);
-	SDL_RenderPresent(renderer);
-	if (SDL_AFFICHE_AUTO) affiche_all();
 	SDL_DestroyTexture(texture);
 	SDL_FreeSurface(image);
 }
