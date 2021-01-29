@@ -73,26 +73,32 @@
 void init_graphics()
 	{
 	// Initialisation d'une taille voulu
-	WIDTH  = 1000;
-	HEIGHT = 1000;
+	WIDTH  = 1700;
+	HEIGHT = 900;
 
-	// Initialisation de la SDL_surface
-	SDL_Init(SDL_INIT_VIDEO);
+	/// Initialisation de la SDL_surface (variable 1.1)
+	if(SDL_Init(SDL_INIT_VIDEO) != 0)
+		{
+			printf("Impossible de charger la librairie SDL: %s", SDL_GetError());
+			exit(EXIT_FAILURE);
+		}
 
 	/// met en place le mode video avec la longueur, la largeur et le nombre de pixel donnée
-	/// SDL_HWSURFACE choisit le processeur graphique par défaut
-	/// SDL_DOUBLEBUF choisit la carte graphique
+	/// SDL_HWSURFACE permet d'utiliser la carte graphique
+	/// SDL_DOUBLEBUF permet d'optimiser l'utilisation de la carte graphique
+	/// SDL_RESIZABLE permet au joueur de modifier la resolution de la fenetre
+	/// ( avec la souris en cliquant sur les cotes par exemple ) 
 	SDL_screen = SDL_SetVideoMode(WIDTH, HEIGHT, 32, SDL_HWSURFACE|SDL_DOUBLEBUF|SDL_RESIZABLE);
 	if ( SDL_screen == NULL )
 		{
 		fprintf(stderr, "Impossible de passer en %dx%d en 32 bits: %s\n", WIDTH, HEIGHT, SDL_GetError());
-		exit(1);
+		exit(EXIT_FAILURE);
 		}
 
 	/// a voir avec les pseudos des joueurs
 	// Autorise la prise en compte de repetition lors d'un appui
 	// long sur une touche
-	SDL_EnableKeyRepeat(1,0);
+	///////SDL_EnableKeyRepeat(1,0);
 
 	// Le titre de la fenetre
 	SDL_WM_SetCaption("Rummikub",NULL);
@@ -155,8 +161,8 @@ COULEUR couleur_RGB(int r, int g, int b)
 	return C;
 	}
 
-void souris_visible()  {SDL_ShowCursor(1);}
-void souris_invisible(){SDL_ShowCursor(0);}
+void souris_visible()  {SDL_ShowCursor(SDL_ENABLE);}
+void souris_invisible(){SDL_ShowCursor(SDL_DISABLE);}
 
 // #######################
 // 3. GESTION D'�V�NEMENTS
@@ -175,23 +181,24 @@ POINT get_arrow()
 	POINT dep;
 	dep.x = dep.y = 0;
 	SDL_Event event;
-	while (SDL_PollEvent(&event))
+	while (SDL_WaitEvent(&event))
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
+		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		/* Si l'utilisateur a appuy� sur une touche */
 		if (event.type == SDL_KEYDOWN)
 			{
 			switch (event.key.keysym.sym)
 					{
-						case SDLK_ESCAPE : exit(0);
-						case SDLK_LEFT   : (dep.x) -= MINDEP; break;
-						case SDLK_RIGHT  : (dep.x) += MINDEP; break;
-						case SDLK_UP     : (dep.y) += MINDEP; break;
-						case SDLK_DOWN   : (dep.y) -= MINDEP; break;
+						case SDLK_ESCAPE : exit(EXIT_SUCCESS);
+						case SDLK_LEFT   : (dep.x) -= MINDEP; printf("fleche gauche\n"); break;
+						case SDLK_RIGHT  : (dep.x) += MINDEP; printf("fleche droite\n"); break;
+						case SDLK_UP     : (dep.y) += MINDEP; printf("fleche haut\n"); break;
+						case SDLK_DOWN   : (dep.y) -= MINDEP; printf("fleche du bas\n"); break;
 						default          : break;
 					}
+			break;
 			}
 		}
 	return dep;
@@ -244,7 +251,7 @@ void wait_escape()
 	while (SDL_WaitEvent(&event) && display)
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
+		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		/* Si l'utilisateur a appuy� sur une touche */
 		if (event.type == SDL_KEYDOWN)
@@ -312,7 +319,7 @@ POINT wait_clic()
 			fflush(stdout);
 			}
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
-		if (event.type == SDL_QUIT) exit(0);
+		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		}
 #ifdef EN_LOCAL
@@ -460,7 +467,7 @@ void draw_line(POINT p1, POINT p2, COULEUR color)
 			add_pix(i,j,color);
 			}
 		}
-	if (SDL_AFFICHE_AUTO) affiche_all();
+		if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 	// 4.4 Dessine un rectangle non rempli
@@ -974,4 +981,15 @@ int distance(POINT P1, POINT P2)
 	int d;
 	d = (P1.x-P2.x)*(P1.x-P2.x) + (P1.y-P2.y)*(P1.y-P2.y);
 	return (int)(sqrt(d));
+	}
+
+
+/// #########
+/// 10. DIVERS v2
+/// #########
+
+	/// 10.1 Permet d'avoir la hauteur et la largeur de la surface
+	void taille(int* h,int* w){
+		*h = SDL_screen->h;
+		*w = SDL_screen->w;
 	}
