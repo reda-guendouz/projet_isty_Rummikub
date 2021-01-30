@@ -78,6 +78,15 @@
 	/// charge une image sans l'afficher (besoin d'un affiche_all() pour la voir)
 	void load_img(char *fic,POINT emplacement, POINT dimensions);
 
+	/*
+	* Affiche le premier menu du jeu !
+	* dimensions premier rectangle  : 90x320 - 640x450
+	* dimensions deuxieme rectangle : 790x420 - 1410x550
+	*/
 	void affiche_menu_debut();
 
+	void fill_screen(COULEUR clr);
+
 	void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR C, char *ttf_file);
+
+	int dans_zone(POINT clic, POINT p1, POINT p2);

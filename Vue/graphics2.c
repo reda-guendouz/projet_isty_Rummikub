@@ -23,8 +23,8 @@ int verdana_ok = FALSE;
 void init_graphics()
 	{
 	/// Initialisation d'une taille voulu
-	WIDTH  = 1700;
-	HEIGHT = 900;
+	WIDTH  = 1450;
+	HEIGHT = 750;
 
 	/// Initialisation de la SDL_surface (variable 1.1)
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -164,7 +164,7 @@ void wait_escape()
 	POINT p;
 	p.x = WIDTH/2 - 170;
 	p.y = HEIGHT - 25;
-	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
+	affiche_texte("Appuyer sur Echap pour terminer",20,p,noir);
 	//affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
@@ -201,19 +201,19 @@ POINT wait_clic()
 			{
 			encore=0;
 			P.x = event.button.x;
-			P.y = HEIGHT-event.button.y;
+			P.y = event.button.y;
 			}
-		/* Si l'utilisateur d�place la souris */
+		/* Si l'utilisateur deplace la souris */
 		if (event.type == SDL_MOUSEMOTION)
 			{
-			printf("%cEn attente de clic ... %4d %4d           %c",13,event.motion.x,HEIGHT - event.motion.y,13);
+			printf("%cEn attente de clic ... %4d %4d           %c",13,event.motion.x,event.motion.y,13);
 			fflush(stdout);
 			}
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
 		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		}
-	printf("%cClic en %4d %4d                                           \n",13,P.x,P.y);
+	printf("%cClic en %4d %4d\n",13,P.x,P.y);
 	___MOUSE_POSITION = P;
 	return P;
 	}
@@ -240,9 +240,9 @@ void draw_pixel(POINT p, COULEUR color)
 
 void draw_line(POINT p1, POINT p2, COULEUR color)
 	{
-	int rrr = ((color >> 16) & 0xFF) / 255.0;
-	int ggg = ((color >> 8) & 0xFF) / 255.0;
-	int bbb = ((color) & 0xFF) / 255.0;
+	int rrr = ((color >> 16) & 0xFF);
+	int ggg = ((color >> 8) & 0xFF);
+	int bbb = ((color) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_RenderDrawLine(renderer,p1.x,p1.y,p2.x,p2.y);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
@@ -284,8 +284,37 @@ void load_img(char *fic,POINT emplacement, POINT dimensions){
 	SDL_FreeSurface(image);
 }
 
-void affiche_menu_debut(){
+void fill_screen(COULEUR clr){
+	int rrr = ((clr >> 16) & 0xFF);
+	int ggg = ((clr >> 8) & 0xFF);
+	int bbb = ((clr) & 0xFF);
+	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_RenderClear(renderer);
-	POINT rect1,rect2;
+	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+}
 
+void affiche_menu_debut(){
+	fill_screen(cyan);
+
+    POINT welcomeText,RecEmplacement,RecDimesions;
+    welcomeText.y=25; welcomeText.x=400;
+    affiche_texte_special("RUMMIKUB",130,welcomeText,vertolive,"assets/Cartoon.ttf");
+    welcomeText.y=400; welcomeText.x=680;
+    affiche_texte("OR",50,welcomeText,noir);
+    RecEmplacement.x = 90; RecEmplacement.y = 320;
+    RecDimesions.x = 550; RecDimesions.y = 130;
+    draw_fill_rectangle(RecEmplacement,RecDimesions,jaune);
+    RecEmplacement.x += 30; RecEmplacement.y += 15;
+    affiche_texte_special("Player(s) VS IA",70,RecEmplacement,noir,"assets/Poppins.ttf");
+    RecEmplacement.x = 790; RecEmplacement.y = 420;
+    RecDimesions.x = 620; RecDimesions.y = 130;
+	draw_fill_rectangle(RecEmplacement,RecDimesions,jaune);
+    RecEmplacement.x += 30; RecEmplacement.y += 15;
+    affiche_texte_special("PVP FIGHTOUUU !",70,RecEmplacement,noir,"assets/Poppins.ttf");
+}
+
+int dans_zone(POINT clic, POINT p1, POINT p2){
+	if (clic.x > p2.x || clic.x < p1.x || clic.y > p2.y || clic.y < p1.y )
+		return false;
+	return true;
 }
