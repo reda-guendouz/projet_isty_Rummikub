@@ -78,7 +78,7 @@
 	void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color);
 
 	/// charge une image sans l'afficher (besoin d'un affiche_all() pour la voir)
-	void load_img(char *fic,POINT emplacement, POINT dimensions);
+	void load_img(char *fic,POINT emplacement);
 
 	void affiche_menu_debut();
 
@@ -86,4 +86,5 @@
 	void transforme_tuile_en_path(TUILE t, char *p);
 	void affiche_plateau_graphique();
 
-	
+	void affiche_joueur_graphique(int num_joueur);
+

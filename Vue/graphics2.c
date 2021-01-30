@@ -27,8 +27,8 @@ int verdana_ok = FALSE;
 void init_graphics()
 	{
 	/// Initialisation d'une taille voulu
-	WIDTH  = 1700;
-	HEIGHT = 900;
+	WIDTH  = 1500;
+	HEIGHT = 700;
 
 	/// Initialisation de la SDL_surface (variable 1.1)
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -99,10 +99,13 @@ COULEUR couleur_RGB(int r, int g, int b)
 /// si ne fonctionne pas, mettre position = {0, 0, X, X}
 void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	int texteW = 0;   int texteH = 0;
-	int texteX = p.x; int texteY = HEIGHT - p.y;
+	int texteX = p.x; int texteY = p.y;
 	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color"
-	SDL_Color color = {255,255,255};
-	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+	int rrr = ((C >> 16) & 0xFF);
+	int ggg = ((C >> 8) & 0xFF);
+	int bbb = ((C) & 0xFF);
+	SDL_Color color = {rrr,ggg,bbb};
+	//SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	SDL_Surface *texte = NULL;
 	TTF_Font *police;
 
@@ -133,7 +136,7 @@ void wait_escape()
 	SDL_Event event;
 	POINT p;
 	p.x = WIDTH/2 - 170;
-	p.y = 25;
+	p.y = HEIGHT - 25;
 	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
 	affiche_all();
 	while (SDL_WaitEvent(&event) && display)
@@ -171,12 +174,12 @@ POINT wait_clic()
 			{
 			encore=0;
 			P.x = event.button.x;
-			P.y = HEIGHT-event.button.y;
+			P.y = event.button.y;
 			}
 		/* Si l'utilisateur d�place la souris */
 		if (event.type == SDL_MOUSEMOTION)
 			{
-			printf("%cEn attente de clic ... %4d %4d           %c",13,event.motion.x,HEIGHT - event.motion.y,13);
+			printf("%cEn attente de clic ... %4d %4d           %c",13,event.motion.x,event.motion.y,13);
 			fflush(stdout);
 			}
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
@@ -243,7 +246,7 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
-void load_img(char *fic,POINT emplacement, POINT dimensions){
+void load_img(char *fic,POINT emplacement){
 	int png1 = 5; int png2 = 5;
 	SDL_Surface *image = IMG_Load(fic);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -292,41 +295,63 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
             break;
         }
     int taille;
-    if(t.chiffre<10)
-		taille=2;
-	else
-		taille = 3;
-	char numero[taille];
-	converti_int_en_str(t.chiffre,numero);
-    strcat(p,numero);
+	if(t.chiffre==-1)
+		strcat(p,"jo");
+    else{
+		if(t.chiffre<10)
+			taille=2;
+		else
+			taille = 3;
+		char numero[taille];
+		converti_int_en_str(t.chiffre,numero);
+		strcat(p,numero);
+	} 
     strcat(p,".png\0");
     strcpy(p2,p);
 }
 
 void affiche_plateau_graphique() {
-	POINT l1,l2;
-    l1.x = 75; l2.x = 0;
-    l1.y = 75; l2.y = 0;
+	POINT l1;
+    l1.x = 340;
+    l1.y = 10;
 	int i,j;
 	TUILE t;
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-			if (plateau[i][j].chiffre == -1)
-                printf(" JK ");
-            else
-            {
 				t = plateau[i][j];
 				char chaine[23];
     			transforme_tuile_en_path(t,chaine);
-				printf("%s\n",chaine);
-				load_img(chaine,l1,l2);
-				l1.x+=50;
-			}
+				load_img(chaine,l1);
+				l1.x+=38;
     	}
-		l1.x=75;
-        l1.y+=75;
+		l1.x=340;
+        l1.y+=50;
+	}
+}
+
+void affiche_joueur_graphique(int num_joueur) {
+	POINT p;
+	p.x=75;
+	p.y=600;
+
+	affiche_texte(joueurs.js[num_joueur].pseudo,20,p,blanc);
+
+	POINT l1;
+    l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
+	//printf("%d\n",l1.x);
+    l1.y = 600;
+	int i;
+	TUILE t;
+
+	for (i = 0; i < joueurs.js[num_joueur].chevalet.nbTuiles ; i++)
+    {
+		t = joueurs.js[num_joueur].chevalet.pile[i];
+		char chaine[23];
+		transforme_tuile_en_path(t,chaine);
+		load_img(chaine,l1);
+		l1.x+=44;
 	}
 }
 

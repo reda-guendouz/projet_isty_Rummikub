@@ -8,8 +8,12 @@ int main(int argc, char const *argv[])
 
     affiche_auto_off();
 
-    affiche_plateau(plateau);
+    
+    affiche_plateau(plateau[0]);
     affiche_plateau_graphique();
+    
+
+    affiche_joueur_graphique(1);
     
 
     affiche_all();
