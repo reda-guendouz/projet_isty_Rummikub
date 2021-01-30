@@ -90,3 +90,5 @@
 	void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR C, char *ttf_file);
 
 	int dans_zone(POINT clic, POINT p1, POINT p2);
+
+	void affiche_inscription();

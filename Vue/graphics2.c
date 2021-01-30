@@ -164,7 +164,7 @@ void wait_escape()
 	POINT p;
 	p.x = WIDTH/2 - 170;
 	p.y = HEIGHT - 25;
-	affiche_texte("Appuyer sur Echap pour terminer",20,p,noir);
+	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
 	//affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
@@ -317,4 +317,43 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 	if (clic.x > p2.x || clic.x < p1.x || clic.y > p2.y || clic.y < p1.y )
 		return false;
 	return true;
+}
+
+void affiche_inscription(){
+	fill_screen(noir);
+	BOOL done=false;
+	char text2[80]="";
+    POINT text,rec1,rec2;
+    text.y=25; text.x=400;
+    affiche_texte("Inscrivez le nom du joueur X, et cliquez pour valider",20,text,blanc);
+	text.y=400; text.x=400;
+	SDL_StartTextInput();
+    while (!done) {
+        SDL_Event event;
+        if (SDL_PollEvent(&event)) {
+            switch (event.type) {
+                case SDL_MOUSEBUTTONDOWN:
+					printf("ok\n");
+                    done = true;
+                    break;
+                case SDL_TEXTINPUT:
+                    /* Add new text onto the end of our text */
+					printf("text input\n");
+                    strcat(text2, event.text.text);
+    				affiche_texte(text2,50,text,blanc);
+                    break;
+				case SDL_QUIT:
+					exit(EXIT_SUCCESS);
+					/*
+                case SDL_TEXTEDITING:
+                    strcpy(composition, event.edit.text);
+                    cursor = event.edit.start;
+                    selection_len = event.edit.length;
+                    break;*/
+            }
+        }
+    }
+	SDL_StopTextInput();
+	printf("fin_boucle\n");
+	return;
 }

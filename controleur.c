@@ -19,6 +19,11 @@ int main(int argc, char const *argv[])
         printf("LETS GO WITH OUR AI !\n");
     else
         printf("WE GO FOR FIGHTOUU !\n");    
+    
+    affiche_inscription();
+
+    printf("fin de inscription\n");
+
 
     wait_escape();
     return 0;
