@@ -26,16 +26,28 @@ int main(void)
         {
             printf("Groupe : 8 Rummikub \n");
             printf("1. Lancer un partie \n");
-            printf("2. Quitter le jeu\n");
+            printf("2. Voir Tableau Score \n");
+            printf("3. Quitter le jeu\n");
             scanf(" %d", &jouer);
-        } while (jouer != 1 && jouer != 2);
+        } while (jouer < 1 && jouer > 3);
         system("clear");
         //SORTIR DU JEU
-        if (jouer == 2)
+        if (jouer == 3)
             jeu = FALSE;
-
+        else if (jouer == 2){
+            do
+            {
+                affiche_score();
+                printf("\n");
+                printf("1. Lancer un partie \n");
+                printf("2. Quitter le jeu\n");
+                scanf(" %d", &jouer);
+            } while (jouer != 1 && jouer != 2);
+            if (jouer == 2)
+                jeu = FALSE;
+        }
         //LANCEMENT D'UNE PARTIE
-        else
+        if(jouer == 1)
         {
             joueurActuel = 0;
             partie = TRUE;

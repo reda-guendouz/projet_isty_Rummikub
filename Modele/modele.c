@@ -420,6 +420,65 @@ void score_fin_partie(int indiceJoueurGagnant)
     for (i = 0; i < joueurs.nbJs; i++)
     {
         joueurs.scores[i] += score[i];
+        ecrire_score(joueurs.js[i].pseudo,score[i]);
+    }
+}
+
+void ecrire_score(char * nomjoueur,int score){
+
+    time_t current_time;
+    char* c_time_string;
+    current_time = time(NULL);
+    c_time_string = ctime(&current_time);
+
+    FILE* fichier = NULL;
+
+    char chaine[500] = "";
+    char chaine_score[500] = "";
+
+    fichier = fopen("score.txt", "a");
+
+    if (fichier != NULL){
+        // On peut lire et écrire dans le fichier
+        strcat(chaine,"Date de la partie : ");
+        strcat(chaine,c_time_string);
+
+        strcat(chaine,"Joueur : ");
+
+        sprintf(chaine_score,"Score : %d",score);
+
+        strcat(chaine,nomjoueur);
+        strcat(chaine,"\n");
+
+        strcat(chaine,chaine_score);
+        strcat(chaine,"\n");
+
+        fputs(chaine,fichier);
+        
+        fclose(fichier);
+    }
+    else{
+        // On affiche un message d'erreur si on veut
+        printf("Impossible d'ouvrir le fichier score.txt en ecriture \n");
+    }
+}
+
+void affiche_score(){
+
+    FILE* fichier = NULL;
+    char chaine[500] = "";
+    fichier = fopen("score.txt", "r");
+
+    if (fichier != NULL){
+        // On peut lire et écrire dans le fichier
+        while (fgets(chaine,500,fichier) != NULL){ // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
+            printf("%s",chaine);
+        }
+        fclose(fichier);
+    }
+    else{
+        // On affiche un message d'erreur si on veut
+        printf("Impossible d'ouvrir le fichier score.txt en lecture \n");
     }
 }
 
