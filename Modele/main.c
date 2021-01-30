@@ -273,7 +273,7 @@ int main(void)
                 affiche_joueur(joueurs.js[joueurActuel]);
                 affiche_plateau(plateau[0]);
                 choixJoueur = action_tour_ia(joueurs.js[joueurActuel]);
-                sleep(50);
+                sleep(5);
             }
             //PIOCHER
             if (choixJoueur == 2)
