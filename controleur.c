@@ -1,9 +1,9 @@
 #include "Vue/graphics2.h"
-#include "Modele/modele.h"
 
 int main(int argc, char const *argv[])
 {
     POINT rec1,rec2,rec3,rec4,clic;
+    char pseudo[MAX_PSEUDONYME];
     init_graphics();
 
     affiche_menu_debut();
@@ -20,11 +20,9 @@ int main(int argc, char const *argv[])
     else
         printf("WE GO FOR FIGHTOUU !\n");    
     
-    affiche_inscription();
+    affiche_inscription(pseudo);
 
-    printf("fin de inscription\n");
-
-
+    fill_screen(noir);
     wait_escape();
     return 0;
 }

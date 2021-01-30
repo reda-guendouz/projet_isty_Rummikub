@@ -107,7 +107,7 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 
 	police = TTF_OpenFont(POLICE_NAME, taille);
 	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
-	if (police) texte = TTF_RenderText_Blended(police, texte_affichable, color);
+	if (police) texte = TTF_RenderUTF8_Blended(police, texte_affichable, color);
 	if (texte)  {
 			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
 			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
@@ -139,7 +139,7 @@ void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR 
 
 	police = TTF_OpenFont(ttf_file, taille);
 	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
-	if (police) texte = TTF_RenderText_Blended(police, texte_affichable, color);
+	if (police) texte = TTF_RenderUTF8_Blended(police, texte_affichable, color);
 	if (texte)  {
 			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
 			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
@@ -319,41 +319,87 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 	return true;
 }
 
-void affiche_inscription(){
-	fill_screen(noir);
+
+void affiche_inscription(char *pseudoJoueur){
+	POINT l;
+	l.x=0;l.y=0;
+	load_img("assets/images/bg.png",l,l);
+
 	BOOL done=false;
-	char text2[80]="";
-    POINT text,rec1,rec2;
-    text.y=25; text.x=400;
-    affiche_texte("Inscrivez le nom du joueur X, et cliquez pour valider",20,text,blanc);
-	text.y=400; text.x=400;
+    SDL_Event event;
+	char text[80]="";
+    POINT textP,rec1,rec2,rec3,rec4,err,clic;
+
+	err.x=30; err.y=HEIGHT-50;
+    textP.y=25; textP.x=350;
+    affiche_texte("Inscrivez le nom du joueur X",25,textP,noir);
+	rec1.x=100; rec1.y=400;
+	rec2.x=170; rec2.y=70;
+	draw_rectangle(rec1,rec2,blanc);
+	rec1.x+=10; rec1.y+=10;
+	affiche_texte("Validez",40,rec1,blanc);
+
+	rec3.x=100; rec3.y=490;
+	draw_rectangle(rec3,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Refaire",40,rec3,blanc);
+
+	// reajustement pour les "dans_zone"
+	rec1.x-=10; rec1.y-=10;
+	rec4.x=rec2.x+rec3.x; rec4.y=rec2.y+rec3.y;
+	rec2.x+=rec1.x; rec2.y+=rec1.y;
+
+	textP.y=400; textP.x=400;
 	SDL_StartTextInput();
     while (!done) {
-        SDL_Event event;
         if (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_MOUSEBUTTONDOWN:
-					printf("ok\n");
-                    done = true;
+					if (event.button.button == SDL_BUTTON_LEFT)
+					{
+						clic.x = event.button.x;
+						clic.y = event.button.y;
+						if (dans_zone(clic,rec1,rec2))
+							done = true;
+						else if(dans_zone(clic,rec3,rec4))
+						{
+							strcpy(text,"");
+							load_img("assets/images/bg.png",l,l);
+							textP.y=25; textP.x=300;
+							affiche_texte("Inscrivez le nom du joueur X",25,textP,noir);
+							textP.y=400; textP.x=400;
+							rec1.x=100; rec1.y=400;
+							rec2.x=170; rec2.y=70;
+							draw_rectangle(rec1,rec2,blanc);
+							rec1.x+=10; rec1.y+=10;
+							affiche_texte("Validez",40,rec1,blanc);
+
+							rec3.x=100; rec3.y=490;
+							draw_rectangle(rec3,rec2,blanc);
+							rec3.x+=10; rec3.y+=10;
+							affiche_texte("Refaire",40,rec3,blanc);
+
+							// reajustement pour les "dans_zone"
+							rec1.x-=10; rec1.y-=10;
+							rec4.x=rec2.x+rec3.x; rec4.y=rec2.y+rec3.y;
+							rec2.x+=rec1.x; rec2.y+=rec1.y;
+						}
+						
+					}
                     break;
                 case SDL_TEXTINPUT:
                     /* Add new text onto the end of our text */
-					printf("text input\n");
-                    strcat(text2, event.text.text);
-    				affiche_texte(text2,50,text,blanc);
+					if (strlen(text) > MAX_PSEUDONYME-1)
+    					affiche_texte("Limite de caractères atteinte !",30,err,rouge);
+					else					
+                    	strcat(text, event.text.text);
+    				affiche_texte(text,50,textP,blanc);
                     break;
 				case SDL_QUIT:
 					exit(EXIT_SUCCESS);
-					/*
-                case SDL_TEXTEDITING:
-                    strcpy(composition, event.edit.text);
-                    cursor = event.edit.start;
-                    selection_len = event.edit.length;
-                    break;*/
             }
         }
     }
 	SDL_StopTextInput();
-	printf("fin_boucle\n");
-	return;
+	strcpy(pseudoJoueur,text);
 }

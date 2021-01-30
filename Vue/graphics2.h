@@ -10,6 +10,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "couleur.h" // Constantes de couleur
+#include "../Modele/modele.h"
 
 	//  type POINT
 	typedef struct point {int x,y;} POINT;
@@ -91,4 +92,4 @@
 
 	int dans_zone(POINT clic, POINT p1, POINT p2);
 
-	void affiche_inscription();
+	void affiche_inscription(char *pseudoJoueur);
