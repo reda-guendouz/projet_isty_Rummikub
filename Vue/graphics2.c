@@ -366,6 +366,7 @@ void inscription(char *pseudoJoueur){
 	SDL_StartTextInput();
     while (!done) {
         if (SDL_PollEvent(&event)) {
+			// case a faire pour plus tard : case SDL_DELETE
             switch (event.type) {
                 case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == SDL_BUTTON_LEFT)
@@ -382,7 +383,6 @@ void inscription(char *pseudoJoueur){
 					}
                     break;
                 case SDL_TEXTINPUT:
-                    /* Add new text onto the end of our text */
 					if (strlen(text) > MAX_PSEUDONYME-1)
     					affiche_texte("Limite de caractères atteinte !",30,err,rouge);
 					else					

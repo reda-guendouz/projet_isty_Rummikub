@@ -21,7 +21,6 @@ int main(int argc, char const *argv[])
         printf("WE GO FOR FIGHTOUU !\n");    
     
     inscription(pseudo);
-
     fill_screen(noir);
     wait_escape();
     return 0;
