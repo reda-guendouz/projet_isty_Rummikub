@@ -321,9 +321,7 @@ void affiche_plateau_graphique() {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
 				t = plateau[i][j];
-				char chaine[23];
-    			transforme_tuile_en_path(t,chaine);
-				load_img(chaine,l1);
+				affiche_tuile_graphique(t,l1);
 				l1.x+=38;
     	}
 		l1.x=340;
@@ -348,12 +346,13 @@ void affiche_joueur_graphique(int num_joueur) {
 	for (i = 0; i < joueurs.js[num_joueur].chevalet.nbTuiles ; i++)
     {
 		t = joueurs.js[num_joueur].chevalet.pile[i];
-		char chaine[23];
-		transforme_tuile_en_path(t,chaine);
-		load_img(chaine,l1);
+		affiche_tuile_graphique(t,l1);
 		l1.x+=44;
 	}
 }
 
-
-
+void affiche_tuile_graphique(TUILE t,POINT p) {
+	char chaine[23];
+	transforme_tuile_en_path(t,chaine);
+	load_img(chaine,p);
+}

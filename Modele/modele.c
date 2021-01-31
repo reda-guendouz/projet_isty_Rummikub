@@ -165,10 +165,12 @@ void affiche_plateau(TUILE *plateau_a_afficher)
         printf("%c|", lettre);
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
+            // TEST AFFICHAGE
             TUILE t;
-            t.chiffre = -1;
+            t.chiffre = 10;
             t.clr = NOIR;
             plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)] = t;
+            //
             if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre == 0 && plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].clr == NOIR)
                 printf("    ");
             else if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre == -1)

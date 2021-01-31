@@ -88,3 +88,5 @@
 
 	void affiche_joueur_graphique(int num_joueur);
 
+	void affiche_tuile_graphique(TUILE t,POINT p);
+
