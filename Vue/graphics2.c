@@ -1,5 +1,9 @@
 #include "police.h"
 #include "graphics2.h"
+
+
+
+
 /// previously here : #ifdef SDL_ttf_OK
 
 #define POLICE_NAME "assets/verdana.ttf"
@@ -23,8 +27,8 @@ int verdana_ok = FALSE;
 void init_graphics()
 	{
 	/// Initialisation d'une taille voulu
-	WIDTH  = 1450;
-	HEIGHT = 750;
+	WIDTH  = 1500;
+	HEIGHT = 700;
 
 	/// Initialisation de la SDL_surface (variable 1.1)
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -96,12 +100,12 @@ COULEUR couleur_RGB(int r, int g, int b)
 void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	int texteW = 0;   int texteH = 0;
 	int texteX = p.x; int texteY = p.y;
-	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color".
+	/// Couleur hexadecimal en uint32 "C" to Couleur rgb "color"
 	int rrr = ((C >> 16) & 0xFF);
 	int ggg = ((C >> 8) & 0xFF);
-	int bbb = ((C ) & 0xFF);
+	int bbb = ((C) & 0xFF);
 	SDL_Color color = {rrr,ggg,bbb};
-	//SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
+	//SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	SDL_Surface *texte = NULL;
 	TTF_Font *police;
 
@@ -273,7 +277,7 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
-void load_img(char *fic,POINT emplacement, POINT dimensions){
+void load_img(char *fic,POINT emplacement){
 	int png1 = 5; int png2 = 5;
 	SDL_Surface *image = IMG_Load(fic);
 	SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, image);
@@ -397,4 +401,101 @@ void inscription(char *pseudoJoueur){
     }
 	SDL_StopTextInput();
 	strcpy(pseudoJoueur,text);
+}
+	//POINT rect1,rect2;
+}
+
+void converti_int_en_str(int nb, char *p)
+{
+	int unite = nb%10;
+	if(nb<10) {
+		p[0] = unite+'0';
+		p[1] = '\0';
+	}
+	else {
+		p[0] = 1 + '0';
+		p[1] = unite+'0';
+		p[2] = '\0';
+	}
+}
+
+void transforme_tuile_en_path(TUILE t,char *p2) {
+    char p[23];
+    strcpy(p,"assets/Tuiles/");
+    switch (t.clr)
+        {
+        case NOIR:
+            strcat(p,"N/");
+            break;
+        case ORANGE:
+            strcat(p,"O/");
+            break;
+        case ROUGE:
+            strcat(p,"R/");
+            break;
+        case BLEU:
+            strcat(p,"B/");
+            break;
+        }
+    int taille;
+	if(t.chiffre==-1)
+		strcat(p,"jo");
+    else{
+		if(t.chiffre<10)
+			taille=2;
+		else
+			taille = 3;
+		char numero[taille];
+		converti_int_en_str(t.chiffre,numero);
+		strcat(p,numero);
+	} 
+    strcat(p,".png\0");
+    strcpy(p2,p);
+}
+
+void affiche_plateau_graphique() {
+	POINT l1;
+    l1.x = 340;
+    l1.y = 10;
+	int i,j;
+	TUILE t;
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+				t = plateau[i][j];
+				affiche_tuile_graphique(t,l1);
+				l1.x+=38;
+    	}
+		l1.x=340;
+        l1.y+=50;
+	}
+}
+
+void affiche_joueur_graphique(int num_joueur) {
+	POINT p;
+	p.x=75;
+	p.y=600;
+
+	affiche_texte(joueurs.js[num_joueur].pseudo,20,p,blanc);
+
+	POINT l1;
+    l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
+	//printf("%d\n",l1.x);
+    l1.y = 600;
+	int i;
+	TUILE t;
+
+	for (i = 0; i < joueurs.js[num_joueur].chevalet.nbTuiles ; i++)
+    {
+		t = joueurs.js[num_joueur].chevalet.pile[i];
+		affiche_tuile_graphique(t,l1);
+		l1.x+=44;
+	}
+}
+
+void affiche_tuile_graphique(TUILE t,POINT p) {
+	char chaine[23];
+	transforme_tuile_en_path(t,chaine);
+	load_img(chaine,p);
 }

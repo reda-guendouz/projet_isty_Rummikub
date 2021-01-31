@@ -12,6 +12,7 @@
 #include "couleur.h" // Constantes de couleur
 #include "../Modele/modele.h"
 
+
 	//  type POINT
 	typedef struct point {int x,y;} POINT;
 
@@ -77,7 +78,17 @@
 	void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color);
 
 	/// charge une image sans l'afficher (besoin d'un affiche_all() pour la voir)
-	void load_img(char *fic,POINT emplacement, POINT dimensions);
+	void load_img(char *fic,POINT emplacement);
+
+	void affiche_menu_debut();
+
+	void converti_int_en_str(int nb, char *p);
+	void transforme_tuile_en_path(TUILE t, char *p);
+	void affiche_plateau_graphique();
+
+	void affiche_joueur_graphique(int num_joueur);
+
+	void affiche_tuile_graphique(TUILE t,POINT p);
 
 	/*
 	* Affiche le premier menu du jeu !
