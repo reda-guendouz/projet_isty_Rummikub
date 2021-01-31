@@ -385,9 +385,10 @@ void inscription(char *pseudoJoueur){
                 case SDL_TEXTINPUT:
 					if (strlen(text) > MAX_PSEUDONYME-1)
     					affiche_texte("Limite de caractères atteinte !",30,err,rouge);
-					else					
+					else{				
                     	strcat(text, event.text.text);
-    				affiche_texte(text,50,textP,blanc);
+    					affiche_texte(text,50,textP,blanc);
+					}
                     break;
 				case SDL_QUIT:
 					exit(EXIT_SUCCESS);
