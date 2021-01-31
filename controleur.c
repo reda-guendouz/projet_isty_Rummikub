@@ -20,7 +20,7 @@ int main(int argc, char const *argv[])
     else
         printf("WE GO FOR FIGHTOUU !\n");    
     
-    affiche_inscription(pseudo);
+    inscription(pseudo);
 
     fill_screen(noir);
     wait_escape();

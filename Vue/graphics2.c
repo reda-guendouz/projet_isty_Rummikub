@@ -319,37 +319,50 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 	return true;
 }
 
+void affiche_inscription(){
+	SDL_RenderClear(renderer);
+    POINT textP,rec1,rec2,rec3,l;
 
-void affiche_inscription(char *pseudoJoueur){
-	POINT l;
+	// fond d'ecran :
 	l.x=0;l.y=0;
 	load_img("assets/images/bg.png",l,l);
 
-	BOOL done=false;
-    SDL_Event event;
-	char text[80]="";
-    POINT textP,rec1,rec2,rec3,rec4,err,clic;
-
-	err.x=30; err.y=HEIGHT-50;
+	// titre :
     textP.y=25; textP.x=350;
     affiche_texte("Inscrivez le nom du joueur X",25,textP,noir);
+
+	// premiere selection :
 	rec1.x=100; rec1.y=400;
 	rec2.x=170; rec2.y=70;
 	draw_rectangle(rec1,rec2,blanc);
 	rec1.x+=10; rec1.y+=10;
 	affiche_texte("Validez",40,rec1,blanc);
-
+	
+	// deuxieme selection :
 	rec3.x=100; rec3.y=490;
 	draw_rectangle(rec3,rec2,blanc);
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Refaire",40,rec3,blanc);
-
+/*
 	// reajustement pour les "dans_zone"
 	rec1.x-=10; rec1.y-=10;
 	rec4.x=rec2.x+rec3.x; rec4.y=rec2.y+rec3.y;
 	rec2.x+=rec1.x; rec2.y+=rec1.y;
+*/
+}
 
+void inscription(char *pseudoJoueur){
+	BOOL done=false;
+    SDL_Event event;
+	char text[80]="";
+    POINT clic,rec1,rec2,rec3,rec4,textP,err;
 	textP.y=400; textP.x=400;
+	err.x=30; err.y=HEIGHT-50;
+	rec1.x=100; rec1.y=400;
+	rec2.x=270; rec2.y=470;
+	rec3.x=100; rec3.y=490;
+	rec4.x=270; rec4.y=560;
+	affiche_inscription();
 	SDL_StartTextInput();
     while (!done) {
         if (SDL_PollEvent(&event)) {
@@ -359,32 +372,13 @@ void affiche_inscription(char *pseudoJoueur){
 					{
 						clic.x = event.button.x;
 						clic.y = event.button.y;
-						if (dans_zone(clic,rec1,rec2))
+						if (dans_zone(clic,rec1,rec2)) // Valider
 							done = true;
-						else if(dans_zone(clic,rec3,rec4))
+						else if(dans_zone(clic,rec3,rec4)) // Refaire
 						{
 							strcpy(text,"");
-							load_img("assets/images/bg.png",l,l);
-							textP.y=25; textP.x=300;
-							affiche_texte("Inscrivez le nom du joueur X",25,textP,noir);
-							textP.y=400; textP.x=400;
-							rec1.x=100; rec1.y=400;
-							rec2.x=170; rec2.y=70;
-							draw_rectangle(rec1,rec2,blanc);
-							rec1.x+=10; rec1.y+=10;
-							affiche_texte("Validez",40,rec1,blanc);
-
-							rec3.x=100; rec3.y=490;
-							draw_rectangle(rec3,rec2,blanc);
-							rec3.x+=10; rec3.y+=10;
-							affiche_texte("Refaire",40,rec3,blanc);
-
-							// reajustement pour les "dans_zone"
-							rec1.x-=10; rec1.y-=10;
-							rec4.x=rec2.x+rec3.x; rec4.y=rec2.y+rec3.y;
-							rec2.x+=rec1.x; rec2.y+=rec1.y;
-						}
-						
+							affiche_inscription();
+						}	
 					}
                     break;
                 case SDL_TEXTINPUT:
