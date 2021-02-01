@@ -1,14 +1,14 @@
 #include "Vue/graphics2.h"
 
+
 int main(int argc, char const *argv[])
 {
     POINT rec1,rec2,rec3,rec4,clic;
-    char pseudo[MAX_PSEUDONYME];
-    int i,j;
+    int i,j,nbJoueurs;
+    BOOL has_ia=false;
 
 
     init_pioche();
-    init_joueurs(2,2);
     init_graphics();
 
     affiche_menu_debut();
@@ -21,12 +21,25 @@ int main(int argc, char const *argv[])
     {
         clic = wait_clic();
     } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
-    if (clic.x < 640)
+    if (clic.x < 640){
         printf("LETS GO WITH OUR AI !\n");
-    else
-        printf("WE GO FOR FIGHTOUU !\n");    
-    
-    inscription(pseudo);
+        nbJoueurs = choix_joueurs();
+        init_joueurs(nbJoueurs,nbJoueurs-1);
+        has_ia=true;
+    }
+    else{
+        printf("WE GO FOR FIGHTOUU !\n");
+        nbJoueurs = choix_joueurs();
+        init_joueurs(nbJoueurs,nbJoueurs);
+    }
+
+    for (i = 0; i < nbJoueurs; i++)
+    {
+        inscription(joueurs.js[i].pseudo,i+1);
+    }
+
+    printf("debug -- test creation joueur 1 : %s\n",joueurs.js[0].pseudo);
+
     fill_screen(noir);
 
     affiche_auto_off();

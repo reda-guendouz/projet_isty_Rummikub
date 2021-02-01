@@ -323,7 +323,7 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 	return true;
 }
 
-void affiche_inscription(){
+void affiche_inscription(int numJoueur){
 	SDL_RenderClear(renderer);
     POINT textP,rec1,rec2,rec3,l;
 
@@ -333,7 +333,11 @@ void affiche_inscription(){
 
 	// titre :
     textP.y=25; textP.x=350;
-    affiche_texte("Inscrivez le nom du joueur X",25,textP,noir);
+	char inscrive[29];
+	strcpy(inscrive,"Inscrivez le nom du joueur ");
+	inscrive[27]= numJoueur + '0';
+	inscrive[28]= '\0';
+    affiche_texte(inscrive,25,textP,noir);
 
 	// premiere selection :
 	rec1.x=100; rec1.y=400;
@@ -347,16 +351,11 @@ void affiche_inscription(){
 	draw_rectangle(rec3,rec2,blanc);
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Refaire",40,rec3,blanc);
-/*
-	// reajustement pour les "dans_zone"
-	rec1.x-=10; rec1.y-=10;
-	rec4.x=rec2.x+rec3.x; rec4.y=rec2.y+rec3.y;
-	rec2.x+=rec1.x; rec2.y+=rec1.y;
-*/
 }
 
-void inscription(char *pseudoJoueur){
+void inscription(char *pseudoJoueur, int numJoueur){
 	BOOL done=false;
+	BOOL empty=true;
     SDL_Event event;
 	char text[80]="";
     POINT clic,rec1,rec2,rec3,rec4,textP,err;
@@ -366,7 +365,7 @@ void inscription(char *pseudoJoueur){
 	rec2.x=270; rec2.y=470;
 	rec3.x=100; rec3.y=490;
 	rec4.x=270; rec4.y=560;
-	affiche_inscription();
+	affiche_inscription(numJoueur);
 	SDL_StartTextInput();
     while (!done) {
         if (SDL_PollEvent(&event)) {
@@ -378,18 +377,29 @@ void inscription(char *pseudoJoueur){
 						clic.x = event.button.x;
 						clic.y = event.button.y;
 						if (dans_zone(clic,rec1,rec2)) // Valider
-							done = true;
+						{
+							if (empty)
+							{
+								affiche_texte("Erreur : nom entré vide !",30,err,rouge);
+								SDL_Delay(1300);
+								affiche_inscription(numJoueur);
+							}
+							else							
+								done = true;
+						}
 						else if(dans_zone(clic,rec3,rec4)) // Refaire
 						{
 							strcpy(text,"");
-							affiche_inscription();
+							empty=true;
+							affiche_inscription(numJoueur);
 						}	
 					}
                     break;
                 case SDL_TEXTINPUT:
 					if (strlen(text) > MAX_PSEUDONYME-1)
     					affiche_texte("Limite de caractères atteinte !",30,err,rouge);
-					else{				
+					else{
+						if(empty) empty = false;
                     	strcat(text, event.text.text);
     					affiche_texte(text,50,textP,blanc);
 					}
@@ -494,4 +504,68 @@ void affiche_tuile_graphique(TUILE t,POINT p) {
 	char chaine[23];
 	transforme_tuile_en_path(t,chaine);
 	load_img(chaine,p);
+}
+
+/*
+* affiche un menu
+* et renvoie le nombre de joueurs
+*/
+int choix_joueurs(){
+	SDL_RenderClear(renderer);
+    POINT textP,rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,l,clic;
+
+	// fond d'ecran :
+	l.x=0;l.y=0;
+	load_img("assets/images/bg.png",l);
+
+	// titre :
+    textP.y=25; textP.x=380;
+    affiche_texte("Combien de joueurs ?",35,textP,noir);
+
+	// premiere selection :
+	rec1.x=100; rec1.y=400;
+	rec2.x=130; rec2.y=70;
+	draw_rectangle(rec1,rec2,blanc);
+	rec1.x+=10; rec1.y+=10;
+	affiche_texte("Un",40,rec1,noir);
+	
+	// deuxieme selection :
+	rec3.x=100; rec3.y=490;
+	draw_rectangle(rec3,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Deux",40,rec3,noir);
+
+	// Troisieme selection :
+	rec4.x=450; rec4.y=400;
+	draw_rectangle(rec4,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Trois",40,rec4,noir);
+
+	// Quatrieme selection :
+	// attention : quatrieme joueur impossible avec ia
+	rec5.x=450; rec5.y=490;
+	draw_rectangle(rec5,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Quatre",40,rec5,noir);
+
+	rec6.x = rec3.x + rec2.x; rec6.y = rec3.y + rec2.y;
+	rec7.x = rec4.x + rec2.x; rec7.y = rec4.y + rec2.y;
+	rec8.x = rec5.x + rec2.x; rec8.y = rec5.y + rec2.y;
+	rec2.x += rec1.x; rec2.y += rec1.y;
+
+	do
+    {
+        clic = wait_clic();
+    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec6) && !dans_zone(clic,rec4,rec7) && !dans_zone(clic,rec5,rec8));
+
+	if (dans_zone(clic,rec1,rec2))
+		return 1;
+	else if (dans_zone(clic,rec3,rec6))
+		return 2;
+	else if (dans_zone(clic,rec4,rec7))
+		return 3;
+	else if (dans_zone(clic,rec5,rec8))
+		return 4;
+	else
+		return -1;
 }

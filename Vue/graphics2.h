@@ -103,6 +103,8 @@
 
 	int dans_zone(POINT clic, POINT p1, POINT p2);
 
-	void inscription(char *pseudoJoueur);
+	void inscription(char *pseudoJoueur,int numJoueur);
 
 	void affiche_inscription();
+
+	int choix_joueurs();
