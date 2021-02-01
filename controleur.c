@@ -4,6 +4,7 @@ int main(int argc, char const *argv[])
 {
     POINT rec1,rec2,rec3,rec4,clic;
     char pseudo[MAX_PSEUDONYME];
+    int i,j;
 
 
     init_pioche();
@@ -30,8 +31,15 @@ int main(int argc, char const *argv[])
 
     affiche_auto_off();
 
-    
-    affiche_plateau(plateau[0]);
+    // TEST AFFICHAGE
+    TUILE t;
+    t.chiffre = 10;
+    t.clr = NOIR;
+    //affiche_plateau(plateau[0]);
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+            plateau[0][(int unsigned)(i * DIM_PLATEAU_W + j)] = t;
+    // FIN TEST AFFICHAGE
     affiche_plateau_graphique();
     
 

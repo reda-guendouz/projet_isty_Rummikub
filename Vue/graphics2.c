@@ -329,7 +329,7 @@ void affiche_inscription(){
 
 	// fond d'ecran :
 	l.x=0;l.y=0;
-	load_img("assets/images/bg.png",l,l);
+	load_img("assets/images/bg.png",l);
 
 	// titre :
     textP.y=25; textP.x=350;
@@ -402,8 +402,6 @@ void inscription(char *pseudoJoueur){
 	SDL_StopTextInput();
 	strcpy(pseudoJoueur,text);
 }
-	//POINT rect1,rect2;
-}
 
 void converti_int_en_str(int nb, char *p)
 {
@@ -455,20 +453,18 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
 
 void affiche_plateau_graphique() {
 	POINT l1;
-    l1.x = 340;
-    l1.y = 10;
+    l1.x = 300;
+    l1.y = 40;
 	int i,j;
-	TUILE t;
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-				t = plateau[i][j];
-				affiche_tuile_graphique(t,l1);
-				l1.x+=38;
+				affiche_tuile_graphique(plateau[i][j],l1);
+				l1.x+=45;
     	}
-		l1.x=340;
-        l1.y+=50;
+		l1.x=300;
+        l1.y+=65;
 	}
 }
 
