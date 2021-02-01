@@ -42,10 +42,11 @@ int main(int argc, char const *argv[])
     // FIN TEST AFFICHAGE
     affiche_plateau_graphique();
     
+    //joueurs.js[1].chevalet.nbTuiles=1;
 
     affiche_joueur_graphique(1);
+    selectionne_tuiles_chevalet(1);
     
-
     affiche_all();
 
     wait_escape();

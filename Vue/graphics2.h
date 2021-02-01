@@ -106,3 +106,5 @@
 	void inscription(char *pseudoJoueur);
 
 	void affiche_inscription();
+
+	void selectionne_tuiles_chevalet(int num_joueur);
