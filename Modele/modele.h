@@ -174,3 +174,5 @@ int char_to_int(char l);
 void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees);
 void copie_liste(LISTE_TUILES *src, LISTE_TUILES *dest);
 int readInt( int limMin, int limMax );
+void ecrire_score(char * chaine,int score);
+void affiche_score();
