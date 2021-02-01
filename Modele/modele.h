@@ -160,7 +160,7 @@ int analyse_plateau(TUILE *plateau);
 /*
 IA
 */
-int action_tour_ia(JOUEUR j);
+int action_tour_ia(LISTE_TUILES* chevaleurIa);
 void combinationUtil(int arr[], int taille, int r, int index, int data[], int i, LISTE_TUILES chevaletIa, LISTE_TUILES* max);
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve);
 void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
@@ -173,3 +173,4 @@ void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
 int char_to_int(char l);
 void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees);
 void copie_liste(LISTE_TUILES *src, LISTE_TUILES *dest);
+int readInt( int limMin, int limMax );

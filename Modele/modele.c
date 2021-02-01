@@ -314,14 +314,18 @@ void tri_liste(LISTE_TUILES *l)
 
 void supprime_liste(LISTE_TUILES *l, TUILE tuile)
 {
-    int i;
-    unsigned char trouve = FALSE;
+    int i,j;
     for (i = 0; i < l->nbTuiles; i++)
     {
-        if (l->pile[i].chiffre == tuile.chiffre && l->pile[i].clr == tuile.clr && !trouve)
-            trouve = TRUE;
-        else
-            ajouter_tuile(l, l->pile[i]);
+        if (l->pile[i].chiffre == tuile.chiffre && l->pile[i].clr == tuile.clr){
+            for(j = i+1; j<l->nbTuiles;j++){
+                l->pile[i].chiffre = l->pile[j].chiffre;
+                l->pile[i].clr = l->pile[j].clr;
+            }
+            l->nbTuiles--;
+            return;
+        }
+
     }
 }
 
@@ -493,30 +497,28 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
 
 
 
-int action_tour_ia(JOUEUR ia)
+int action_tour_ia(LISTE_TUILES* chevaletIa)
 {
-    LISTE_TUILES listeIa = ia.chevalet;
-    LISTE_TUILES *ptr_listeIa = &listeIa;
     LISTE_TUILES combinaisonsTrouve;
     int i =0;
     TUILE copiePlateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
     combinaisonsTrouve.nbTuiles = 0;
     copie_plateau(copiePlateau[0],plateau[0]);
-    tri_liste(ptr_listeIa);
-    affiche_liste_tuiles(listeIa);
-    trouver_combinaisons(listeIa,&combinaisonsTrouve);
+    affiche_liste_tuiles(*chevaletIa);
+    trouver_combinaisons(*chevaletIa,&combinaisonsTrouve);
     if (combinaisonsTrouve.nbTuiles > 0) 
     {
         printf("COMBINAISONS TROUVE IA PLACE \n");
-        for(i =0; i<combinaisonsTrouve.nbTuiles; i++)
-            supprime_liste(&ia.chevalet,combinaisonsTrouve.pile[i]);
+        for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
+            supprime_liste(chevaletIa,combinaisonsTrouve.pile[i]);
+        }
         placer_combinaisons(combinaisonsTrouve, copiePlateau[0]);
         copie_plateau(plateau[0], copiePlateau[0]);
     }
         
     else {
         printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
-        piocher(ptr_listeIa);
+        piocher(chevaletIa);
     }
     return 2;
 }
@@ -578,4 +580,22 @@ void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau) {
         }
     }
         
+}
+
+int readInt( int limMin, int limMax ) {
+   for (;;) { // tant que la saisie n'est pas valide
+      // lire
+      char str[12];
+      if ( !fgets( str , sizeof str/sizeof*str , stdin ) )
+         printf( "Incident lors de la saisie\n" );
+      else {
+         // convertir
+         char *end;
+         long  res;
+         int errno = 0;
+         res = strtol( str, &end, 0 );
+         if ( errno == 0 && end != str  && res >= limMin  &&  res <= limMax )
+            return (int)res;
+      }
+   }
 }

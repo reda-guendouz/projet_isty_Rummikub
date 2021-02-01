@@ -18,17 +18,13 @@ int main(void)
 
     while (jeu)
     {
-
         //LANCEMENT DU JEU
         partie = FALSE;
         system("clear");
-        do
-        {
-            printf("Groupe : 8 Rummikub \n");
-            printf("1. Lancer un partie \n");
-            printf("2. Quitter le jeu\n");
-            scanf(" %d", &jouer);
-        } while (jouer != 1 && jouer != 2);
+        printf("Groupe : 8 Rummikub \n");
+        printf("1. Lancer un partie \n");
+        printf("2. Quitter le jeu\n");
+        jouer = readInt(1,2);
         system("clear");
         //SORTIR DU JEU
         if (jouer == 2)
@@ -43,16 +39,10 @@ int main(void)
             init_pioche();
             // SELECTION DES JOUEURS
             nbJoueurs = -1;
-            do
-            {
-                printf("Combien de joueurs jouent ?\n");
-                scanf(" %d", &nbJoueurs);
-            } while (nbJoueurs < 2 || nbJoueurs > 4);
-            do
-            {
-                printf("Combien de humains jouent ?\n");
-                scanf(" %d", &nbJoueursH);
-            } while (nbJoueursH < 1 || nbJoueursH > nbJoueurs);
+            printf("Combien de joueurs jouent ?\n");
+            nbJoueurs = readInt(2,4);
+            printf("Combien de humains jouent ?\n");
+            nbJoueursH = readInt(1,nbJoueurs);
             nbJoueursIA = nbJoueurs - nbJoueursH;
             init_joueurs(nbJoueurs,nbJoueursH);
             system("clear");
@@ -66,15 +56,12 @@ int main(void)
             affiche_plateau(plateau[0]);
             printf("JOUEUR %d JOUE\n", joueurActuel+1);
             if (joueurActuel + 1 - nbJoueursH  <= 0 ){
-                do
-                {
-                    choixJoueur = -1;
-                    printf("Voulez-vous posez une combinaison ou piocher ?\n");
-                    printf("0. Fin de partie\n");
-                    printf("1. Jouer \n");
-                    printf("2. Piocher \n");
-                    scanf(" %d", &choixJoueur);
-                } while (choixJoueur < 0 || choixJoueur > 2);
+                choixJoueur = -1;
+                printf("Voulez-vous posez une combinaison ou piocher ?\n");
+                printf("0. Fin de partie\n");
+                printf("1. Jouer \n");
+                printf("2. Piocher \n");
+                choixJoueur = readInt(0,2);
 
                 //FIN DE PARTIE PREMATURE
                 if (choixJoueur == 0)
@@ -89,20 +76,17 @@ int main(void)
                         while (selectionTuiles)
                         {
                             placerTuile = FALSE;
-                            do
-                            {
-                                numTuileChoisis = -3;
-                                system("clear");
-                                affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
-                                affiche_plateau(plateau[0]);
-                                printf("\nTuile selectionne : \n");
-                                affiche_liste_tuiles(tuilesSelectionnes);
-                                printf("\n\n");
-                                printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
-                                printf("-1. Valider la selection\n");
-                                printf("-2. Piochez et passer son tour\n");
-                                scanf(" %d", &numTuileChoisis);
-                            } while (numTuileChoisis < -2 || numTuileChoisis > joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
+                            numTuileChoisis = -3;
+                            system("clear");
+                            affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
+                            affiche_plateau(plateau[0]);
+                            printf("\nTuile selectionne : \n");
+                            affiche_liste_tuiles(tuilesSelectionnes);
+                            printf("\n\n");
+                            printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
+                            printf("-1. Valider la selection\n");
+                            printf("-2. Piochez et passer son tour\n");
+                            numTuileChoisis = readInt(-2,joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (numTuileChoisis == -2)
                             {
@@ -136,15 +120,13 @@ int main(void)
                             tri_liste(&tuilesSelectionnes);
                             printf("Tuiles selectionnees : \n");
                             affiche_liste_tuiles(tuilesSelectionnes);
-                            do
-                            {
-                                choixPlacement = -3;
-                                printf("\nQue voulez-vous faire ?\n");
-                                printf("0. Piochez et passer son tour\n");
-                                printf("1. Refaire sa selection\n");
-                                printf("2. Placer les tuiles sur le plateau\n");
-                                scanf(" %d", &choixPlacement);
-                            } while (choixPlacement < 0 || choixPlacement > 2);
+                            choixPlacement = -3;
+                            printf("\nQue voulez-vous faire ?\n");
+                            printf("0. Piochez et passer son tour\n");
+                            printf("1. Refaire sa selection\n");
+                            printf("2. Placer les tuiles sur le plateau\n");
+                            scanf(" %d", &choixPlacement);
+                            choixPlacement = readInt(0,2);
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (choixPlacement == 0)
                             {
@@ -185,17 +167,14 @@ int main(void)
                         while (modifPlateau)
                         {
                             affiche_plateau(copiePlateau[0]);
-                            do
-                            {
-                                choixModifPlateau = -3;
-                                printf("Que voulez-vous faire ?\n");
-                                printf("0. Piochez et passer son tour\n");
-                                printf("1. Refaire sa selection\n");
-                                printf("2. Replacer les tuiles sur le plateau\n");
-                                printf("3. Valider le plateau et passer son tour\n");
-                                printf("4. Modifier le plateau\n");
-                                scanf(" %d", &choixModifPlateau);
-                            } while (choixPlacement < 0 || choixPlacement > 4);
+                            choixModifPlateau = -3;
+                            printf("Que voulez-vous faire ?\n");
+                            printf("0. Piochez et passer son tour\n");
+                            printf("1. Refaire sa selection\n");
+                            printf("2. Replacer les tuiles sur le plateau\n");
+                            printf("3. Valider le plateau et passer son tour\n");
+                            printf("4. Modifier le plateau\n");
+                            choixModifPlateau = readInt(0,4);
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (choixModifPlateau == 0)
                             {
@@ -260,7 +239,7 @@ int main(void)
                                     printf("Voulez-vous continuer ?\n");
                                     printf("0. Non\n");
                                     printf("1. Oui\n");
-                                    scanf(" %d", &choixModifPlateau);
+                                    choixModifPlateau = readInt(0,1);
                                 } while (choixModifPlateau);
                             }
                         }
@@ -272,7 +251,7 @@ int main(void)
                 printf("TOUR DE l'IA\n");
                 affiche_joueur(joueurs.js[joueurActuel]);
                 affiche_plateau(plateau[0]);
-                choixJoueur = action_tour_ia(joueurs.js[joueurActuel]);
+                choixJoueur = action_tour_ia(&joueurs.js[joueurActuel].chevalet);
                 sleep(5);
             }
             //PIOCHER
@@ -292,11 +271,8 @@ int main(void)
             {
                 system("clear");
                 affiche_victoire(joueurs.js[joueurActuel], joueurActuel);
-                do
-                {
-                    printf("Appuyer sur 0 pour revenir au menu\n");
-                    scanf(" %d", &choixJoueur);
-                } while (choixJoueur != 0);
+                printf("Appuyer sur 0 pour revenir au menu\n");
+                choixJoueur = readInt(0,0);
                 victoire = FALSE;
             }
         }
