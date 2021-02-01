@@ -477,7 +477,6 @@ void affiche_joueur_graphique(int num_joueur) {
 
 	POINT l1;
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
-	//printf("%d\n",l1.x);
     l1.y = 600;
 	int i;
 	TUILE t;
@@ -519,10 +518,20 @@ void selectionne_tuiles_chevalet(int num_joueur) {
 			if(clic.x>=xg && clic.x<=xd){
 				for(i=0; i<joueurs.js[num_joueur].chevalet.nbTuiles; i++){
 					if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
-						coin.x=xg+i*44; coin.y=601;
+						coin.x=xg+(i*44)-1; coin.y=599;
 						dim.x=39; dim.y=55;
+						COULEUR c;
+						TUILE t = joueurs.js[num_joueur].chevalet.pile[i];
+						if(tuile_dans_liste(liste,t)) {
+							c = noir;
+							supprime_liste(&liste,t);
+						}
+						else {
+							c = jaune;
+							ajouter_tuile(&liste,t);
+						}
 						for(j=0;j<3;j++){
-							draw_rectangle(coin,dim,jaune);
+							draw_rectangle(coin,dim,c);
 							coin.x--; coin.y--;
 							dim.x+=2; dim.y+=2;
 						}
