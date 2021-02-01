@@ -118,7 +118,6 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
 			SDL_Rect position = {texteX, texteY, texteW, texteH};
 			SDL_RenderCopy(renderer, texture, NULL, &position);
-			SDL_RenderPresent(renderer);
 			if (SDL_AFFICHE_AUTO) affiche_all();
 			SDL_DestroyTexture(texture);
 			SDL_FreeSurface(texte);
