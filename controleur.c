@@ -6,7 +6,9 @@ int main(int argc, char const *argv[])
     // creation des champs
     POINT rec1,rec2,rec3,rec4,clic;
     int i,j,nbJoueursH,joueurActuel=0;
-    BOOL has_ia=false,partie=true,jeu=true;
+    BOOL has_ia=false,partie=true,tour=true,tourValide=false;
+    LISTE_TUILES selectionnees;
+    TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W];
 
     init_pioche();
     init_graphics();
@@ -36,28 +38,28 @@ int main(int argc, char const *argv[])
             if (!has_ia || i!=3)
                 inscription(joueurs.js[i].pseudo,i+1);
 
-        printf("debug -- test creation joueur 1 : %s\n",joueurs.js[0].pseudo);
+        printf("debug -- test creation joueur %d : %s\n",joueurActuel,joueurs.js[joueurActuel].pseudo);
 
         fill_screen(noir);
 
         affiche_auto_off();
 
-        // TEST AFFICHAGE
-        TUILE t;
-        t.chiffre = 10;
-        t.clr = NOIR;
-        //affiche_plateau(plateau[0]);
-        for (i = 0; i < DIM_PLATEAU_H; i++)
-            for (j = 0; j < DIM_PLATEAU_W; j++)
-                plateau[i][j] = t;
-        // FIN TEST AFFICHAGE
-        affiche_plateau_graphique();
+        while (tour)
+        {
+            fill_screen(noir);
 
-        affiche_joueur_graphique(joueurActuel);
-        affiche_all();
-        selectionne_tuiles_chevalet(1);
-        
-        affiche_all();
+            affiche_plateau_graphique();
+            copie_plateau(copieP[0],plateau[0]);
+
+            affiche_joueur_graphique(joueurActuel);
+            affiche_all();
+            selectionne_tuiles_chevalet(joueurActuel);
+            
+            affiche_all();
+            if (tourValide)
+                copie_plateau(plateau[0],copieP[0]);
+        }
+
     }
     wait_escape();
     return 0;

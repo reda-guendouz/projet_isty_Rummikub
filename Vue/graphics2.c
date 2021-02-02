@@ -489,6 +489,7 @@ void affiche_plateau_graphique() {
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
+
 void affiche_joueur_graphique(int num_joueur) {
 	POINT p;
 	p.x=75;
