@@ -241,13 +241,13 @@ void draw_pixel(POINT p, COULEUR color)
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
-void draw_line(POINT p1, POINT p2, COULEUR color)
+void draw_line(POINT debutLigne, POINT finLigne, COULEUR color)
 	{
 	int rrr = ((color >> 16) & 0xFF);
 	int ggg = ((color >> 8) & 0xFF);
 	int bbb = ((color) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
-	SDL_RenderDrawLine(renderer,p1.x,p1.y,p2.x,p2.y);
+	SDL_RenderDrawLine(renderer,debutLigne.x,debutLigne.y,finLigne.x,finLigne.y);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
@@ -294,6 +294,7 @@ void fill_screen(COULEUR clr){
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);	
 }
 
 void affiche_menu_debut(){
@@ -461,20 +462,31 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
 }
 
 void affiche_plateau_graphique() {
-	POINT l1;
-    l1.x = 300;
-    l1.y = 40;
-	int i,j;
+	POINT l1,fond1,fond2,fond3,fond4;
+	int i,j,espace=45,espace2=65;
+    l1.x = 300; l1.y = 40;
+	fond1.x = l1.x - 6; fond1.y = l1.y - 6;
+	fond2.x = l1.x + DIM_PLATEAU_W*espace - 4; fond2.y=fond1.y;
+	fond3.x = fond1.x; fond3.y = fond1.y;
+	fond4.x = fond3.x; fond4.y = DIM_PLATEAU_H*espace2 + espace2/2 + 2;
+	draw_line(fond1,fond2,blanc);
+	draw_line(fond3,fond4,blanc);
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-				affiche_tuile_graphique(plateau[i][j],l1);
-				l1.x+=45;
+			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
+			draw_line(fond3,fond4,blanc);
+			affiche_tuile_graphique(plateau[i][j],l1);
+			l1.x+=espace;
     	}
 		l1.x=300;
-        l1.y+=65;
+        l1.y+=espace2;
+		fond1.y = l1.y - 6;
+		fond2.y=fond1.y;
+		draw_line(fond1,fond2,blanc);
 	}
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
 void affiche_joueur_graphique(int num_joueur) {
@@ -488,14 +500,13 @@ void affiche_joueur_graphique(int num_joueur) {
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
     l1.y = 600;
 	int i;
-	TUILE t;
 
 	for (i = 0; i < joueurs.js[num_joueur].chevalet.nbTuiles ; i++)
     {
-		t = joueurs.js[num_joueur].chevalet.pile[i];
-		affiche_tuile_graphique(t,l1);
+		affiche_tuile_graphique(joueurs.js[num_joueur].chevalet.pile[i],l1);
 		l1.x+=44;
 	}
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
 void affiche_tuile_graphique(TUILE t,POINT p) {
@@ -566,11 +577,16 @@ int choix_joueurs(){
 		return 4;
 	else
 		return -1;
+	
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
+
 void selectionne_tuiles_chevalet(int num_joueur) {
 	POINT rec1,rec2,coin,dim,clic;
 	int i,j,xg,xd;
 	LISTE_TUILES liste;
+	COULEUR c;
+	TUILE t;
 	liste.nbTuiles=0;
 
 	rec1.x=1200; rec1.y=600;
@@ -578,6 +594,7 @@ void selectionne_tuiles_chevalet(int num_joueur) {
 	draw_rectangle(rec1,rec2,blanc);
 	rec1.x+=10; rec1.y+=10;
 	affiche_texte("Validez",40,rec1,blanc);
+	affiche_all();
 
 	rec1.x-=10; rec1.y-=10;
 	rec2.x=rec1.x+170; rec2.y=rec1.y+70;
@@ -592,8 +609,7 @@ void selectionne_tuiles_chevalet(int num_joueur) {
 					if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
 						coin.x=xg+(i*44)-1; coin.y=599;
 						dim.x=39; dim.y=55;
-						COULEUR c;
-						TUILE t = joueurs.js[num_joueur].chevalet.pile[i];
+						t = joueurs.js[num_joueur].chevalet.pile[i];
 						if(tuile_dans_liste(liste,t)) {
 							c = noir;
 							supprime_liste(&liste,t);
