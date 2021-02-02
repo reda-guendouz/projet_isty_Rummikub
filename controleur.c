@@ -56,8 +56,8 @@ int main(int argc, char const *argv[])
     affiche_texte("TESTAS",30,p,blanc);
 
     affiche_joueur_graphique(1);
+    selectionne_tuiles_chevalet(1);
     
-
     affiche_all();
 
     wait_escape();

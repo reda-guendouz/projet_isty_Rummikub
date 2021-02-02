@@ -216,7 +216,7 @@ POINT wait_clic()
 		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		}
-	printf("%cClic en %4d %4d\n",13,P.x,P.y);
+	printf("%cClic en  %4d %4d\n",13,P.x,P.y);
 	___MOUSE_POSITION = P;
 	return P;
 	}
@@ -486,7 +486,6 @@ void affiche_joueur_graphique(int num_joueur) {
 
 	POINT l1;
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
-	//printf("%d\n",l1.x);
     l1.y = 600;
 	int i;
 	TUILE t;
@@ -567,4 +566,52 @@ int choix_joueurs(){
 		return 4;
 	else
 		return -1;
+}
+void selectionne_tuiles_chevalet(int num_joueur) {
+	POINT rec1,rec2,coin,dim,clic;
+	int i,j,xg,xd;
+	LISTE_TUILES liste;
+	liste.nbTuiles=0;
+
+	rec1.x=1200; rec1.y=600;
+	rec2.x=170; rec2.y=70;
+	draw_rectangle(rec1,rec2,blanc);
+	rec1.x+=10; rec1.y+=10;
+	affiche_texte("Validez",40,rec1,blanc);
+
+	rec1.x-=10; rec1.y-=10;
+	rec2.x=rec1.x+170; rec2.y=rec1.y+70;
+	clic = wait_clic();
+	while (!dans_zone(clic,rec1,rec2))
+	{
+		if(clic.y>=600 && clic.y<=654){
+			xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
+			xd = xg + ((joueurs.js[num_joueur].chevalet.nbTuiles)*44) - 3;
+			if(clic.x>=xg && clic.x<=xd){
+				for(i=0; i<joueurs.js[num_joueur].chevalet.nbTuiles; i++){
+					if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
+						coin.x=xg+(i*44)-1; coin.y=599;
+						dim.x=39; dim.y=55;
+						COULEUR c;
+						TUILE t = joueurs.js[num_joueur].chevalet.pile[i];
+						if(tuile_dans_liste(liste,t)) {
+							c = noir;
+							supprime_liste(&liste,t);
+						}
+						else {
+							c = jaune;
+							ajouter_tuile(&liste,t);
+						}
+						for(j=0;j<3;j++){
+							draw_rectangle(coin,dim,c);
+							coin.x--; coin.y--;
+							dim.x+=2; dim.y+=2;
+						}
+						affiche_all();
+					}
+				}
+			}
+		}
+		clic = wait_clic();
+	}
 }

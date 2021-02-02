@@ -108,3 +108,4 @@
 	void affiche_inscription();
 
 	int choix_joueurs();
+	void selectionne_tuiles_chevalet(int num_joueur);

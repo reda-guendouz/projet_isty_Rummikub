@@ -307,14 +307,18 @@ void tri_liste(LISTE_TUILES *l)
 
 void supprime_liste(LISTE_TUILES *l, TUILE tuile)
 {
-    int i;
-    unsigned char trouve = FALSE;
+    int i,j;
     for (i = 0; i < l->nbTuiles; i++)
     {
-        if (l->pile[i].chiffre == tuile.chiffre && l->pile[i].clr == tuile.clr && !trouve)
-            trouve = TRUE;
-        else
-            ajouter_tuile(l, l->pile[i]);
+        if (l->pile[i].chiffre == tuile.chiffre && l->pile[i].clr == tuile.clr){
+            for(j = i+1; j<l->nbTuiles;j++){
+                l->pile[i].chiffre = l->pile[j].chiffre;
+                l->pile[i].clr = l->pile[j].clr;
+            }
+            l->nbTuiles--;
+            return;
+        }
+
     }
 }
 
@@ -576,4 +580,15 @@ void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE *copiePlateau)
             }
         }
     }
+}
+
+int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile) {
+    int i;
+    TUILE t;
+    for(i=0; i < liste.nbTuiles; i++) {
+        t = liste.pile[i];
+        if(tuile.chiffre == t.chiffre && tuile.clr == t.clr)
+            return TRUE;
+    }
+    return FALSE;
 }
