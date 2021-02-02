@@ -86,9 +86,6 @@ void affiche_all()
 		else wait_escape();
 	}
 
-	// La fonction synchro est la fonction historique
-void synchro() { affiche_all(); }
-
 COULEUR couleur_RGB(int r, int g, int b)
 	{
 	COULEUR C;
@@ -461,7 +458,7 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
     strcpy(p2,p);
 }
 
-void affiche_plateau_graphique() {
+void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 	POINT l1,fond1,fond2,fond3,fond4;
 	int i,j,espace=45,espace2=65;
     l1.x = 300; l1.y = 40;
@@ -477,7 +474,7 @@ void affiche_plateau_graphique() {
         {
 			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
 			draw_line(fond3,fond4,blanc);
-			affiche_tuile_graphique(plateau[i][j],l1);
+			affiche_tuile_graphique(plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)],l1);
 			l1.x+=espace;
     	}
 		l1.x=300;
@@ -582,13 +579,12 @@ int choix_joueurs(){
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
-void selectionne_tuiles_chevalet(int num_joueur) {
+void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	POINT rec1,rec2,coin,dim,clic;
 	int i,j,xg,xd;
-	LISTE_TUILES liste;
 	COULEUR c;
 	TUILE t;
-	liste.nbTuiles=0;
+	selectionnees->nbTuiles=0;
 
 	rec1.x=1200; rec1.y=600;
 	rec2.x=170; rec2.y=70;
@@ -611,13 +607,13 @@ void selectionne_tuiles_chevalet(int num_joueur) {
 						coin.x=xg+(i*44)-1; coin.y=599;
 						dim.x=39; dim.y=55;
 						t = joueurs.js[num_joueur].chevalet.pile[i];
-						if(tuile_dans_liste(liste,t)) {
+						if(tuile_dans_liste(*selectionnees,t)) {
 							c = noir;
-							supprime_liste(&liste,t);
+							supprime_liste(selectionnees,t);
 						}
 						else {
 							c = jaune;
-							ajouter_tuile(&liste,t);
+							ajouter_tuile(selectionnees,t);
 						}
 						for(j=0;j<3;j++){
 							draw_rectangle(coin,dim,c);

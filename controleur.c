@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
     // creation des champs
     POINT rec1,rec2,rec3,rec4,clic;
     int i,j,nbJoueursH,joueurActuel=0;
-    BOOL has_ia=false,partie=true,tour=true,tourValide=false;
+    BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection;
     LISTE_TUILES selectionnees;
     TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W];
 
@@ -48,12 +48,29 @@ int main(int argc, char const *argv[])
         {
             fill_screen(noir);
 
-            affiche_plateau_graphique();
             copie_plateau(copieP[0],plateau[0]);
 
+            affiche_plateau_graphique(copieP[0]);
             affiche_joueur_graphique(joueurActuel);
             affiche_all();
-            selectionne_tuiles_chevalet(joueurActuel);
+            while (selection)
+            {
+                // PHASE SELECTION TUILES
+                //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
+                selectionne_tuiles_chevalet(joueurActuel,&selectionnees);
+                /// bouton refaire => continue;
+                // PHASE SELECTION/MODIFICATION PLATEAU
+                /// while(plateau){
+                    //// ne pas oublier de supprimer copieP
+                    /// bouton refaire plateau => continue;
+                    /// bouton retour selection => break;
+                    // VALIDATION DU JOUEUR
+                    // PHASE VERIFICATION (implicite/caché)
+                    /// if (toutEstBon) selection = false; plateau = false;
+                    /// else break; // retour a la selection
+                /// }
+            }
+
             
             affiche_all();
             if (tourValide)
