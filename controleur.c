@@ -3,16 +3,16 @@
 
 int main(int argc, char const *argv[])
 {
+    // creation des champs
     POINT rec1,rec2,rec3,rec4,clic;
-    int i,j,nbJoueurs;
+    int i,j,nbJoueursH;
     BOOL has_ia=false;
-
 
     init_pioche();
     init_graphics();
 
+    // menu_debut selection pvp/ia
     affiche_menu_debut();
-    
     rec1.x = 90; rec1.y = 320;
     rec2.x = 640; rec2.y = 450;
     rec3.x = 790; rec3.y = 420;
@@ -23,20 +23,17 @@ int main(int argc, char const *argv[])
     } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
     if (clic.x < 640){
         printf("LETS GO WITH OUR AI !\n");
-        nbJoueurs = choix_joueurs();
-        init_joueurs(nbJoueurs,nbJoueurs-1);
         has_ia=true;
     }
-    else{
+    else
         printf("WE GO FOR FIGHTOUU !\n");
-        nbJoueurs = choix_joueurs();
-        init_joueurs(nbJoueurs,nbJoueurs);
-    }
+    nbJoueursH = choix_joueurs();
 
-    for (i = 0; i < nbJoueurs; i++)
-    {
-        inscription(joueurs.js[i].pseudo,i+1);
-    }
+    init_joueurs(nbJoueursH,nbJoueursH-has_ia);
+
+    for (i = 0; i < nbJoueursH; i++)
+        if (!has_ia || i!=3)
+            inscription(joueurs.js[i].pseudo,i+1);
 
     printf("debug -- test creation joueur 1 : %s\n",joueurs.js[0].pseudo);
 
@@ -51,10 +48,12 @@ int main(int argc, char const *argv[])
     //affiche_plateau(plateau[0]);
     for (i = 0; i < DIM_PLATEAU_H; i++)
         for (j = 0; j < DIM_PLATEAU_W; j++)
-            plateau[0][(int unsigned)(i * DIM_PLATEAU_W + j)] = t;
+            plateau[i][j] = t;
     // FIN TEST AFFICHAGE
     affiche_plateau_graphique();
-    
+    POINT p;
+    p.x= 1288; p.y = 540;
+    affiche_texte("TESTAS",30,p,blanc);
 
     affiche_joueur_graphique(1);
     

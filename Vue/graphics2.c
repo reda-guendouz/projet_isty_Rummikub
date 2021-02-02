@@ -168,7 +168,7 @@ void wait_escape()
 	p.x = WIDTH/2 - 170;
 	p.y = HEIGHT - 25;
 	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
-	//affiche_all();
+	affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
@@ -507,7 +507,7 @@ void affiche_tuile_graphique(TUILE t,POINT p) {
 
 /*
 * affiche un menu
-* et renvoie le nombre de joueurs
+* et renvoie le nombre de joueurs choisi
 */
 int choix_joueurs(){
 	SDL_RenderClear(renderer);
@@ -522,7 +522,7 @@ int choix_joueurs(){
     affiche_texte("Combien de joueurs ?",35,textP,noir);
 
 	// premiere selection :
-	rec1.x=100; rec1.y=400;
+	rec1.x=100; rec1.y=100;
 	rec2.x=130; rec2.y=70;
 	draw_rectangle(rec1,rec2,blanc);
 	rec1.x+=10; rec1.y+=10;
@@ -535,14 +535,14 @@ int choix_joueurs(){
 	affiche_texte("Deux",40,rec3,noir);
 
 	// Troisieme selection :
-	rec4.x=450; rec4.y=400;
+	rec4.x=900; rec4.y=100;
 	draw_rectangle(rec4,rec2,blanc);
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Trois",40,rec4,noir);
 
 	// Quatrieme selection :
 	// attention : quatrieme joueur impossible avec ia
-	rec5.x=450; rec5.y=490;
+	rec5.x=900; rec5.y=490;
 	draw_rectangle(rec5,rec2,blanc);
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Quatre",40,rec5,noir);
