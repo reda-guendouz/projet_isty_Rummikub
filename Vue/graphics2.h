@@ -108,4 +108,5 @@
 	void affiche_inscription();
 
 	int choix_joueurs();
-	void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) ;
+	BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) ;
+	void choix_case_plateau(POINT clic,int *ligne,int *colonne);

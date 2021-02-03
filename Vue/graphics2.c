@@ -82,7 +82,7 @@ void affiche_all()
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) 
 		if (event.type == SDL_QUIT) exit(0);
-	if (__init_graphics_est_deja_appele) SDL_RenderPresent(renderer);
+	if (__init_graphics_est_deja_appele) {SDL_RenderPresent(renderer);printf("je suis call\n");}
 		else wait_escape();
 	}
 
@@ -115,13 +115,12 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
 			SDL_Rect position = {texteX, texteY, texteW, texteH};
 			SDL_RenderCopy(renderer, texture, NULL, &position);
-			if (SDL_AFFICHE_AUTO) affiche_all();
+			if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 			SDL_DestroyTexture(texture);
 			SDL_FreeSurface(texte);
 			}
 	else printf("%s\n",texte_affichable);
 	TTF_CloseFont(police);
-	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 }
 
 /// si ne fonctionne pas, mettre position = {0, 0, X, X}
@@ -246,7 +245,7 @@ void draw_line(POINT debutLigne, POINT finLigne, COULEUR color)
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_RenderDrawLine(renderer,debutLigne.x,debutLigne.y,finLigne.x,finLigne.y);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
-	if (SDL_AFFICHE_AUTO) affiche_all();
+	//if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 	}
 
 void draw_rectangle(POINT emplacement, POINT dimensions, COULEUR color)
@@ -257,8 +256,7 @@ void draw_rectangle(POINT emplacement, POINT dimensions, COULEUR color)
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_Rect testas= {emplacement.x,emplacement.y,dimensions.x,dimensions.y};
 	SDL_RenderDrawRect(renderer, &testas);
-	SDL_SetRenderDrawColor(renderer,255,255,255,0);
-	if (SDL_AFFICHE_AUTO) affiche_all();
+	//if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
@@ -269,8 +267,7 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_Rect testas= {p1.x,p1.y,p2.x,p2.y};
 	SDL_RenderFillRect(renderer, &testas);
-	SDL_SetRenderDrawColor(renderer,255,255,255,0);
-	if (SDL_AFFICHE_AUTO) affiche_all();
+	//if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
 void load_img(char *fic,POINT emplacement){
@@ -290,7 +287,6 @@ void fill_screen(COULEUR clr){
 	int bbb = ((clr) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_RenderClear(renderer);
-	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);	
 }
 
@@ -579,24 +575,30 @@ int choix_joueurs(){
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
-void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
-	POINT rec1,rec2,coin,dim,clic;
+BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
+	POINT rec1,rec2,rec3,rec4,coin,dim,clic;
 	int i,j,xg,xd;
 	COULEUR c;
 	TUILE t;
 	selectionnees->nbTuiles=0;
 
 	rec1.x=1200; rec1.y=600;
-	rec2.x=170; rec2.y=70;
+	rec2.x=120; rec2.y=40;
 	draw_rectangle(rec1,rec2,blanc);
 	rec1.x+=10; rec1.y+=10;
-	affiche_texte("Validez",40,rec1,blanc);
+	affiche_texte("Validez",20,rec1,blanc);
+	rec3.x=rec1.x-10; rec3.y=rec1.y+40;
+	draw_rectangle(rec3,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Piochez",20,rec3,blanc);
 	affiche_all();
 
 	rec1.x-=10; rec1.y-=10;
-	rec2.x=rec1.x+170; rec2.y=rec1.y+70;
+	rec3.x-=10; rec3.y-=10;
+	rec4.x=rec3.x + rec2.x; rec4.y=rec3.y + rec2.y;
+	rec2.x+=rec1.x; rec2.y+=rec1.y;
 	clic = wait_clic();
-	while (!dans_zone(clic,rec1,rec2))
+	while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4))
 	{
 		if(clic.y>=600 && clic.y<=654){
 			xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
@@ -607,7 +609,7 @@ void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 						coin.x=xg+(i*44)-1; coin.y=599;
 						dim.x=39; dim.y=55;
 						t = joueurs.js[num_joueur].chevalet.pile[i];
-						if(tuile_dans_liste(*selectionnees,t)) {
+						if(tuile_dans_liste(*selectionnees,t)){
 							c = noir;
 							supprime_liste(selectionnees,t);
 						}
@@ -627,4 +629,13 @@ void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 		}
 		clic = wait_clic();
 	}
+
+	if (clic.y<640) // piocher
+		return false;
+	else // valider selection
+		return true;	
+}
+
+void choix_case_plateau(POINT clic,int *ligne,int *colonne){
+	return;
 }
