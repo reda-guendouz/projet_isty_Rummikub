@@ -86,9 +86,6 @@ void affiche_all()
 		else wait_escape();
 	}
 
-	// La fonction synchro est la fonction historique
-void synchro() { affiche_all(); }
-
 COULEUR couleur_RGB(int r, int g, int b)
 	{
 	COULEUR C;
@@ -118,7 +115,6 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
 			SDL_Rect position = {texteX, texteY, texteW, texteH};
 			SDL_RenderCopy(renderer, texture, NULL, &position);
-			SDL_RenderPresent(renderer);
 			if (SDL_AFFICHE_AUTO) affiche_all();
 			SDL_DestroyTexture(texture);
 			SDL_FreeSurface(texte);
@@ -169,7 +165,7 @@ void wait_escape()
 	p.x = WIDTH/2 - 170;
 	p.y = HEIGHT - 25;
 	affiche_texte("Appuyer sur Echap pour terminer",20,p,blanc);
-	//affiche_all();
+	affiche_all();
 	while (SDL_WaitEvent(&event) && display)
 		{
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
@@ -242,13 +238,13 @@ void draw_pixel(POINT p, COULEUR color)
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
-void draw_line(POINT p1, POINT p2, COULEUR color)
+void draw_line(POINT debutLigne, POINT finLigne, COULEUR color)
 	{
 	int rrr = ((color >> 16) & 0xFF);
 	int ggg = ((color >> 8) & 0xFF);
 	int bbb = ((color) & 0xFF);
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
-	SDL_RenderDrawLine(renderer,p1.x,p1.y,p2.x,p2.y);
+	SDL_RenderDrawLine(renderer,debutLigne.x,debutLigne.y,finLigne.x,finLigne.y);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
@@ -295,6 +291,7 @@ void fill_screen(COULEUR clr){
 	SDL_SetRenderDrawColor(renderer,rrr,ggg,bbb,0);
 	SDL_RenderClear(renderer);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);	
 }
 
 void affiche_menu_debut(){
@@ -323,7 +320,7 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 	return true;
 }
 
-void affiche_inscription(){
+void affiche_inscription(int numJoueur){
 	SDL_RenderClear(renderer);
     POINT textP,rec1,rec2,rec3,l;
 
@@ -333,7 +330,11 @@ void affiche_inscription(){
 
 	// titre :
     textP.y=25; textP.x=350;
-    affiche_texte("Inscrivez le nom du joueur X",25,textP,noir);
+	char inscrive[29];
+	strcpy(inscrive,"Inscrivez le nom du joueur ");
+	inscrive[27]= numJoueur + '0';
+	inscrive[28]= '\0';
+    affiche_texte(inscrive,25,textP,noir);
 
 	// premiere selection :
 	rec1.x=100; rec1.y=400;
@@ -347,16 +348,11 @@ void affiche_inscription(){
 	draw_rectangle(rec3,rec2,blanc);
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Refaire",40,rec3,blanc);
-/*
-	// reajustement pour les "dans_zone"
-	rec1.x-=10; rec1.y-=10;
-	rec4.x=rec2.x+rec3.x; rec4.y=rec2.y+rec3.y;
-	rec2.x+=rec1.x; rec2.y+=rec1.y;
-*/
 }
 
-void inscription(char *pseudoJoueur){
+void inscription(char *pseudoJoueur, int numJoueur){
 	BOOL done=false;
+	BOOL empty=true;
     SDL_Event event;
 	char text[80]="";
     POINT clic,rec1,rec2,rec3,rec4,textP,err;
@@ -366,7 +362,7 @@ void inscription(char *pseudoJoueur){
 	rec2.x=270; rec2.y=470;
 	rec3.x=100; rec3.y=490;
 	rec4.x=270; rec4.y=560;
-	affiche_inscription();
+	affiche_inscription(numJoueur);
 	SDL_StartTextInput();
     while (!done) {
         if (SDL_PollEvent(&event)) {
@@ -378,18 +374,29 @@ void inscription(char *pseudoJoueur){
 						clic.x = event.button.x;
 						clic.y = event.button.y;
 						if (dans_zone(clic,rec1,rec2)) // Valider
-							done = true;
+						{
+							if (empty)
+							{
+								affiche_texte("Erreur : nom entré vide !",30,err,rouge);
+								SDL_Delay(1300);
+								affiche_inscription(numJoueur);
+							}
+							else							
+								done = true;
+						}
 						else if(dans_zone(clic,rec3,rec4)) // Refaire
 						{
 							strcpy(text,"");
-							affiche_inscription();
+							empty=true;
+							affiche_inscription(numJoueur);
 						}	
 					}
                     break;
                 case SDL_TEXTINPUT:
 					if (strlen(text) > MAX_PSEUDONYME-1)
     					affiche_texte("Limite de caractères atteinte !",30,err,rouge);
-					else{				
+					else{
+						if(empty) empty = false;
                     	strcat(text, event.text.text);
     					affiche_texte(text,50,textP,blanc);
 					}
@@ -451,22 +458,34 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
     strcpy(p2,p);
 }
 
-void affiche_plateau_graphique() {
-	POINT l1;
-    l1.x = 300;
-    l1.y = 40;
-	int i,j;
+void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
+	POINT l1,fond1,fond2,fond3,fond4;
+	int i,j,espace=45,espace2=65;
+    l1.x = 300; l1.y = 40;
+	fond1.x = l1.x - 6; fond1.y = l1.y - 6;
+	fond2.x = l1.x + DIM_PLATEAU_W*espace - 4; fond2.y=fond1.y;
+	fond3.x = fond1.x; fond3.y = fond1.y;
+	fond4.x = fond3.x; fond4.y = DIM_PLATEAU_H*espace2 + espace2/2 + 2;
+	draw_line(fond1,fond2,blanc);
+	draw_line(fond3,fond4,blanc);
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-				affiche_tuile_graphique(plateau[i][j],l1);
-				l1.x+=45;
+			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
+			draw_line(fond3,fond4,blanc);
+			affiche_tuile_graphique(plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)],l1);
+			l1.x+=espace;
     	}
 		l1.x=300;
-        l1.y+=65;
+        l1.y+=espace2;
+		fond1.y = l1.y - 6;
+		fond2.y=fond1.y;
+		draw_line(fond1,fond2,blanc);
 	}
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
+
 
 void affiche_joueur_graphique(int num_joueur) {
 	POINT p;
@@ -479,14 +498,13 @@ void affiche_joueur_graphique(int num_joueur) {
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
     l1.y = 600;
 	int i;
-	TUILE t;
 
 	for (i = 0; i < joueurs.js[num_joueur].chevalet.nbTuiles ; i++)
     {
-		t = joueurs.js[num_joueur].chevalet.pile[i];
-		affiche_tuile_graphique(t,l1);
+		affiche_tuile_graphique(joueurs.js[num_joueur].chevalet.pile[i],l1);
 		l1.x+=44;
 	}
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
 void affiche_tuile_graphique(TUILE t,POINT p) {
@@ -495,17 +513,85 @@ void affiche_tuile_graphique(TUILE t,POINT p) {
 	load_img(chaine,p);
 }
 
-void selectionne_tuiles_chevalet(int num_joueur) {
+/*
+* affiche un menu
+* et renvoie le nombre de joueurs choisi
+*/
+int choix_joueurs(){
+	SDL_RenderClear(renderer);
+    POINT textP,rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,l,clic;
+
+	// fond d'ecran :
+	l.x=0;l.y=0;
+	load_img("assets/images/bg.png",l);
+
+	// titre :
+    textP.y=25; textP.x=380;
+    affiche_texte("Combien de joueurs ?",35,textP,noir);
+
+	// premiere selection :
+	rec1.x=100; rec1.y=100;
+	rec2.x=130; rec2.y=70;
+	draw_rectangle(rec1,rec2,blanc);
+	rec1.x+=10; rec1.y+=10;
+	affiche_texte("Un",40,rec1,noir);
+	
+	// deuxieme selection :
+	rec3.x=100; rec3.y=490;
+	draw_rectangle(rec3,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Deux",40,rec3,noir);
+
+	// Troisieme selection :
+	rec4.x=900; rec4.y=100;
+	draw_rectangle(rec4,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Trois",40,rec4,noir);
+
+	// Quatrieme selection :
+	// attention : quatrieme joueur impossible avec ia
+	rec5.x=900; rec5.y=490;
+	draw_rectangle(rec5,rec2,blanc);
+	rec3.x+=10; rec3.y+=10;
+	affiche_texte("Quatre",40,rec5,noir);
+
+	rec6.x = rec3.x + rec2.x; rec6.y = rec3.y + rec2.y;
+	rec7.x = rec4.x + rec2.x; rec7.y = rec4.y + rec2.y;
+	rec8.x = rec5.x + rec2.x; rec8.y = rec5.y + rec2.y;
+	rec2.x += rec1.x; rec2.y += rec1.y;
+
+	do
+    {
+        clic = wait_clic();
+    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec6) && !dans_zone(clic,rec4,rec7) && !dans_zone(clic,rec5,rec8));
+
+	if (dans_zone(clic,rec1,rec2))
+		return 1;
+	else if (dans_zone(clic,rec3,rec6))
+		return 2;
+	else if (dans_zone(clic,rec4,rec7))
+		return 3;
+	else if (dans_zone(clic,rec5,rec8))
+		return 4;
+	else
+		return -1;
+	
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
+}
+
+void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	POINT rec1,rec2,coin,dim,clic;
 	int i,j,xg,xd;
-	LISTE_TUILES liste;
-	liste.nbTuiles=0;
+	COULEUR c;
+	TUILE t;
+	selectionnees->nbTuiles=0;
 
 	rec1.x=1200; rec1.y=600;
 	rec2.x=170; rec2.y=70;
 	draw_rectangle(rec1,rec2,blanc);
 	rec1.x+=10; rec1.y+=10;
 	affiche_texte("Validez",40,rec1,blanc);
+	affiche_all();
 
 	rec1.x-=10; rec1.y-=10;
 	rec2.x=rec1.x+170; rec2.y=rec1.y+70;
@@ -520,15 +606,14 @@ void selectionne_tuiles_chevalet(int num_joueur) {
 					if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
 						coin.x=xg+(i*44)-1; coin.y=599;
 						dim.x=39; dim.y=55;
-						COULEUR c;
-						TUILE t = joueurs.js[num_joueur].chevalet.pile[i];
-						if(tuile_dans_liste(liste,t)) {
+						t = joueurs.js[num_joueur].chevalet.pile[i];
+						if(tuile_dans_liste(*selectionnees,t)) {
 							c = noir;
-							supprime_liste(&liste,t);
+							supprime_liste(selectionnees,t);
 						}
 						else {
 							c = jaune;
-							ajouter_tuile(&liste,t);
+							ajouter_tuile(selectionnees,t);
 						}
 						for(j=0;j<3;j++){
 							draw_rectangle(coin,dim,c);

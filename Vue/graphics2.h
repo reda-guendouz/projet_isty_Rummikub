@@ -84,7 +84,7 @@
 
 	void converti_int_en_str(int nb, char *p);
 	void transforme_tuile_en_path(TUILE t, char *p);
-	void affiche_plateau_graphique();
+	void affiche_plateau_graphique(TUILE *plateau_a_afficher);
 
 	void affiche_joueur_graphique(int num_joueur);
 
@@ -103,10 +103,10 @@
 
 	int dans_zone(POINT clic, POINT p1, POINT p2);
 
-	void inscription(char *pseudoJoueur);
+	void inscription(char *pseudoJoueur,int numJoueur);
 
 	void affiche_inscription();
 
-	void selectionne_tuiles_chevalet(int num_joueur);
-
 	void choix_case_plateau(POINT clic,int *ligne,int *colonne);
+	int choix_joueurs();
+	void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) ;

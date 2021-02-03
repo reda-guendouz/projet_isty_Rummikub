@@ -50,9 +50,9 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         tmp = i + 1;
         joueurs.js[i].numJoueur = tmp;
         if (nbJoueursH > 0)
-        {
+        {/*
             printf("Entrez le pseudonyme du joueur %d : ", tmp);
-            scanf(" %s", joueurs.js[i].pseudo);
+            scanf(" %s", joueurs.js[i].pseudo);*/
             nbJoueursH--;
         }
         else
