@@ -543,3 +543,8 @@ void selectionne_tuiles_chevalet(int num_joueur) {
 		clic = wait_clic();
 	}
 }
+
+
+void choix_case_plateau(POINT clic,int *ligne,int *colonne) {
+	
+}
