@@ -1,6 +1,5 @@
 #include "Vue/graphics2.h"
 
-
 int main(int argc, char const *argv[])
 {
     // creation des champs
@@ -16,29 +15,34 @@ int main(int argc, char const *argv[])
     {
         // menu_debut selection pvp/ia
         affiche_menu_debut();
-        rec1.x = 90; rec1.y = 320;
-        rec2.x = 640; rec2.y = 450;
-        rec3.x = 790; rec3.y = 420;
-        rec4.x = 1410; rec4.y = 550;
+        rec1.x = 90;
+        rec1.y = 320;
+        rec2.x = 640;
+        rec2.y = 450;
+        rec3.x = 790;
+        rec3.y = 420;
+        rec4.x = 1410;
+        rec4.y = 550;
         do
         {
             clic = wait_clic();
-        } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
-        if (clic.x < 640){
+        } while (!dans_zone(clic, rec1, rec2) && !dans_zone(clic, rec3, rec4));
+        if (clic.x < 640)
+        {
             printf("LETS GO WITH OUR AI !\n");
-            has_ia=true;
+            has_ia = true;
         }
         else
             printf("WE GO FOR FIGHTOUU !\n");
         nbJoueursH = choix_joueurs();
 
-        init_joueurs(nbJoueursH,nbJoueursH-has_ia);
+        init_joueurs(nbJoueursH, nbJoueursH - has_ia);
 
         for (i = 0; i < nbJoueursH; i++)
-            if (!has_ia || i!=3)
-                inscription(joueurs.js[i].pseudo,i+1);
+            if (!has_ia || i != 3)
+                inscription(joueurs.js[i].pseudo, i + 1);
 
-        printf("debug -- test creation joueur %d : %s\n",joueurActuel,joueurs.js[joueurActuel].pseudo);
+        printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
 
         affiche_auto_off();
 
@@ -129,7 +133,26 @@ int main(int argc, char const *argv[])
                 joueurActuel++;
             }
         }
+        
 
+        // PHASE SELECTION TUILES
+        //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
+        selectionne_tuiles_chevalet(joueurActuel, &selectionnees);
+        /// bouton refaire => continue;
+        // PHASE SELECTION/MODIFICATION PLATEAU
+        /// while(plateau){
+        //// ne pas oublier de supprimer copieP
+        /// bouton refaire plateau => continue;
+        /// bouton retour selection => break;
+        // VALIDATION DU JOUEUR
+        // PHASE VERIFICATION (implicite/caché)
+        /// if (toutEstBon) selection = false; plateau = false;
+        /// else break; // retour a la selection
+        /// }
+
+        affiche_all();
+        if (tourValide)
+            copie_plateau(plateau[0], copieP[0]);
     }
     wait_escape();
     return 0;
