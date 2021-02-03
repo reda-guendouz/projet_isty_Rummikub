@@ -110,3 +110,4 @@
 	int choix_joueurs();
 	BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) ;
 	void choix_case_plateau(POINT clic,int *ligne,int *colonne);
+	void affiche_modif_plateau(TUILE *plateau_a_afficher, int joueur);

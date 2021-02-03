@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
     // creation des champs
     POINT rec1,rec2,rec3,rec4,clic;
     int i,j,nbJoueursH,joueurActuel=0,ligne,colonne;
-    BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true;
+    BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true;
     LISTE_TUILES selectionnees;
     TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W];
 
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
 
         printf("debug -- test creation joueur %d : %s\n",joueurActuel,joueurs.js[joueurActuel].pseudo);
 
-        //affiche_auto_off();
+        affiche_auto_off();
 
         while (tour)
         {
@@ -64,22 +64,38 @@ int main(int argc, char const *argv[])
                     affiche_all();
                     if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees)){
                         selection=false;
-                        // afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
+                        //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
                         // choix placement tuile :
+                        rec3.x=50; rec3.y=200;
+                        rec4.x=120; rec4.y=40;
+                        draw_rectangle(rec3,rec4,blanc);
+                        rec1.x+=10; rec1.y+=10;
+                        affiche_texte("Refaire",20,rec1,blanc);
+                        affiche_all();
+                        // rec1 - rec2 : dimensions du plateau
                         rec1.x = 294; rec1.y = 34;
                         rec2.x = 1294; rec2.y = 506;
                         do
                         {
                             clic=wait_clic();
-                        } while (!dans_zone(clic,rec1,rec2));
-                        choix_case_plateau(clic,&ligne,&colonne);
-
-                        if (est_placable(selectionnees.nbTuiles,ligne,colonne)) // placement tuile :
+                        } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
+                        if (dans_zone(clic,rec1,rec2)) // choix - placement tuiles
                         {
-                            placer_tuiles(selectionnees,copieP[0],ligne,colonne);
-                        } else // retour a la selection
-                            selection = true;
-                    } else
+                            choix_case_plateau(clic,&ligne,&colonne);
+
+                            if (est_placable(selectionnees.nbTuiles,ligne,colonne)) // placement tuile :
+                            {
+                                placer_tuiles(selectionnees,copieP[0],ligne,colonne);
+                                affiche_plateau_graphique(copieP[0]);
+                                affiche_all();
+                            } else{ // retour a la selection
+                                selection = true;
+                                //// afficher "erreur: votre liste ne peut se mettre ici"
+                            }
+                        } else // choix - refaire
+                            selection=true;
+                        
+                    } else // choix - piocher
                     {
                         piocher(&joueurs.js[joueurActuel].chevalet);
                         selection = false;
@@ -87,15 +103,22 @@ int main(int argc, char const *argv[])
                     
                     /// bouton refaire => continue;
                     // PHASE SELECTION/MODIFICATION PLATEAU
-                    /// while(plateau){
-                        //// ne pas oublier de supprimer copieP
+                    while(modifP){
+                        affiche_modif_plateau(copieP[0],joueurActuel);
+                        rec3.x = 294; rec3.y = 34;
+                        rec4.x = 1294; rec4.y = 506;
+                        do
+                        {
+                            clic=wait_clic();
+                        } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
+                        choix_case_plateau(clic,&ligne,&colonne);
                         /// bouton refaire plateau => continue;
                         /// bouton retour selection => break;
                         // VALIDATION DU JOUEUR
                         // PHASE VERIFICATION (implicite/caché)
                         /// if (toutEstBon) selection = false; plateau = false;
                         /// else break; // retour a la selection
-                    /// }
+                    }
                 }
             }
 
