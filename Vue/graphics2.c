@@ -631,5 +631,17 @@ void selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 
 
 void choix_case_plateau(POINT clic,int *ligne,int *colonne) {
-	
+	int l=0,c=0,x=clic.x,y=clic.y;
+	x-=294;
+	y-=34;
+	while(x>45){
+		x-=45;
+		c++;
+	}
+	while(y>59){
+		y-=59;
+		l++;
+	}
+	*ligne=l;
+	*colonne=c;
 }
