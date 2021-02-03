@@ -1,5 +1,4 @@
 #include "modele.h"
-#include <unistd.h>
 
 int main(void)
 {
@@ -8,9 +7,10 @@ int main(void)
     unsigned char jeu = TRUE;
     unsigned char partie, tour, selectionTuiles, placerTuile, modifPlateau, victoire;
     int jouer, nbJoueurs,nbJoueursH, nbJoueursIA, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
-         colonneSource,  colonneDestination;
+    colonneSource,  colonneDestination, premiereCombinaisons;
     char ligneSource, ligneDestination;
     LISTE_TUILES tuilesSelectionnes;
+    int premiereMain[nbJoueurs];
     tuilesSelectionnes.pile[MAX_TUILES];
     tuilesSelectionnes.nbTuiles = 0;
     TUILE copiePlateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
@@ -20,7 +20,7 @@ int main(void)
     {
         //LANCEMENT DU JEU
         partie = FALSE;
-        system("clear");
+        //system("clear");
         printf("Groupe : 8 Rummikub \n");
         printf("1. Lancer un partie \n");
         printf("2. Voir Tableau Score \n");
@@ -31,29 +31,31 @@ int main(void)
         if (jouer == 3)
             jeu = FALSE;
         else if (jouer == 2){
-            do
-            {
-                affiche_score();
-                printf("\n");
-                printf("1. Lancer un partie \n");
-                printf("2. Quitter le jeu\n");
-                scanf(" %d", &jouer);
-            } while (jouer != 1 && jouer != 2);
+            affiche_score();
+            printf("\n");
+            printf("1. Lancer un partie \n");
+            printf("2. Quitter le jeu\n");
+            jouer = readInt(1,2);
             if (jouer == 2)
                 jeu = FALSE;
+            system("clear");
         }
         //LANCEMENT D'UNE PARTIE
         if(jouer == 1)
         {
+            int i = 0;
+            for (i = 0; i < 4; i++){
+                premiereMain[i]= 0;
+            }
             joueurActuel = 0;
             partie = TRUE;
             victoire = FALSE;
             init_pioche();
             // SELECTION DES JOUEURS
             nbJoueurs = -1;
-            printf("Combien de joueurs jouent ?\n");
+            printf("Combien de joueurs jouent (2 à 4)?\n");
             nbJoueurs = readInt(2,4);
-            printf("Combien de humains jouent ?\n");
+            printf("Combien de humains jouent (1 à %d)?\n",nbJoueurs);
             nbJoueursH = readInt(1,nbJoueurs);
             nbJoueursIA = nbJoueurs - nbJoueursH;
             init_joueurs(nbJoueurs,nbJoueursH);
@@ -96,8 +98,8 @@ int main(void)
                             affiche_liste_tuiles(tuilesSelectionnes);
                             printf("\n\n");
                             printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
-                            printf("-1. Valider la selection\n");
-                            printf("-2. Piochez et passer son tour\n");
+                            printf("(-1). Valider la selection\n");
+                            printf("(-2). Piochez et passer son tour\n");
                             numTuileChoisis = readInt(-2,joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (numTuileChoisis == -2)
@@ -111,8 +113,14 @@ int main(void)
                             {
                                 if (tuilesSelectionnes.nbTuiles > 0)
                                 {
-                                    selectionTuiles = FALSE;
-                                    placerTuile = TRUE;
+                                    if (!premiereMain[joueurActuel] && calcul_main(tuilesSelectionnes) < 30){
+                                        printf("Pour votre première main, choisisez une combinaisons de tuiles supérieur à 30\n");
+                                    }
+                                    else {
+                                        premiereMain[joueurActuel] = 1;
+                                        selectionTuiles = FALSE;
+                                        placerTuile = TRUE;
+                                    }
                                 }
                                 else
                                     printf("Selectionner au moins une tuile avant de valider la selection\n");
@@ -137,7 +145,6 @@ int main(void)
                             printf("0. Piochez et passer son tour\n");
                             printf("1. Refaire sa selection\n");
                             printf("2. Placer les tuiles sur le plateau\n");
-                            scanf(" %d", &choixPlacement);
                             choixPlacement = readInt(0,2);
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (choixPlacement == 0)
@@ -263,8 +270,32 @@ int main(void)
                 printf("TOUR DE l'IA\n");
                 affiche_joueur(joueurs.js[joueurActuel]);
                 affiche_plateau(plateau[0]);
-                choixJoueur = action_tour_ia(&joueurs.js[joueurActuel].chevalet);
-                sleep(5);
+                LISTE_TUILES combinaisonsTrouve;
+                combinaisonsTrouve.nbTuiles = 0;
+                int i =0;
+                trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
+                copie_plateau(copiePlateau[0],plateau[0]);
+                if (!premiereMain[joueurActuel] && calcul_main(combinaisonsTrouve) <= 30) {
+                    printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
+                    piocher(&joueurs.js[joueurActuel].chevalet);
+                }
+                else {
+                    premiereMain[joueurActuel] = 1;
+                    if (combinaisonsTrouve.nbTuiles > 0 && placer_combinaisons(combinaisonsTrouve, copiePlateau[0])) 
+                    {
+                        printf("COMBINAISONS TROUVE PAR L'IA \n");
+                        for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
+                            supprime_liste(&joueurs.js[joueurActuel].chevalet,combinaisonsTrouve.pile[i]);
+                        }
+                        copie_plateau(plateau[0], copiePlateau[0]);      
+                    } 
+                    else {
+                        printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
+                        piocher(&joueurs.js[joueurActuel].chevalet);
+                    }
+                    choixJoueur = -1;
+                    system("clear");
+                }
             }
             //PIOCHER
             if (choixJoueur == 2)

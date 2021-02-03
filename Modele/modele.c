@@ -133,11 +133,15 @@ void melanger_pioche()
 
 void piocher(LISTE_TUILES *liste)
 {
-    pioche.nbTuiles--;
-    TUILE tuile = pioche.pile[pioche.nbTuiles];
-    ajouter_tuile(liste, tuile);
-    /*joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
-    joueurs.js[numJoueur].chevalet.nbTuiles++;*/
+    if (pioche.nbTuiles > 0){
+        pioche.nbTuiles--;
+        TUILE tuile = pioche.pile[pioche.nbTuiles];
+        ajouter_tuile(liste, tuile);
+    }
+    else {
+        printf("PLUS DE TUILES DANS LA PIOCHE");
+        sleep(3);
+    }
 }
 
 /***********
@@ -146,22 +150,6 @@ void piocher(LISTE_TUILES *liste)
 void affiche_plateau(TUILE *plateau_a_afficher)
 {
     int i, j, k;
-
-    // partie test
-    /*
-    TUILE t1;
-    t1.clr = ROUGE;
-    t1.chiffre = 9;
-    TUILE t2;
-    t2.clr = BLEU;
-    t2.chiffre = 9;
-    TUILE t3;
-    t3.clr = ORANGE;
-    t3.chiffre = 9;
-    plateau[0][0] = t1;
-    plateau[0][1] = t2;
-    plateau[0][2] = t3;*/
-
     printf("\nPlateau:\n  ");
     for (k = 0; k < 22; k++)
     {
@@ -543,7 +531,6 @@ int analyse_plateau(TUILE *plateau)
             }
         }
     }
-
     return TRUE;
 }
 
@@ -553,35 +540,6 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
     for (i = 0; i < tuilesSelectionnees.nbTuiles; i++)
         supprime_liste(chevalet, tuilesSelectionnees.pile[i]);
 }
-
-
-
-int action_tour_ia(LISTE_TUILES* chevaletIa)
-{
-    LISTE_TUILES combinaisonsTrouve;
-    int i =0;
-    TUILE copiePlateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
-    combinaisonsTrouve.nbTuiles = 0;
-    copie_plateau(copiePlateau[0],plateau[0]);
-    affiche_liste_tuiles(*chevaletIa);
-    trouver_combinaisons(*chevaletIa,&combinaisonsTrouve);
-    if (combinaisonsTrouve.nbTuiles > 0) 
-    {
-        printf("COMBINAISONS TROUVE IA PLACE \n");
-        for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
-            supprime_liste(chevaletIa,combinaisonsTrouve.pile[i]);
-        }
-        placer_combinaisons(combinaisonsTrouve, copiePlateau[0]);
-        copie_plateau(plateau[0], copiePlateau[0]);
-    }
-        
-    else {
-        printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
-        piocher(chevaletIa);
-    }
-    return 2;
-}
-
 
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve)
 {
@@ -607,8 +565,8 @@ void combinationUtil(int arr[], int taille, int r, int index, int data[], int i,
         for (j = 0; j < r; j++)
             ajouter_tuile(&new, chevaletIa.pile[data[j]]);
         if (test_combinaison(&new)){
-            if (new.nbTuiles > max->nbTuiles)
-                copie_liste(&new,max); // VERIF max poids
+            if (calcul_main(new) > calcul_main(*max))
+                copie_liste(&new,max);
         }
         return;
     }
@@ -628,17 +586,23 @@ void copie_liste(LISTE_TUILES* src, LISTE_TUILES* dst){
     }
 }
 
-void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau) {
+int placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau) {
     int i,j, tailleCombinaisons = combinaisonTrouve.nbTuiles;
     for (i = 0; i<DIM_PLATEAU_H;i++){
         for (j=0; j<DIM_PLATEAU_W;j++){
-            if (est_placable(tailleCombinaisons, i,j)){
-                placer_tuiles(combinaisonTrouve, copiePlateau, i,j);
-                return;
+            if (j > 0){
+                j--;tailleCombinaisons++;
+            }
+            if (est_placable(tailleCombinaisons,i,j)){
+                placer_tuiles(combinaisonTrouve,copiePlateau,i,j);
+                return TRUE;
+            }
+            if (j > 0){
+                j++;tailleCombinaisons--;
             }
         }
     }
-        
+    return FALSE;   
 }
 
 int readInt( int limMin, int limMax ) {
@@ -657,4 +621,12 @@ int readInt( int limMin, int limMax ) {
             return (int)res;
       }
    }
+}
+
+int calcul_main(LISTE_TUILES listeTuiles){
+    int i;
+    int compteur = 0;
+    for (i = 0; i < listeTuiles.nbTuiles; i++)
+        compteur += listeTuiles.pile[i].chiffre;
+    return compteur;
 }
