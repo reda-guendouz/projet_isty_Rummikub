@@ -62,6 +62,10 @@ int main(int argc, char const *argv[])
                     // PHASE SELECTION TUILES
                     //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
                     selectionnees.nbTuiles=0; // cense vider la pile, a tester
+                    rec4.x=120; rec4.y=40;
+                    rec3.x=50; rec3.y=200;
+                    draw_fill_rectangle(rec3,rec4,noir);
+                    printf("debug -- refaire\n");
 
                     copie_plateau(copieP[0],plateau[0]);
                     affiche_plateau_graphique(copieP[0]);
@@ -72,12 +76,11 @@ int main(int argc, char const *argv[])
                         printf("debug -- selection tuiles\n");
                         //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
                         // choix placement tuile :
-                        rec4.x=120; rec4.y=40;
-                        rec3.x=50; rec3.y=200;
                         draw_rectangle(rec3,rec4,blanc);
                         rec3.x+=10; rec3.y+=10;
                         affiche_texte("Refaire",20,rec3,blanc);
                         rec3.x-=10; rec3.y-=10;
+                        rec4.x+=rec3.x; rec4.y+=rec3.y;
                         affiche_all();
                         // ici, rec1 - rec2 : dimensions du plateau
                         rec1.x = 294; rec1.y = 34;
@@ -112,9 +115,10 @@ int main(int argc, char const *argv[])
                             selection = false;
                             modifP=false;
                             tourValide=false;
-                        } else  // choix - refaire
+                        } else if (dans_zone(clic,rec3,rec4)){ // choix - refaire
                             selection=true;
-                        
+                            modifP=false;
+                        }
                     } else // choix - piocher
                     {
                         piocher(&joueurs.js[joueurActuel].chevalet);

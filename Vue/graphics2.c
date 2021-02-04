@@ -490,13 +490,12 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 
 
 void affiche_joueur_graphique(int num_joueur) {
-	POINT p;
+	POINT p,l1;
 	p.x=75;
 	p.y=600;
 
 	affiche_texte(joueurs.js[num_joueur].pseudo,20,p,blanc);
 
-	POINT l1;
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
     l1.y = 600;
 	int i;
