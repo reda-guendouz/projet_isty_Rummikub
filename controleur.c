@@ -2,7 +2,7 @@
 
 int main(int argc, char const *argv[])
 {
-    // creation des champs
+    // creation des variables du jeu
     POINT rec1,rec2,rec3,rec4,rec5,rec6,texteInfo,clic;
     int i,j,nbJoueursH,joueurActuel=0,ligne,colonne;
     BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true;
