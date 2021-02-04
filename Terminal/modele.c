@@ -219,67 +219,94 @@ void placer_tuiles(LISTE_TUILES selection, TUILE *copie_plateau, int l, int c)
 
 int suite(LISTE_TUILES *l)
 {
-    int i,suite = 0;
-    int joker = 0;
-    if (l->nbTuiles > 2)
-    {
+    if (l->nbTuiles > 2) {
+        int i, nbJoker = 0, val = 0, clr = NOIR, new = 0,compteur =0;
+        TUILE remplacantJoker;
+        LISTE_TUILES copie;
+        copie.nbTuiles = 0;
+     
         tri_liste(l);
-        for (i = 0; i < l->nbTuiles-1; i++)
-        {
-            if (l->pile[i].clr == NOIR && l->pile[i].chiffre == -1){
-                joker +=1;
-            }
-            else if (l->pile[i].clr == l->pile[i+1].clr) 
-            {
-                if (l->pile[i].chiffre + 1 == l->pile[i+1].chiffre){
-                    suite +=1;
+        for (i = 0; i < l->nbTuiles; i++){
+            if (l->pile[i].chiffre == -1)
+                nbJoker++;
+            else {
+                if (!new){
+                    val = l->pile[i].chiffre;
+                    clr = l->pile[i].clr;
+                    new = 1;
+                    ajouter_tuile(&copie,l->pile[i]);
                 }
-                else 
-                {
-                    if (joker > 0) //si un joker
-                    {
-                        joker -= 1;
-                        if (l->pile[i].chiffre == -l->pile[i+1].chiffre +2)
-                            suite +=1;
-                        else
-                            return 0;
+                else {
+                    if (val + 1 == l->pile[i].chiffre && clr == l->pile[i].clr){
+                        val++;
+                        ajouter_tuile(&copie,l->pile[i]);
                     }
-                    else
+                    else if (val + 1 != l->pile[i].chiffre && clr == l->pile[i].clr && nbJoker){
+                        remplacantJoker.clr = clr;
+                        remplacantJoker.chiffre = val + 1;
+                        val++;
+                        ajouter_tuile(&copie,remplacantJoker);
+                        nbJoker--;
+                        i--;
+                    }
+                    else 
                         return 0;
-                } 
+                }
             }
-            else
-                return 0;
         }
-        return 1;
+        val++;
+        for (i = 0; i<nbJoker;i++){
+            remplacantJoker.chiffre = val;
+            remplacantJoker.clr = clr;
+            ajouter_tuile(&copie,remplacantJoker);
+            val++;
+        }
+        if (!new) {
+            for (i = 0; i<l->nbTuiles;i++)
+                compteur += 13 - i;
+            return compteur;
+        }
+        else 
+            return calcul_main(copie);
     }
+
     return 0;
 }
 
 int triplon_quadruplon(LISTE_TUILES *l)
 {
-    if (l->nbTuiles > 2 && l->nbTuiles < 5)
-    {
-        int i, j;
-        for (i = 0; i < l->nbTuiles - 1; i++)
-        {
-            if (l->pile[i].chiffre == l->pile[i + 1].chiffre)
-            {
-                for (j = i + 1; j < l->nbTuiles; j++)
-                {
-                    if (l->pile[i].clr == l->pile[j].clr)
-                    {
-                        return 0;
+    if (l->nbTuiles > 2 && l->nbTuiles < 5) {
+        int i,j, nbJoker = 0, compteur = 0, clr = NOIR, new = 0;
+        int  couleur[4];
+        for (i = 0; i <4; i++)
+            couleur[i] = 1;
+        
+        tri_liste(l);
+        for (i = 0; i < l->nbTuiles; i++){
+            if (l->pile[i].chiffre == -1)
+                nbJoker++;
+            else {
+                if (!new){
+                    compteur = l->pile[i].chiffre;
+                    clr = l->pile[i].clr;
+                    couleur[clr]=0;
+                    new = 1;
+                }
+                else {
+                    if (compteur == l->pile[i].chiffre && couleur[l->pile[i].clr]){
+                        couleur[l->pile[i].clr] = 0;
                     }
+                    else
+                        return 0;
                 }
             }
-            else
-                return 0;
         }
-        return l->pile[0].chiffre * l->nbTuiles;
+        if (!new)
+            return 13*l->nbTuiles;
+        else 
+            return compteur*l->nbTuiles;
     }
-    else
-        return 0;
+    return 0;
 }
 
 void tri_liste(LISTE_TUILES *l)

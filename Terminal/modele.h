@@ -159,7 +159,7 @@ int est_victorieux(JOUEUR j);
 TUILE plateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
 
 /*
-affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
+Affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
 */
 void affiche_plateau(TUILE *plateau_a_afficher);
 

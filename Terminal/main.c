@@ -18,9 +18,34 @@ int main(void)
 
     while (jeu)
     {
+
+        LISTE_TUILES test;
+        test.nbTuiles =0;
+        TUILE t1,t2,t3,t4,t5,t6;
+        t1.chiffre = 1;
+        t1.clr = NOIR;
+        t2.chiffre = -1;
+        t2.clr = NOIR;
+        t3.chiffre = 3;
+        t3.clr = NOIR;
+        t4.chiffre = 6;
+        t4.clr = NOIR;
+        ajouter_tuile(&test,t1);
+        ajouter_tuile(&test,t2);
+        ajouter_tuile(&test,t3);
+        ajouter_tuile(&test,t2);
+        ajouter_tuile(&test,t4);
+        ajouter_tuile(&test,t2);
+
+        int reponse;
+        reponse = suite(&test);
+        printf("SUITE  : %d \n",reponse);
+        sleep(5);
+
+
         //LANCEMENT DU JEU
         partie = FALSE;
-        //system("clear");
+        system("clear");
         printf("Groupe : 8 Rummikub \n");
         printf("1. Lancer un partie \n");
         printf("2. Voir Tableau Score \n");
@@ -45,7 +70,7 @@ int main(void)
         {
             int i = 0;
             for (i = 0; i < 4; i++){
-                premiereMain[i]= 0;
+                premiereMain[i]= 1;
             }
             joueurActuel = 0;
             partie = TRUE;
@@ -97,6 +122,8 @@ int main(void)
                             printf("\nTuile selectionne : \n");
                             affiche_liste_tuiles(tuilesSelectionnes);
                             printf("\n\n");
+                            if (premiereMain[joueurActuel] && calcul_main(tuilesSelectionnes) < 30)
+                                printf("Pour votre première main, choisisez une combinaisons de tuiles supérieur à 30\n\n");
                             printf("Quelle tuile voulez-vous jouez dans votre chevalet ? (Donnez le numéro de la tuile)\n");
                             printf("(-1). Valider la selection\n");
                             printf("(-2). Piochez et passer son tour\n");
@@ -113,11 +140,9 @@ int main(void)
                             {
                                 if (tuilesSelectionnes.nbTuiles > 0)
                                 {
-                                    if (!premiereMain[joueurActuel] && calcul_main(tuilesSelectionnes) < 30){
-                                        printf("Pour votre première main, choisisez une combinaisons de tuiles supérieur à 30\n");
-                                    }
-                                    else {
-                                        premiereMain[joueurActuel] = 1;
+
+                                    if (!premiereMain[joueurActuel] && !calcul_main(tuilesSelectionnes) < 30) {
+                                        premiereMain[joueurActuel] = 0;
                                         selectionTuiles = FALSE;
                                         placerTuile = TRUE;
                                     }
@@ -272,10 +297,10 @@ int main(void)
                 affiche_plateau(plateau[0]);
                 LISTE_TUILES combinaisonsTrouve;
                 combinaisonsTrouve.nbTuiles = 0;
-                int i =0;
+                int i = 0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copiePlateau[0],plateau[0]);
-                if (!premiereMain[joueurActuel] && calcul_main(combinaisonsTrouve) <= 30) {
+                if (premiereMain[joueurActuel] && calcul_main(combinaisonsTrouve) <= 30) {
                     printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
                 }
@@ -293,9 +318,10 @@ int main(void)
                         printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
                         piocher(&joueurs.js[joueurActuel].chevalet);
                     }
-                    choixJoueur = -1;
-                    system("clear");
                 }
+                sleep(3);
+                choixJoueur = -1;
+                system("clear");
             }
             //PIOCHER
             if (choixJoueur == 2)
@@ -310,6 +336,7 @@ int main(void)
                 tuilesSelectionnes.pile[MAX_TUILES];
                 tuilesSelectionnes.nbTuiles = 0;
             }
+            //FIN DE PARTIE VICTOIRE
             else
             {
                 system("clear");
