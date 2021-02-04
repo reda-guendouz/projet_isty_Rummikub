@@ -362,6 +362,25 @@ void inscription(char *pseudoJoueur, int numJoueur){
         if (SDL_PollEvent(&event)) {
 			// case a faire pour plus tard : case SDL_DELETE
             switch (event.type) {
+				case SDL_KEYDOWN:
+					if (event.key.keysym.sym == SDLK_RETURN)
+					{
+						if (empty)
+							{
+								affiche_texte("Erreur : nom entré vide !",30,err,rouge);
+								SDL_Delay(1200);
+								affiche_inscription(numJoueur);
+							}
+							else							
+								done = true;
+					} else if (event.key.keysym.sym == SDLK_BACKSPACE)
+					{
+						text[strlen(text)-1] = '\0';
+						affiche_inscription(numJoueur);
+    					affiche_texte(text,50,textP,blanc);
+					}
+										
+					break;
                 case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == SDL_BUTTON_LEFT)
 					{
@@ -387,7 +406,7 @@ void inscription(char *pseudoJoueur, int numJoueur){
 					}
                     break;
                 case SDL_TEXTINPUT:
-					if (strlen(text) > MAX_PSEUDONYME-1)
+					if (strlen(text) == MAX_PSEUDONYME)
     					affiche_texte("Limite de caractères atteinte !",30,err,rouge);
 					else{
 						if(empty) empty = false;
