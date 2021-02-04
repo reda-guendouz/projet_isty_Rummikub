@@ -363,7 +363,7 @@ void inscription(char *pseudoJoueur, int numJoueur){
 			// case a faire pour plus tard : case SDL_DELETE
             switch (event.type) {
 				case SDL_KEYDOWN:
-					if (event.key.keysym.sym == SDLK_RETURN)
+					if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER )
 					{
 						if (empty)
 							{
