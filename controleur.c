@@ -21,6 +21,7 @@ int main(int argc, char const *argv[])
         rec4.x = 1375; rec4.y = 500;
         rec5.x = 730; rec5.y = 600;
         rec6.x = 800; rec6.y = 630;
+        
         texteInfo.x=50; texteInfo.y=350;
         do
         {
@@ -30,7 +31,7 @@ int main(int argc, char const *argv[])
         {
             has_ia = true;
         }
-        else if (dans_zone(clic, rec5, rec6)) {
+        else if (dans_zone(clic, rec5, rec6)) { // quitter
             IMG_Quit();
             TTF_Quit();
             SDL_Quit();
@@ -53,7 +54,15 @@ int main(int argc, char const *argv[])
         printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
 
         affiche_auto_off();
-
+        // bouton valider :
+        rec7.x=1360; rec7.y=460;
+	    rec8.x=1480; rec8.y=500;
+        // ici, rec1 - rec2 : dimensions du plateau
+        rec1.x = 294; rec1.y = 34;
+        rec2.x = 1294; rec2.y = 506;
+        // ici, rec5 - rec6 : bouton piocher
+        rec5.x = 1360; rec5.y = 510;
+        rec6.x = 1480; rec6.y = 550;
         while (tour)
         {
             fill_screen(noir);
@@ -93,12 +102,6 @@ int main(int argc, char const *argv[])
                         rec3.x-=10; rec3.y-=10;
                         rec4.x+=rec3.x; rec4.y+=rec3.y;
                         affiche_all();
-                        // ici, rec1 - rec2 : dimensions du plateau
-                        rec1.x = 294; rec1.y = 34;
-                        rec2.x = 1294; rec2.y = 506;
-                        // ici, rec5 - rec6 : bouton piocher
-                        rec5.x = 1190; rec5.y = 640;
-                        rec6.x = 1310; rec6.y = 680;
                         do
                         {
                             clic=wait_clic();
@@ -143,6 +146,7 @@ int main(int argc, char const *argv[])
                             selection = false;
                             modifP=false;
                             tourValide=false;
+                            break;
                         } else if (dans_zone(clic,rec3,rec4)){ // choix - refaire
                             selection=true;
                             modifP=false;
@@ -150,9 +154,11 @@ int main(int argc, char const *argv[])
                     } else // choix - piocher
                     {
                         piocher(&joueurs.js[joueurActuel].chevalet);
+                        printf("piocher");
                         selection = false;
                         modifP=false;
                         tourValide=false;
+                        break;
                     }
                     
                     /// bouton refaire => continue;
@@ -165,7 +171,7 @@ int main(int argc, char const *argv[])
                         {
                             clic = wait_clic();
                             printf("debug -- modifP\n");
-                        } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec5,rec6));//plateau - refaire - piocher - valider
+                        } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec7,rec8));//plateau - refaire - piocher - valider
                         if (dans_zone(clic,rec1,rec2)) // plateau intervertion 1
                         {
                             choix_case_plateau(clic,&ligne,&colonne);
@@ -193,7 +199,7 @@ int main(int argc, char const *argv[])
                                 modifP2=false;
                                 modifP=false;
                                 selection=false;
-                                continue;
+                                break;
                             } else
                             {
                                 //// afficher : "erreur : placement de tuiles invalides"
@@ -234,7 +240,8 @@ int main(int argc, char const *argv[])
                                     modifP2=false;
                                     modifP=false;
                                     selection=false;
-                                    break;
+                                    tourValide=true;
+                                    continue;
                                 } else
                                 {
                                     //// afficher : "erreur : placement de tuiles invalides"
@@ -246,7 +253,7 @@ int main(int argc, char const *argv[])
                             {
                                 clic = wait_clic();
                             printf("debug -clic- modifP2 2eme tour\n");
-                            } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec5,rec6));//plateau - refaire - piocher - valider
+                            } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec7,rec8));//plateau - refaire - piocher - valider
                             if (dans_zone(clic,rec1,rec2)) // plateau intervertion 1
                             {
                                 choix_case_plateau(clic,&ligne,&colonne);
@@ -264,6 +271,7 @@ int main(int argc, char const *argv[])
                                 selection = false;
                                 modifP=false;
                                 tourValide=false;
+                                break;
                             } else // valider
                             {
                                 if(analyse_plateau(copieP[0])){
@@ -271,6 +279,7 @@ int main(int argc, char const *argv[])
                                     modifP2=false;
                                     modifP=false;
                                     selection=false;
+                                    tourValide=true;
                                     break;
                                 } else
                                 {

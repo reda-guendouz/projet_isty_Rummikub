@@ -372,7 +372,7 @@ void inscription(char *pseudoJoueur, int numJoueur){
 							if (empty)
 							{
 								affiche_texte("Erreur : nom entré vide !",30,err,rouge);
-								SDL_Delay(1300);
+								SDL_Delay(1200);
 								affiche_inscription(numJoueur);
 							}
 							else							
@@ -519,7 +519,7 @@ void affiche_tuile_graphique(TUILE t,POINT p) {
 	} else
 	{
 		POINT p2;
-		p2.x=40; p2.y=56;
+		p2.x=41; p2.y=56;
 		draw_fill_rectangle(p,p2,noir);
 	}	
 }
@@ -636,7 +636,7 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	rec4.x=rec3.x + rec2.x; rec4.y=rec3.y + rec2.y;
 	rec2.x+=rec1.x; rec2.y+=rec1.y;
 	clic = wait_clic();
-	while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4))
+	while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4)) // valider - piocher
 	{
 		if(clic.y>=600 && clic.y<=654){
 			xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
@@ -668,10 +668,10 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 		clic = wait_clic();
 	}
 
-	if (clic.y>640) // piocher
-		return false;
+	if (dans_zone(clic,rec1,rec2)) // piocher
+		return true;
 	else // valider selection
-		return true;	
+		return false;	
 }
 
 void affiche_modif_plateau(TUILE *plateau_a_afficher, int joueur){
