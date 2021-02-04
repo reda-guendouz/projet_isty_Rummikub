@@ -291,23 +291,21 @@ void fill_screen(COULEUR clr){
 }
 
 void affiche_menu_debut(){
-	fill_screen(cyan);
+	fill_screen(noir);
 
-    POINT welcomeText,RecEmplacement,RecDimesions;
-    welcomeText.y=25; welcomeText.x=400;
-    affiche_texte_special("RUMMIKUB",130,welcomeText,vertolive,"assets/Cartoon.ttf");
-    welcomeText.y=400; welcomeText.x=680;
-    affiche_texte("OR",50,welcomeText,noir);
-    RecEmplacement.x = 90; RecEmplacement.y = 320;
-    RecDimesions.x = 550; RecDimesions.y = 130;
-    draw_fill_rectangle(RecEmplacement,RecDimesions,jaune);
-    RecEmplacement.x += 30; RecEmplacement.y += 15;
-    affiche_texte_special("Player(s) VS IA",70,RecEmplacement,noir,"assets/Poppins.ttf");
-    RecEmplacement.x = 790; RecEmplacement.y = 420;
-    RecDimesions.x = 620; RecDimesions.y = 130;
-	draw_fill_rectangle(RecEmplacement,RecDimesions,jaune);
-    RecEmplacement.x += 30; RecEmplacement.y += 15;
-    affiche_texte_special("PVP FIGHTOUUU !",70,RecEmplacement,noir,"assets/Poppins.ttf");
+    POINT text,RecEmplacement;
+    text.y=25; text.x=400;
+    affiche_texte_special("RUMMIKUB",130,text,blanc,"assets/Cartoon.ttf");
+    text.x=720; text.y=385; 
+    affiche_texte_special("or",50,text,blanc,"assets/valianttimes.ttf");
+    RecEmplacement.x = 250; RecEmplacement.y = 320;
+    affiche_texte_special("PLAYERS VS IA",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
+    RecEmplacement.x = 850; RecEmplacement.y = 420;
+    affiche_texte_special("PLAYERS VS PLAYERS",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
+
+	text.x=730; text.y=600;
+    affiche_texte_special("Quitter",30,text,blanc,"assets/valianttimes.ttf");
+    
 }
 
 int dans_zone(POINT clic, POINT p1, POINT p2){
@@ -530,64 +528,87 @@ void affiche_tuile_graphique(TUILE t,POINT p) {
 * affiche un menu
 * et renvoie le nombre de joueurs choisi
 */
-int choix_joueurs(){
+int choix_joueurs(int nbIA,BOOL demandeIA){
 	SDL_RenderClear(renderer);
-    POINT textP,rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,l,clic;
+    POINT textP,rec1,rec2,rec3,rec4,rec5,rec6,l,clic;
+	int i,step=3;
 
 	// fond d'ecran :
 	l.x=0;l.y=0;
 	load_img("assets/images/bg.png",l);
 
 	// titre :
-    textP.y=25; textP.x=380;
-    affiche_texte("Combien de joueurs ?",35,textP,noir);
+    textP.x=560; textP.y=25;
+	if(demandeIA) {
+		affiche_texte_special("Combien d'IA' ?",70,textP,blanc,"assets/valianttimes.ttf");
+	}
+	else{
+		affiche_texte_special("Combien de joueur ?",70,textP,blanc,"assets/valianttimes.ttf");
+	}
+	char tab[4];
+	if(!demandeIA && nbIA==0) {
+		tab[0] = '2';
+		tab[1] = '3';
+		tab[2] = '4';
+		tab[3] = '\0';
+	}
+	else {
+		tab[0] = '1';
+		tab[1] = '2';
+		tab[2] = '3';
+		tab[3] = '\0';
+	}
+	if(!demandeIA && nbIA==2)
+		step=2;
 
-	// premiere selection :
-	rec1.x=100; rec1.y=100;
-	rec2.x=130; rec2.y=70;
-	draw_rectangle(rec1,rec2,blanc);
-	rec1.x+=10; rec1.y+=10;
-	affiche_texte("Un",40,rec1,noir);
+	textP.x=400; textP.y=300;
+	char var[2];
+	var[1]='\0';
+
+	for(i=0; i < step ;i++) {
+		var[0]=tab[i];
+   		affiche_texte_special(var,200,textP,blanc,"assets/valianttimes.ttf");
+		textP.x+= 300;
+	}
+
+	rec1.x=400; rec1.y=300;
+	rec2.x=460; rec2.y=480;
+	rec3.x=rec1.x+300; rec3.y=rec1.y;
+	rec4.x=770; rec4.y=rec2.y;
+	rec5.x=rec1.x+300; rec5.y=rec1.y;
+	rec6.x=1060; rec6.y=rec2.y;
+
+	if (step==2) {
+		do
+    {
+        clic = wait_clic();
+    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
+	}
 	
-	// deuxieme selection :
-	rec3.x=100; rec3.y=490;
-	draw_rectangle(rec3,rec2,blanc);
-	rec3.x+=10; rec3.y+=10;
-	affiche_texte("Deux",40,rec3,noir);
-
-	// Troisieme selection :
-	rec4.x=900; rec4.y=100;
-	draw_rectangle(rec4,rec2,blanc);
-	rec3.x+=10; rec3.y+=10;
-	affiche_texte("Trois",40,rec4,noir);
-
-	// Quatrieme selection :
-	// attention : quatrieme joueur impossible avec ia
-	rec5.x=900; rec5.y=490;
-	draw_rectangle(rec5,rec2,blanc);
-	rec3.x+=10; rec3.y+=10;
-	affiche_texte("Quatre",40,rec5,noir);
-
-	rec6.x = rec3.x + rec2.x; rec6.y = rec3.y + rec2.y;
-	rec7.x = rec4.x + rec2.x; rec7.y = rec4.y + rec2.y;
-	rec8.x = rec5.x + rec2.x; rec8.y = rec5.y + rec2.y;
-	rec2.x += rec1.x; rec2.y += rec1.y;
-
 	do
     {
         clic = wait_clic();
-    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec6) && !dans_zone(clic,rec4,rec7) && !dans_zone(clic,rec5,rec8));
+    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6));
 	
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 
-	if (dans_zone(clic,rec1,rec2))
+	if (dans_zone(clic,rec1,rec2)) {
+		if(!demandeIA && nbIA==0)
+			return 2;
 		return 1;
-	else if (dans_zone(clic,rec3,rec6))
+	}
+	else if (dans_zone(clic,rec3,rec4)){
+		if(!demandeIA && nbIA==0)
+			return 3;
 		return 2;
-	else if (dans_zone(clic,rec4,rec7))
+	}
+		
+	else if (step==2 && dans_zone(clic,rec5,rec6)) {
+		if(!demandeIA && nbIA==0)
+			return 4;
 		return 3;
-	else if (dans_zone(clic,rec5,rec8))
-		return 4;
+	}
+		
 	else
 		return -1;
 }
@@ -599,7 +620,7 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	TUILE t;
 	selectionnees->nbTuiles=0;
 
-	rec1.x=1200; rec1.y=600;
+	rec1.x=1360; rec1.y=460;
 	rec2.x=120; rec2.y=40;
 	draw_rectangle(rec1,rec2,blanc);
 	rec1.x+=10; rec1.y+=10;
@@ -667,10 +688,34 @@ void choix_case_plateau(POINT clic,int *ligne,int *colonne) {
 		x-=45;
 		c++;
 	}
-	while(y>59){
-		y-=59;
+	while(y>65){
+		y-=65;
 		l++;
 	}
 	*ligne=l;
 	*colonne=c;
 }
+
+
+void tuile_selectionne(int ligne,int colonne,BOOL selec) {
+	POINT p,dim;
+	int i;
+	COULEUR c;
+	if(selec)
+		c = jaune;
+	else
+		c = noir;
+
+	p.x = 300 + (ligne*45) -1; 
+	p.y = 40 + (colonne*65) -1;
+	dim.x=40; dim.y=56;
+
+	for(i=0;i<3;i++){
+		draw_rectangle(p,dim,c);
+		p.x--; p.y--;
+		dim.x+=2; dim.y+=2;
+	}
+	if(SDL_AFFICHE_AUTO)
+		SDL_RenderPresent(renderer);
+}
+

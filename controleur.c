@@ -4,7 +4,7 @@ int main(int argc, char const *argv[])
 {
     // creation des variables du jeu
     POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,texteInfo,clic,oldClic;
-    int i,j,nbJoueursH,joueurActuel=0,ligne,colonne;
+    int i,j,nbJoueursH,nbJoueursIA=0,joueurActuel=0,ligne,colonne;
     BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true,modifP2=true;
     LISTE_TUILES selectionnees;
     TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W],tmp;
@@ -15,30 +15,39 @@ int main(int argc, char const *argv[])
     {
         // menu_debut selection pvp/ia
         affiche_menu_debut();
-        rec1.x = 90; rec1.y = 320;
-        rec2.x = 640; rec2.y = 450;
-        rec3.x = 790; rec3.y = 420;
-        rec4.x = 1410; rec4.y = 550;
-        rec7.x=1200; rec7.y=600;
-        rec8.x=1320; rec8.y=640;
+        rec1.x = 250; rec1.y = 320;
+        rec2.x = 620; rec2.y = 400;
+        rec3.x = 850; rec3.y = 420;
+        rec4.x = 1375; rec4.y = 500;
+        rec5.x = 730; rec5.y = 600;
+        rec6.x = 800; rec6.y = 630;
         texteInfo.x=50; texteInfo.y=350;
         do
         {
             clic = wait_clic();
-        } while (!dans_zone(clic, rec1, rec2) && !dans_zone(clic, rec3, rec4));
-        if (clic.x < 640) // joueur choisit IA
+        } while (!dans_zone(clic, rec1, rec2) && !dans_zone(clic, rec3, rec4) && !dans_zone(clic, rec5, rec6));
+        if (dans_zone(clic, rec1, rec2)) // joueur choisit IA
         {
-            printf("debug -- LETS GO WITH OUR AI !\n");
             has_ia = true;
         }
-        else
-            printf("debug -- WE GO FOR FIGHTOUU !\n");
-        nbJoueursH = choix_joueurs();
+        else if (dans_zone(clic, rec5, rec6)) {
+            IMG_Quit();
+            TTF_Quit();
+            SDL_Quit();
+            return 0;
+        }
+        if(has_ia)
+            nbJoueursIA = choix_joueurs(nbJoueursIA,TRUE);
+        if(nbJoueursIA<3)
+            nbJoueursH = choix_joueurs(nbJoueursIA,FALSE);
+        else 
+            nbJoueursH = 1;
 
-        init_joueurs(nbJoueursH + has_ia, nbJoueursH);
+        
+
+        init_joueurs(nbJoueursH + nbJoueursIA, nbJoueursH);
 
         for (i = 0; i < nbJoueursH; i++)
-            if ((!has_ia || i != 3)/* && (has_ia || i!=0)*/) // 4 jrs + ia = impossible && 1 jr sans ia = impossible
                 inscription(joueurs.js[i].pseudo, i + 1);
 
         printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
@@ -72,6 +81,7 @@ int main(int argc, char const *argv[])
                     copie_plateau(copieP[0],plateau[0]);
                     affiche_plateau_graphique(copieP[0]);
                     affiche_joueur_graphique(joueurActuel);
+    
                     affiche_all();
                     if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees)){
                         selection=false;
@@ -298,6 +308,8 @@ int main(int argc, char const *argv[])
 
         ///// fin de partie
     }
-    wait_escape();
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
     return 0;
 }
