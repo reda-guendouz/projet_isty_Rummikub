@@ -316,32 +316,44 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 
 void affiche_inscription(int numJoueur){
 	SDL_RenderClear(renderer);
-    POINT textP,rec1,rec2,rec3,l;
+    POINT textP,rec1,rec2,rec3,l,ligne1,ligne2;
+	int i;
 
 	// fond d'ecran :
 	l.x=0;l.y=0;
 	load_img("assets/images/bg.png",l);
 
 	// titre :
-    textP.y=25; textP.x=350;
+    textP.y=50; textP.x=350;
 	char inscrive[29];
 	strcpy(inscrive,"Inscrivez le nom du joueur ");
 	inscrive[27]= numJoueur + '0';
 	inscrive[28]= '\0';
-    affiche_texte(inscrive,25,textP,noir);
+    affiche_texte_special(inscrive,60,textP,blanc,"assets/Poppins.ttf");
 
 	// premiere selection :
 	rec1.x=100; rec1.y=400;
 	rec2.x=170; rec2.y=70;
 	draw_rectangle(rec1,rec2,blanc);
-	rec1.x+=10; rec1.y+=10;
+	rec1.x+=13; rec1.y+=10;
 	affiche_texte("Validez",40,rec1,blanc);
 	
 	// deuxieme selection :
 	rec3.x=100; rec3.y=490;
 	draw_rectangle(rec3,rec2,blanc);
-	rec3.x+=10; rec3.y+=10;
+	rec3.x+=13; rec3.y+=10;
 	affiche_texte("Refaire",40,rec3,blanc);
+
+
+	ligne1.x=400; ligne1.y=460;
+	ligne2.x=700; ligne2.y=ligne1.y;
+	for (i = 0; i < 3 ; i++){
+		draw_line(ligne1,ligne2,blanc);
+		 ligne1.y++;
+		 ligne2.y++;
+	}
+	affiche_all();
+	
 }
 
 void inscription(char *pseudoJoueur, int numJoueur){
@@ -377,7 +389,8 @@ void inscription(char *pseudoJoueur, int numJoueur){
 					{
 						text[strlen(text)-1] = '\0';
 						affiche_inscription(numJoueur);
-    					affiche_texte(text,50,textP,blanc);
+    					//affiche_texte(text,50,textP,blanc);
+						affiche_texte_special(text,45,textP,blanc,"assets/Playball.ttf");
 					}
 										
 					break;
@@ -411,7 +424,8 @@ void inscription(char *pseudoJoueur, int numJoueur){
 					else{
 						if(empty) empty = false;
                     	strcat(text, event.text.text);
-    					affiche_texte(text,50,textP,blanc);
+    					//affiche_texte(text,50,textP,blanc);
+						affiche_texte_special(text,45,textP,blanc,"assets/Playball.ttf");
 					}
                     break;
 				case SDL_QUIT:
@@ -738,3 +752,23 @@ void tuile_selectionne(int ligne,int colonne,BOOL selec) {
 		SDL_RenderPresent(renderer);
 }
 
+void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
+	fill_screen(noir);
+	POINT text;
+	
+	text.x=425; text.y=50;
+	affiche_texte_special("VICTOIRE !",200,text,blanc,"assets/valianttimes.ttf");
+
+	// Joueur gagnant
+	int taille =0;
+	while(j.pseudo[taille]!='\0'){
+		taille++;
+	}
+	text.x=750-((taille*16)/2); text.y=300;
+	affiche_texte_special(j.pseudo,50,text,vert,"assets/valianttimes.ttf");
+
+	text.x=630; text.y=350;
+	affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
+
+	wait_escape();
+}
