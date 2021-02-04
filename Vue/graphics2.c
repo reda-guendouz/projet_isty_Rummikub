@@ -630,7 +630,7 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 		clic = wait_clic();
 	}
 
-	if (clic.y<640) // piocher
+	if (clic.y>640) // piocher
 		return false;
 	else // valider selection
 		return true;	
