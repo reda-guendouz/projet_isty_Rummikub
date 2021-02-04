@@ -474,7 +474,7 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 			if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre!=0)
 			{
 				SDL_Delay(200);
-				affiche_all();
+				SDL_RenderPresent(renderer);
 			}
 			
 			l1.x+=espace;
@@ -490,13 +490,17 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 
 
 void affiche_joueur_graphique(int num_joueur) {
-	POINT p,l1;
+	POINT p,l1,l2;
 	p.x=75;
 	p.y=600;
 
 	affiche_texte(joueurs.js[num_joueur].pseudo,20,p,blanc);
 
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
+    l1.y = 595;
+	l2.x = l1.x + (joueurs.js[num_joueur].chevalet.nbTuiles*22) + 1;
+	l2.y = l1.y + 60;
+	draw_fill_rectangle(l1,l2,noir);
     l1.y = 600;
 	int i;
 
@@ -509,9 +513,17 @@ void affiche_joueur_graphique(int num_joueur) {
 }
 
 void affiche_tuile_graphique(TUILE t,POINT p) {
-	char chaine[23];
-	transforme_tuile_en_path(t,chaine);
-	load_img(chaine,p);
+	if (t.chiffre!=0)
+	{
+		char chaine[23];
+		transforme_tuile_en_path(t,chaine);
+		load_img(chaine,p);
+	} else
+	{
+		POINT p2;
+		p2.x=40; p2.y=56;
+		draw_fill_rectangle(p,p2,noir);
+	}	
 }
 
 /*
