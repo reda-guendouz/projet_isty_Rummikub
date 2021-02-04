@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
             printf("WE GO FOR FIGHTOUU !\n");
         nbJoueursH = choix_joueurs();
 
-        init_joueurs(nbJoueursH, nbJoueursH - has_ia);
+        init_joueurs(nbJoueursH + has_ia, nbJoueursH);
 
         for (i = 0; i < nbJoueursH; i++)
             if ((!has_ia || i != 3)/* && (has_ia || i!=0)*/) // 4 jrs + ia = impossible && 1 jr sans ia = impossible
@@ -48,14 +48,18 @@ int main(int argc, char const *argv[])
             fill_screen(noir);
             selection=true;
             modifP=true;
-            if (has_ia && strcmp(joueurs.js[joueurActuel].pseudo,"IA"))
+            printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo,joueurActuel);
+
+            if (has_ia && strcmp(joueurs.js[joueurActuel].pseudo,"IA")==0)
             {
                 printf("IA IS PLAYING...\n");
                 SDL_Delay(500);
+                modifP=false;
             } else
             {
                 while (selection)
                 {
+
                     // PHASE SELECTION TUILES
                     //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
                     selectionnees.nbTuiles=0;
