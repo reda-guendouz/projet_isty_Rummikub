@@ -24,13 +24,13 @@ int main(int argc, char const *argv[])
         {
             clic = wait_clic();
         } while (!dans_zone(clic, rec1, rec2) && !dans_zone(clic, rec3, rec4));
-        if (clic.x < 640)
+        if (clic.x < 640) // joueur choisit IA
         {
-            printf("LETS GO WITH OUR AI !\n");
+            printf("debug -- LETS GO WITH OUR AI !\n");
             has_ia = true;
         }
         else
-            printf("WE GO FOR FIGHTOUU !\n");
+            printf("debug -- WE GO FOR FIGHTOUU !\n");
         nbJoueursH = choix_joueurs();
 
         init_joueurs(nbJoueursH + has_ia, nbJoueursH);
@@ -50,20 +50,18 @@ int main(int argc, char const *argv[])
             modifP=true;
             printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo,joueurActuel);
 
-            if (has_ia && strcmp(joueurs.js[joueurActuel].pseudo,"IA")==0)
+            if (has_ia && !strcmp(joueurs.js[joueurActuel].pseudo,"IA")) // tour d'un ia
             {
                 printf("IA IS PLAYING...\n");
                 SDL_Delay(500);
-                modifP=false;
-            } else
+            } else // tour d'un joueur H
             {
                 while (selection)
                 {
 
                     // PHASE SELECTION TUILES
                     //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
-                    selectionnees.nbTuiles=0;
-                    selectionnees.pile[MAX_TUILES]; // cense vider la pile, a tester
+                    selectionnees.nbTuiles=0; // cense vider la pile, a tester
 
                     copie_plateau(copieP[0],plateau[0]);
                     affiche_plateau_graphique(copieP[0]);
@@ -75,9 +73,6 @@ int main(int argc, char const *argv[])
                         //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
                         // choix placement tuile :
                         rec4.x=120; rec4.y=40;
-                        rec3.x=1200; rec3.y=600;
-                        draw_fill_rectangle(rec3,rec4,noir);
-
                         rec3.x=50; rec3.y=200;
                         draw_rectangle(rec3,rec4,blanc);
                         rec3.x+=10; rec3.y+=10;

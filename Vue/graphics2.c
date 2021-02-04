@@ -471,6 +471,12 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
 			draw_line(fond3,fond4,blanc);
 			affiche_tuile_graphique(plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)],l1);
+			if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre!=0)
+			{
+				SDL_Delay(200);
+				affiche_all();
+			}
+			
 			l1.x+=espace;
     	}
 		l1.x=300;
@@ -560,6 +566,8 @@ int choix_joueurs(){
     {
         clic = wait_clic();
     } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec6) && !dans_zone(clic,rec4,rec7) && !dans_zone(clic,rec5,rec8));
+	
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 
 	if (dans_zone(clic,rec1,rec2))
 		return 1;
@@ -571,8 +579,6 @@ int choix_joueurs(){
 		return 4;
 	else
 		return -1;
-	
-	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
 BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
