@@ -43,10 +43,11 @@ int main(int argc, char const *argv[])
         else 
             nbJoueursH = 1;
 
-        init_joueurs(nbJoueursH + has_ia, nbJoueursH);
+        
+
+        init_joueurs(nbJoueursH + nbJoueursIA, nbJoueursH);
 
         for (i = 0; i < nbJoueursH; i++)
-            if ((!has_ia || i != 3)/* && (has_ia || i!=0)*/) // 4 jrs + ia = impossible && 1 jr sans ia = impossible
                 inscription(joueurs.js[i].pseudo, i + 1);
 
         printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
@@ -76,6 +77,7 @@ int main(int argc, char const *argv[])
                     copie_plateau(copieP[0],plateau[0]);
                     affiche_plateau_graphique(copieP[0]);
                     affiche_joueur_graphique(joueurActuel);
+    
                     affiche_all();
                     if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees)){
                         selection=false;

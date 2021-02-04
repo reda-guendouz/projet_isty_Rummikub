@@ -684,3 +684,27 @@ void choix_case_plateau(POINT clic,int *ligne,int *colonne) {
 	*ligne=l;
 	*colonne=c;
 }
+
+
+void tuile_selectionne(int ligne,int colonne,BOOL selec) {
+	POINT p,dim;
+	int i;
+	COULEUR c;
+	if(selec)
+		c = jaune;
+	else
+		c = noir;
+
+	p.x = 300 + (ligne*45) -1; 
+	p.y = 40 + (colonne*65) -1;
+	dim.x=40; dim.y=56;
+
+	for(i=0;i<3;i++){
+		draw_rectangle(p,dim,c);
+		p.x--; p.y--;
+		dim.x+=2; dim.y+=2;
+	}
+	if(SDL_AFFICHE_AUTO)
+		SDL_RenderPresent(renderer);
+}
+
