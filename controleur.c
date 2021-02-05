@@ -75,17 +75,21 @@ int main(int argc, char const *argv[])
 
             if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
-                printf("debug -- chevalet ia 1:\n");
+                //printf("debug -- chevalet ia 1:\n");
                 affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
-                printf("debug -- chevalet ia 2:\n");
+                //printf("debug -- chevalet ia 2:\n");
                 LISTE_TUILES combinaisonsTrouve;
                 combinaisonsTrouve.nbTuiles=0;
                 affiche_liste_tuiles(combinaisonsTrouve);
-                printf("debug -- chevalet ia 3: %d\n",joueurs.js[joueurActuel].chevalet.nbTuiles);
+                //printf("debug -- chevalet ia 3: %d\n",calcul_main(&combinaisonsTrouve));
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
-                printf("debug -- chevalet ia 4:\n");
+                //printf("debug -- chevalet ia 4:\n");
+                printf("\n");
+                affiche_liste_tuiles(combinaisonsTrouve);
+                printf("SON COUP : %d\n",calcul_main(&combinaisonsTrouve));
+                printf("\n");
                 copie_plateau(copieP[0],plateau[0]);
-                printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premieresMains[joueurActuel],calcul_main(&combinaisonsTrouve));
+                //printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premieresMains[joueurActuel],calcul_main(&combinaisonsTrouve));
                 if (premieresMains[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
                     printf("debug -- premiere main pas passe1\n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
@@ -168,6 +172,7 @@ int main(int argc, char const *argv[])
                                         piocher(&joueurs.js[joueurActuel].chevalet);
                                         selection = false;
                                         modifP=false;
+                                        break;
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
@@ -184,6 +189,7 @@ int main(int argc, char const *argv[])
                         } else if (dans_zone(clic,rec5,rec6)) // choix - piocher
                         {
                             piocher(&joueurs.js[joueurActuel].chevalet);
+                            printf("piocher\n");
                             selection = false;
                             modifP=false;
                             break;
@@ -194,7 +200,7 @@ int main(int argc, char const *argv[])
                     } else // choix - piocher
                     {
                         piocher(&joueurs.js[joueurActuel].chevalet);
-                        printf("piocher");
+                        printf("piocher\n");
                         selection = false;
                         modifP=false;
                         break;

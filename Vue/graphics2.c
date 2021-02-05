@@ -31,7 +31,7 @@ void init_graphics()
 			exit(EXIT_FAILURE);
 		}
     //"Ceci est un titre quelconque mais pas vraiment parce qu'il n'y a vraiment rien de quelconque dans la vie"
-	screen=SDL_CreateWindow("Rummikub",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WIDTH,HEIGHT,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL);
+	screen=SDL_CreateWindow("Rummikub",SDL_WINDOWPOS_UNDEFINED,SDL_WINDOWPOS_UNDEFINED,WIDTH,HEIGHT,SDL_WINDOW_SHOWN|SDL_WINDOW_OPENGL|SDL_WINDOW_MOUSE_FOCUS);
     renderer = SDL_CreateRenderer(screen,-1,SDL_RENDERER_ACCELERATED);
 	if ( screen == NULL )
 		{
