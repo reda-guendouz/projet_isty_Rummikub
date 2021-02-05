@@ -77,8 +77,7 @@ int main(int argc, char const *argv[])
                 /*
                 printf("IA IS PLAYING...\n");
                 SDL_Delay(500);*/
-                combinaisonsTrouve.nbTuiles = 0;
-                i = 0;
+                combinaisonsTrouve.nbTuiles=0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copieP[0],plateau[0]);
                 if (premieresMains[joueurActuel] && calcul_main(combinaisonsTrouve) < 30) {
@@ -320,12 +319,15 @@ int main(int argc, char const *argv[])
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
-                if (est_victorieux(joueurs.js[joueurActuel]))
-                    affiche_victoire_graphique(joueurActuel);                
+                if (est_victorieux(joueurs.js[joueurActuel])){
+                    affiche_victoire_graphique(joueurActuel);
+                    score_fin_partie(joueurActuel);
+                }
                 mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
-            transition(joueurActuel+1);
+            if (joueurActuel + 1 - nbJoueursH  <= 0)
+                transition(joueurActuel+1);
         } // end tour
         
 
