@@ -103,6 +103,7 @@ int main(int argc, char const *argv[])
                         affiche_texte("Refaire",20,rec3,blanc);
                         rec3.x-=10; rec3.y-=10;
                         rec4.x+=rec3.x; rec4.y+=rec3.y;
+                        affiche_info_tour(2);
                         affiche_all();
                         do
                         {
@@ -117,6 +118,7 @@ int main(int argc, char const *argv[])
                                 {
                                     placer_tuiles(selectionnees,copieP[0],ligne,colonne);
                                     affiche_plateau_graphique(copieP[0]);
+                                    affiche_info_tour(3);
                                     affiche_all();
                                     do
                                     {
@@ -165,6 +167,7 @@ int main(int argc, char const *argv[])
                     // PHASE MODIFICATION PLATEAU
                     while(modifP){
                         affiche_joueur_graphique(joueurActuel);
+                        affiche_info_tour(4);
                         affiche_all();
                         do
                         {
@@ -201,7 +204,7 @@ int main(int argc, char const *argv[])
                             } else
                             {
                                 //// afficher : "erreur : placement de tuiles invalides"
-                                affiche_texte("Erreur : Votre plateau n'est pas valide",25,err1,rouge);
+                                affiche_texte("Erreur : Votre plateau n'est pas valide",25,err,rouge);
 
                                 return 0;
                             }

@@ -750,12 +750,15 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			done=true;
 			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
 			affiche_all();
+			mettre_a_jour(selectionnees,*selectionnees);
 			SDL_Delay(1200);
 			affiche_joueur_graphique(num_joueur);
 			affiche_all();
 
-		} else if (*premiereMain)
+		} else if (*premiereMain){
 			*premiereMain = false;
+			done=false;
+		}
 		else
 			done=false;
 	}
@@ -885,14 +888,14 @@ void affiche_info_tour(int val) {
 		affiche_texte("valide",17,text,blanc);
 		text.x= 1295; text.y= 330;
 		affiche_texte("- Pioche",17,text,blanc);
-		text.x= 1295; text.y= 360;
+		text.y= 360;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
 	case 3:
 		affiche_texte("- Valide le placement",17,text,blanc);
 		text.x= 1295; text.y= 310;
 		affiche_texte("- Pioche",17,text,blanc);
-		text.x= 1295; text.y= 340;
+		text.y= 340;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
 	case 4:
@@ -901,9 +904,9 @@ void affiche_info_tour(int val) {
 		affiche_texte("puis valide le coup",17,text,blanc);
 		text.x= 1295; text.y= 330;
 		affiche_texte("- Valide le coup",17,text,blanc);
-		text.x= 1295; text.y= 360;
+		text.y= 360;
 		affiche_texte("- Pioche",17,text,blanc);
-		text.x= 1295; text.y= 390;
+		text.y= 390;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
 	}
