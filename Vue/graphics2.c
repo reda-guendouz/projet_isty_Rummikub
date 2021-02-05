@@ -755,15 +755,17 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 
 	if (step==2) {
 		do
-    {
-        clic = wait_clic();
-    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
+		{
+			clic = wait_clic();
+		} while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4));
 	}
+	else {
+		do
+		{
+			clic = wait_clic();
+		} while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6));
 	
-	do
-    {
-        clic = wait_clic();
-    } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6));
+	}
 	
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 
@@ -778,7 +780,7 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 		return 2;
 	}
 		
-	else if (step==2 && dans_zone(clic,rec5,rec6)) {
+	else if (step==3 && dans_zone(clic,rec5,rec6)) {
 		if(!demandeIA && nbIA==0)
 			return 4;
 		return 3;
