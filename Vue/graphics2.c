@@ -958,7 +958,7 @@ void transition(int joueurSuivant) {
 	textJoueur[8]= '\0';
 	affiche_texte_special(textJoueur,50,text,blanc,"assets/valianttimes.ttf");
 
-	text.x = 750 - ((strlen(joueurs.js->pseudo)/2)*20); text.y=170;
+	text.x = 740 - ((strlen(joueurs.js->pseudo)/2)*20); text.y=170;
     affiche_texte_special(joueurs.js->pseudo,70,text,bleu,"assets/valianttimes.ttf");
 
 	text.x = 560; text.y=230;
