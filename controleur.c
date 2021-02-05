@@ -137,6 +137,7 @@ int main(int argc, char const *argv[])
                                 } else{ // retour a la selection
                                     selection = true;
                                     affiche_texte("Erreur : votre liste ne peut se mettre ici",25,err,rouge);
+                                    SDL_Delay(1200);
                                     //// afficher "erreur: votre liste ne peut se mettre ici"
                                 }
                             } else
@@ -160,8 +161,7 @@ int main(int argc, char const *argv[])
                         break;
                     }
                     
-                    /// bouton refaire => continue;
-                    // PHASE SELECTION/MODIFICATION PLATEAU
+                    // PHASE MODIFICATION PLATEAU
                     while(modifP){
                         affiche_joueur_graphique(joueurActuel);
                         affiche_all();
@@ -200,6 +200,8 @@ int main(int argc, char const *argv[])
                             } else
                             {
                                 //// afficher : "erreur : placement de tuiles invalides"
+                                affiche_texte("Erreur : Votre plateau n'est pas valide",25,err1,rouge);
+
                                 return 0;
                             }
                         }

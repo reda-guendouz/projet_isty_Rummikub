@@ -895,7 +895,7 @@ void affiche_info_tour(int val) {
 		text.x= 1295; text.y= 340;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
-	case 4:;
+	case 4:
 		affiche_texte("- Deplace les tuiles",17,text,blanc);
 		text.x= 1300; text.y= 300;
 		affiche_texte("puis valide le coup",17,text,blanc);
