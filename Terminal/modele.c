@@ -471,7 +471,9 @@ int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource
 {
     // verifier ici d'abord que les lignes et colonnes sont bonnes
     // sinon retourner false
-    if (ligneSource < 0 && ligneSource >= DIM_PLATEAU_H && colonneDestination < 0 && colonneDestination >= DIM_PLATEAU_W)
+    printf(" SOURCE : %d %d  ---- DESTINATION %d %d \n",ligneSource,colonneSource,ligneDestination,colonneDestination);
+    if (ligneSource < 0 || ligneSource >= DIM_PLATEAU_H || colonneSource < 0 || colonneSource >= DIM_PLATEAU_W ||
+        ligneDestination < 0 || ligneDestination >= DIM_PLATEAU_H || colonneDestination < 0 || colonneDestination >= DIM_PLATEAU_W)
         return FALSE;
     TUILE temp;
     temp.chiffre = copie_plateau[ligneSource * DIM_PLATEAU_W + colonneSource].chiffre;
