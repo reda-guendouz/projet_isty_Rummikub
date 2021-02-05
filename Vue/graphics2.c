@@ -316,20 +316,26 @@ void affiche_score_graphique(POINT point){
 	FILE* fichier = NULL;
     char chaine[500] = "";
     fichier = fopen("Terminal/score.txt", "r");
-	int ligne=0;
+	int ligne=0,ch,totalLignes=0;
 	POINT text = point;
-
 	if (fichier != NULL){
+		while(!feof(fichier))
+		{
+			ch = fgetc(fichier);
+			if(ch == '\n')
+				totalLignes++;
+		}
+		printf("l:%d\n",totalLignes);
+		fichier = fopen("Terminal/score.txt", "r");
         while (fgets(chaine,500,fichier) != NULL){
-			char d[] = ":";
+			char d[] = " :";
   			char *p = strtok(chaine, d);
-			int i=0;
+			int i=0,taille;
 			while(p != NULL)
 			{
 				if(i==1) {
-					int taille = sizeof(p)/sizeof(p[0]); 
-					p[taille-1] = '8';
-					strcpy(p,replace_char(p,'\n',' '));
+					if (ligne!=totalLignes)
+						p[strlen(p)-2]='\0';
 					if (ligne%3==1) {
 						printf("Joueur (moi) : %s\n", p);
 						affiche_texte(p,20,text,blanc);
