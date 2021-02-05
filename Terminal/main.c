@@ -99,7 +99,7 @@ int main(void)
                             numTuileChoisis = -3;
                             
                             do {
-                                //system("clear");
+                                system("clear");
                                 affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
                                 affiche_plateau(plateau[0]);
                                 printf("\nTuile selectionne : \n");
@@ -111,13 +111,11 @@ int main(void)
                                 numTuileChoisis = readInt(-2,joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
                             }
                             while(est_dans_selection(numTuileChoisis,selection+1,estSelectionne));
-                            printf("Tuile : %d\n",numTuileChoisis);
                             estSelectionne[selection] = numTuileChoisis;
                             selection++;
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (numTuileChoisis == -2)
                             {   
-                                printf("aaaaaaaa\n");
                                 tour = FALSE;
                                 selectionTuiles = FALSE;
                                 modifPlateau = FALSE;
@@ -128,7 +126,6 @@ int main(void)
                             {
                                 if (tuilesSelectionnes.nbTuiles > 0)
                                 {
-                                    affiche_liste_tuiles(tuilesSelectionnes);
                                     if (premiereMain[joueurActuel] && calcul_main(&tuilesSelectionnes) < 30) {
                                         int i;
                                         for (i=0;i<selection;i++){
@@ -136,8 +133,11 @@ int main(void)
                                         }
                                         selection = 0;
                                         tuilesSelectionnes.nbTuiles = 0;
-                                        printf("Pour votre premiere main valeur > 30\n");
+                                        printf("/************************************************************************\\\n");
+                                        printf("Pour votre premiere main, la valeur de celle-ci doit etre suépérieur à 30\n");
+                                        printf("\\************************************************************************/\n");
                                         sleep(2);
+                                        system("clear");
                                     }
                                     else {
                                         selectionTuiles = FALSE;
@@ -201,6 +201,7 @@ int main(void)
                                 placer_tuiles(tuilesSelectionnes, copiePlateau[0], char_to_int(ligneSource), colonneSource);
                                 placerTuile = FALSE;
                                 modifPlateau = TRUE;
+                                system("clear");
                             }
                         }
                         //MODIFIER LE PLATEAU
@@ -289,6 +290,7 @@ int main(void)
                     }
                 }
             }
+            //TOUR DE L'IA
             else {
                 system("clear");
                 printf("TOUR DE l'IA\n");
