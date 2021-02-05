@@ -848,6 +848,7 @@ void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
 void transition(int joueurSuivant) {
 	fill_screen(noir);
 	POINT text,rec1,rec2;
+	int i;
 	text.x = 680; text.y=100;
 
 	char textJoueur[9];
@@ -861,21 +862,12 @@ void transition(int joueurSuivant) {
 
 	rec1.x= 686; rec1.y=400;
 	rec2.x=	15; rec2.y =15;
-	draw_fill_rectangle(rec1,rec2,blanc);
-
-	affiche_all();
-	SDL_Delay(1000);
-	rec1.x+=50;
-	draw_fill_rectangle(rec1,rec2,blanc);
-
-	affiche_all();
-	SDL_Delay(1000);
-	rec1.x+=50;
-	draw_fill_rectangle(rec1,rec2,blanc);
-	affiche_all();
-
-	SDL_Delay(1000);
-
+	for(i=0;i<3;i++) {
+		draw_fill_rectangle(rec1,rec2,blanc);
+		affiche_all();
+		rec1.x+=50;
+		SDL_Delay(1000);
+	}
 }
 
 /*
@@ -923,5 +915,36 @@ void affiche_info_tour(int val) {
 		text.x= 1295; text.y= 390;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
+	}
+}
+
+/*
+* affiche un ecran de transition qui indique ce que l'IA fait durant son tour 
+*/
+void transition_IA(int val) {
+	fill_screen(noir);
+	POINT text,rec1,rec2;
+	int i;
+	text.x = 728; text.y=100;
+
+    affiche_texte_special("IA",70,text,rouge,"assets/valianttimes.ttf");
+
+	if(val==1){
+		text.x = 560; text.y=190;
+		affiche_texte_special("est en train de jouer",60,text,blanc,"assets/valianttimes.ttf");
+	}
+	else
+	{
+		text.x = 560; text.y=180;
+		affiche_texte_special("est en train de piocher",60,text,blanc,"assets/valianttimes.ttf");
+	}
+	
+	rec1.x= 686; rec1.y=400;
+	rec2.x=	15; rec2.y =15;
+	for(i=0;i<3;i++) {
+		draw_fill_rectangle(rec1,rec2,blanc);
+		affiche_all();
+		rec1.x+=50;
+		SDL_Delay(1500);
 	}
 }

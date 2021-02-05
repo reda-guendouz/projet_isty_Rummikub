@@ -120,3 +120,4 @@
 	void transition(int joueurSuivant);
 	
 	void affiche_info_tour(int val);
+	void transition_IA(int val);
