@@ -69,30 +69,22 @@ int main(int argc, char const *argv[])
             selection=true;
             modifP=true;
             tourValide=false;
-            printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo);
 
             if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
-                printf("debug -- chevalet ia 1:\n");
                 affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
-                printf("debug -- chevalet ia 2:\n");
                 LISTE_TUILES combinaisonsTrouve;
                 combinaisonsTrouve.nbTuiles=0;
                 affiche_liste_tuiles(combinaisonsTrouve);
-                printf("debug -- chevalet ia 3: %d\n",joueurs.js[joueurActuel].chevalet.nbTuiles);
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
-                printf("debug -- chevalet ia 4:\n");
                 copie_plateau(copieP[0],plateau[0]);
-                printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premieresMains[joueurActuel],calcul_main(&combinaisonsTrouve));
                 if (premieresMains[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
-                    printf("debug -- premiere main pas passe1\n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
-                    //transition_IA(2);
+                    transition_IA(2);
                 }
                 else {
                     if (combinaisonsTrouve.nbTuiles > 0 && placer_combinaisons(combinaisonsTrouve, copieP[0])) 
                     {
-                        printf("debug -- premiere main passe\n");
                         for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
                             supprime_liste(&joueurs.js[joueurActuel].chevalet,combinaisonsTrouve.pile[i]);
                         }
@@ -101,9 +93,8 @@ int main(int argc, char const *argv[])
                         transition_IA(1);
                     } 
                     else {
-                        printf("debug -- premiere main pas passe2\n");
                         piocher(&joueurs.js[joueurActuel].chevalet);
-                        //transition_IA(2);
+                        transition_IA(2);
                     }
                 }
             } else // tour d'un joueur H
@@ -325,16 +316,15 @@ int main(int argc, char const *argv[])
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
-                printf("tour valide\n");
                 if (est_victorieux(joueurs.js[joueurActuel])){
                     affiche_victoire_graphique(joueurActuel);
                     score_fin_partie(joueurActuel);
                 }
                 mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
-            joueurActuel = (joueurActuel+1)%joueurs.nbJs;/*
+            joueurActuel = (joueurActuel+1)%joueurs.nbJs;
             if (joueurActuel + 1 - nbJoueursH  <= 0)
-                transition(joueurActuel+1);*/
+                transition(joueurActuel+1);
         } // end tour
     }///// fin de partie
     quit();
