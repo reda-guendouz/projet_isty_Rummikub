@@ -351,9 +351,7 @@ void affiche_inscription(int numJoueur){
 		draw_line(ligne1,ligne2,blanc);
 		 ligne1.y++;
 		 ligne2.y++;
-	}
-	affiche_all();
-	
+	}	
 }
 
 void inscription(char *pseudoJoueur, int numJoueur){
@@ -392,7 +390,6 @@ void inscription(char *pseudoJoueur, int numJoueur){
     					//affiche_texte(text,50,textP,blanc);
 						affiche_texte_special(text,45,textP,blanc,"assets/Playball.ttf");
 					}
-										
 					break;
                 case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == SDL_BUTTON_LEFT)
