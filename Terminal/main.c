@@ -155,7 +155,7 @@ int main(void)
                                 if (tuilesSelectionnes.nbTuiles > 0)
                                 {
                                     affiche_liste_tuiles(tuilesSelectionnes);
-                                    if (premiereMain[joueurActuel] && calcul_main(tuilesSelectionnes) < 30) {
+                                    if (premiereMain[joueurActuel] && calcul_main(&tuilesSelectionnes) < 30) {
                                         int i;
                                         for (i=0;i<selection;i++){
                                             estSelectionne[i] = -3;
@@ -323,19 +323,20 @@ int main(void)
                 int i = 0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copiePlateau[0],plateau[0]);
-                if (premiereMain[joueurActuel] && calcul_main(combinaisonsTrouve) < 30) {
+                //printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premiereMain[joueurActuel],calcul_main(combinaisonsTrouve));
+                if (premiereMain[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
                     printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
                 }
                 else {
-                    premiereMain[joueurActuel] = 0;
                     if (combinaisonsTrouve.nbTuiles > 0 && placer_combinaisons(combinaisonsTrouve, copiePlateau[0])) 
                     {
                         printf("COMBINAISONS TROUVE PAR L'IA \n");
                         for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
                             supprime_liste(&joueurs.js[joueurActuel].chevalet,combinaisonsTrouve.pile[i]);
                         }
-                        copie_plateau(plateau[0], copiePlateau[0]);      
+                        copie_plateau(plateau[0], copiePlateau[0]);  
+                        premiereMain[joueurActuel] = 0;
                     } 
                     else {
                         printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
