@@ -74,9 +74,6 @@ int main(int argc, char const *argv[])
 
             if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
-                /*
-                printf("IA IS PLAYING...\n");
-                SDL_Delay(500);*/
                 combinaisonsTrouve.nbTuiles=0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copieP[0],plateau[0]);
@@ -319,6 +316,7 @@ int main(int argc, char const *argv[])
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
+                printf();
                 if (est_victorieux(joueurs.js[joueurActuel])){
                     affiche_victoire_graphique(joueurActuel);
                     score_fin_partie(joueurActuel);

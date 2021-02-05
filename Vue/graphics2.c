@@ -71,7 +71,7 @@ void affiche_all()
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) 
 		if (event.type == SDL_QUIT) exit(0);
-	if (__init_graphics_est_deja_appele) {SDL_RenderPresent(renderer);printf("je suis call\n");}
+	if (__init_graphics_est_deja_appele) SDL_RenderPresent(renderer);
 		else wait_escape();
 	}
 
