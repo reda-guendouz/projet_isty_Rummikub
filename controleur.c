@@ -3,7 +3,7 @@
 int main(int argc, char const *argv[])
 {
     // creation des variables du jeu
-    POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,texteInfo,clic,oldClic;
+    POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,texteInfo,clic,oldClic,err;
     int i,j,nbJoueursH,nbJoueursIA=0,joueurActuel=0,ligne,colonne;
     BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true,modifP2=true;
     LISTE_TUILES selectionnees;
@@ -21,6 +21,7 @@ int main(int argc, char const *argv[])
         rec4.x = 1375; rec4.y = 500;
         rec5.x = 730; rec5.y = 600;
         rec6.x = 800; rec6.y = 630;
+	    err.x = 680; err.y = HEIGHT-30;
         
         texteInfo.x=50; texteInfo.y=350;
         do
@@ -120,7 +121,7 @@ int main(int argc, char const *argv[])
                                     {
                                         clic=wait_clic();
                                     } while (!dans_zone(clic,rec7,rec8) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6)); // valider - refaire - piocher
-                                    if (dans_zone(clic,rec7,rec8)) // valider
+                                    if (dans_zone(clic,rec7,rec8)) // choix - valider
                                     {
                                         modifP=true;
                                     } else if (dans_zone(clic,rec3,rec4)) // refaire
@@ -135,6 +136,7 @@ int main(int argc, char const *argv[])
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
+                                    affiche_texte("Erreur : votre liste ne peut se mettre ici",25,err,rouge);
                                     //// afficher "erreur: votre liste ne peut se mettre ici"
                                 }
                             } else
