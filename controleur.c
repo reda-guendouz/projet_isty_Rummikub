@@ -93,6 +93,7 @@ int main(int argc, char const *argv[])
                     affiche_joueur_graphique(joueurActuel);
     
                     affiche_all();
+                    affiche_info_tour(1);
                     if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees,&premieresMains[joueurActuel])){
                         selection=false;
                         //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)

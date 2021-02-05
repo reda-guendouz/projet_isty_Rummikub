@@ -880,7 +880,7 @@ void affiche_info_tour(int val) {
 		affiche_texte("- Pioche",17,text,blanc);
 		break;
 	case 2:
-		affiche_texte("- Place des tuiles puis",17,text,blanc);
+		affiche_texte("- Place les tuiles puis",17,text,blanc);
 		text.x= 1300; text.y= 300;
 		affiche_texte("valide",17,text,blanc);
 		text.x= 1295; text.y= 330;
