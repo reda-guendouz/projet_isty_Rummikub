@@ -766,11 +766,6 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 		return false;	
 }
 
-void affiche_modif_plateau(TUILE *plateau_a_afficher, int joueur){
-	affiche_plateau_graphique(plateau_a_afficher);
-	affiche_joueur_graphique(joueur);
-}
-
 /*
 * converti les coordonnes d'un clic en coordonne de case dans la plateau
 */
