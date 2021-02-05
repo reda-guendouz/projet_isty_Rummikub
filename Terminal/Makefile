@@ -3,7 +3,7 @@ fichiers=main.c modele.c
 exec=exec
 
 all:
-	$(CC) $(fichiers) -o $(exec)
+	$(CC) -Wall $(fichiers) -o $(exec)
 	./exec
 
 clean:
