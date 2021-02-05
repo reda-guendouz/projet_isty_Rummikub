@@ -115,7 +115,7 @@ void affiche_liste_tuiles(LISTE_TUILES liste_tuiles);
 /*
 Renvoie la somme des tuiles d'une liste de tuile.
 */
-int calcul_main(LISTE_TUILES liste_tuiles);
+int calcul_main(LISTE_TUILES* liste_tuiles);
 
 /*
 Permute les Joker dans la suite
@@ -233,7 +233,7 @@ void piocher(LISTE_TUILES *l);
 *  IA *
 * ****/
 int action_tour_ia(LISTE_TUILES* chevaleurIa);
-void combinationUtil(int arr[], int taille, int r, int index, int data[], int i, LISTE_TUILES chevaletIa, LISTE_TUILES* max);
+void combinationUtil(int arr[], int data[], int start, int end, int index, int r, LISTE_TUILES chevalet, LISTE_TUILES* bestListe);
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve);
 int placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
 

@@ -73,7 +73,7 @@ void affiche_all()
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) 
 		if (event.type == SDL_QUIT) exit(0);
-	if (__init_graphics_est_deja_appele) {SDL_RenderPresent(renderer);}
+	if (__init_graphics_est_deja_appele) SDL_RenderPresent(renderer);
 		else wait_escape();
 	}
 
@@ -456,6 +456,7 @@ void inscription(char *pseudoJoueur, int numJoueur){
 	rec3.x=100; rec3.y=490;
 	rec4.x=270; rec4.y=560;
 	affiche_inscription(numJoueur);
+	affiche_all();
 	SDL_StartTextInput();
     while (!done) {
         if (SDL_PollEvent(&event)) {
@@ -469,6 +470,7 @@ void inscription(char *pseudoJoueur, int numJoueur){
 								affiche_texte("Erreur : nom entré vide !",30,err,rouge);
 								SDL_Delay(1200);
 								affiche_inscription(numJoueur);
+								affiche_all();
 							}
 							else							
 								done = true;
@@ -478,6 +480,7 @@ void inscription(char *pseudoJoueur, int numJoueur){
 						affiche_inscription(numJoueur);
     					//affiche_texte(text,50,textP,blanc);
 						affiche_texte_special(text,45,textP,blanc,"assets/Playball.ttf");
+						affiche_all();
 					}
 					break;
                 case SDL_MOUSEBUTTONDOWN:
@@ -583,7 +586,7 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
 * affiche le plateau du jeu avec les tuiles qu'il contient 
 * et un delai de 200ms pour chaque tuile
 */
-void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher) {
+void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher,int l, int c) {
 	POINT l1,fond1,fond2,fond3,fond4;
 	int i,j,espace=45,espace2=65;
     l1.x = 300; l1.y = 40;
@@ -600,7 +603,7 @@ void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher) {
 			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
 			draw_line(fond3,fond4,blanc);
 			affiche_tuile_graphique(plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)],l1);
-			if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre!=0)
+			if (plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre!=0 && l >= j && c >= i)
 			{
 				SDL_Delay(200);
 				SDL_RenderPresent(renderer);
@@ -851,7 +854,8 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			}
 			clic = wait_clic();
 		}
-		if (dans_zone(clic,rec1,rec2) && *premiereMain && calcul_main(*selectionnees) < 30){ // valider
+		printf("debug -- done : %d -- cmain : %d \n",*premiereMain,calcul_main(selectionnees) );
+		if (dans_zone(clic,rec1,rec2) && *premiereMain && calcul_main(selectionnees) < 30){ // valider
 			done=true;
 			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
 			affiche_all();

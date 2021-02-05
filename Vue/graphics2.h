@@ -87,7 +87,7 @@
 
 	/// Affiche le plateau de jeu
 	void affiche_plateau_graphique(TUILE *plateau_a_afficher);
-	void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher);
+	void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher, int l, int c);
 
 	/// Affiche le chevalet d'un joueur
 	void affiche_joueur_graphique(int num_joueur);

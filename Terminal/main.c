@@ -6,14 +6,14 @@ int main(void)
     srand(time(NULL));
     unsigned char jeu = TRUE;
     unsigned char partie, tour, selectionTuiles, placerTuile, modifPlateau, victoire;
-    int jouer, nbJoueurs,nbJoueursH, nbJoueursIA, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
-    colonneSource,  colonneDestination, premiereCombinaisons;
+    int jouer,nbJoueursH, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
+    colonneSource,  colonneDestination;
     char ligneSource, ligneDestination;
     int selection = 0;
     int estSelectionne[50];
+    int nbJoueurs = 4;
     LISTE_TUILES tuilesSelectionnes;
     int premiereMain[nbJoueurs];
-    tuilesSelectionnes.pile[MAX_TUILES];
     tuilesSelectionnes.nbTuiles = 0;
     TUILE copiePlateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
     TUILE selectionne;
@@ -85,7 +85,6 @@ int main(void)
             nbJoueurs = readInt(2,4);
             printf("Combien de humains jouent (1 à %d)?\n",nbJoueurs);
             nbJoueursH = readInt(1,nbJoueurs);
-            nbJoueursIA = nbJoueurs - nbJoueursH;
             init_joueurs(nbJoueurs,nbJoueursH);
             system("clear");
         }
@@ -156,12 +155,7 @@ int main(void)
                                 if (tuilesSelectionnes.nbTuiles > 0)
                                 {
                                     affiche_liste_tuiles(tuilesSelectionnes);
-                                    if (premiereMain[joueurActuel] && (calcul_main(tuilesSelectionnes) >= 30)) {
-                                        premiereMain[joueurActuel] = 0;
-                                        selectionTuiles = FALSE;
-                                        placerTuile = TRUE;
-                                    }   
-                                    else{
+                                    if (premiereMain[joueurActuel] && calcul_main(&tuilesSelectionnes) < 30) {
                                         int i;
                                         for (i=0;i<selection;i++){
                                             estSelectionne[i] = -3;
@@ -171,8 +165,10 @@ int main(void)
                                         printf("Pour votre premiere main valeur > 30\n");
                                         sleep(2);
                                     }
-                                    int i;
-                                    
+                                    else {
+                                        selectionTuiles = FALSE;
+                                        placerTuile = TRUE;
+                                    }                                    
                                 }
                                 else
                                     printf("Selectionner au moins une tuile avant de valider la selection\n");
@@ -189,7 +185,7 @@ int main(void)
                         {
                             system("clear");
                             affiche_plateau(plateau[0]);
-                            tri_liste(&tuilesSelectionnes);
+                            suite(&tuilesSelectionnes);
                             printf("Tuiles selectionnees : \n");
                             affiche_liste_tuiles(tuilesSelectionnes);
                             choixPlacement = -3;
@@ -210,7 +206,6 @@ int main(void)
                             {
                                 placerTuile = FALSE;
                                 selectionTuiles = TRUE;
-                                tuilesSelectionnes.pile[MAX_TUILES];
                                 tuilesSelectionnes.nbTuiles = 0;
                             }
                             //PLACER LES TUILES DANS LE PLATEAU
@@ -227,7 +222,7 @@ int main(void)
                                     printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
                                     scanf(" %c", &ligneSource);
                                     printf("colonne : ");
-                                    scanf(" %d", &colonneSource);
+                                    colonneSource = readInt(0,DIM_PLATEAU_W);
                                 } while (!est_placable(tuilesSelectionnes.nbTuiles, char_to_int(ligneSource), colonneSource));
                                 placer_tuiles(tuilesSelectionnes, copiePlateau[0], char_to_int(ligneSource), colonneSource);
                                 placerTuile = FALSE;
@@ -258,7 +253,6 @@ int main(void)
                             {
                                 modifPlateau = FALSE;
                                 selectionTuiles = TRUE;
-                                tuilesSelectionnes.pile[MAX_TUILES];
                                 tuilesSelectionnes.nbTuiles = 0;
                             }
                             //REFAIRE LE PLACEMENT DES TUILES
@@ -274,6 +268,8 @@ int main(void)
                                 printf("VALIDATION EN COURS\n\n");
                                 if (analyse_plateau(copiePlateau[0]))
                                 {
+                                    if (premiereMain[joueurActuel])
+                                        premiereMain[joueurActuel] = 0;
                                     copie_plateau(plateau[0], copiePlateau[0]);
                                     printf("Copie bien passé\n\n");
                                     mettre_a_jour(&joueurs.js[joueurActuel].chevalet, tuilesSelectionnes);
@@ -297,20 +293,22 @@ int main(void)
                                     printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
                                     scanf(" %c", &ligneSource);
                                     printf("colonne : ");
-                                    scanf(" %d", &colonneSource);
+                                    colonneSource = readInt(0,DIM_PLATEAU_W);
                                     printf("tuile destination :\nligne : ");
                                     scanf(" %c", &ligneDestination);
                                     printf("colonne : ");
-                                    scanf(" %d", &colonneDestination);
+                                    colonneDestination = readInt(0,DIM_PLATEAU_W);
                                     if (!intervertion_tuiles(copiePlateau[0], char_to_int(ligneSource), colonneSource, char_to_int(ligneDestination), colonneDestination))
                                     {
                                         printf("Err: mauvaises positions\n");
                                     }
-                                    affiche_plateau(copiePlateau[0]);
-                                    printf("Voulez-vous continuer ?\n");
-                                    printf("0. Non\n");
-                                    printf("1. Oui\n");
-                                    choixModifPlateau = readInt(0,1);
+                                    else {
+                                        affiche_plateau(copiePlateau[0]);
+                                        printf("Voulez-vous continuer ?\n");
+                                        printf("0. Non\n");
+                                        printf("1. Oui\n");
+                                        choixModifPlateau = readInt(0,1);
+                                    }
                                 } while (choixModifPlateau);
                             }
                         }
@@ -327,26 +325,27 @@ int main(void)
                 int i = 0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copiePlateau[0],plateau[0]);
-                if (premiereMain[joueurActuel] && calcul_main(combinaisonsTrouve) <= 30) {
+                //printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premiereMain[joueurActuel],calcul_main(combinaisonsTrouve));
+                if (premiereMain[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
                     printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
                 }
                 else {
-                    premiereMain[joueurActuel] = 1;
                     if (combinaisonsTrouve.nbTuiles > 0 && placer_combinaisons(combinaisonsTrouve, copiePlateau[0])) 
                     {
                         printf("COMBINAISONS TROUVE PAR L'IA \n");
                         for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
                             supprime_liste(&joueurs.js[joueurActuel].chevalet,combinaisonsTrouve.pile[i]);
                         }
-                        copie_plateau(plateau[0], copiePlateau[0]);      
+                        copie_plateau(plateau[0], copiePlateau[0]);  
+                        premiereMain[joueurActuel] = 0;
                     } 
                     else {
                         printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
                         piocher(&joueurs.js[joueurActuel].chevalet);
                     }
                 }
-                sleep(3);
+                sleep(1);
                 choixJoueur = -1;
                 system("clear");
             }
@@ -360,7 +359,6 @@ int main(void)
             if (!est_victorieux(joueurs.js[joueurActuel]))
             {
                 joueurActuel = (joueurActuel + 1) % (joueurs.nbJs);
-                tuilesSelectionnes.pile[MAX_TUILES];
                 tuilesSelectionnes.nbTuiles = 0;
             }
             //FIN DE PARTIE VICTOIRE
