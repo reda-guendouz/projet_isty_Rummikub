@@ -32,9 +32,7 @@ int main(int argc, char const *argv[])
             has_ia = true;
         }
         else if (dans_zone(clic, rec5, rec6)) { // quitter
-            IMG_Quit();
-            TTF_Quit();
-            SDL_Quit();
+            quit();
             return 0;
         }
         if(has_ia)
@@ -43,13 +41,15 @@ int main(int argc, char const *argv[])
             nbJoueursH = choix_joueurs(nbJoueursIA,FALSE);
         else 
             nbJoueursH = 1;
-
-        
-
         init_joueurs(nbJoueursH + nbJoueursIA, nbJoueursH);
 
+        BOOL premieresMains[nbJoueursH+nbJoueursIA];
+        for (i = 0; i < joueurs.nbJs; i++)
+            premieresMains[i] = true;
+        
+
         for (i = 0; i < nbJoueursH; i++)
-                inscription(joueurs.js[i].pseudo, i + 1);
+            inscription(joueurs.js[i].pseudo, i + 1);
 
         printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
 
@@ -68,6 +68,7 @@ int main(int argc, char const *argv[])
             fill_screen(noir);
             selection=true;
             modifP=true;
+            tourValide=false;
             printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo,joueurActuel);
 
             if (has_ia && !strcmp(joueurs.js[joueurActuel].pseudo,"IA")) // tour d'un ia
@@ -79,20 +80,19 @@ int main(int argc, char const *argv[])
                 while (selection)
                 {
                     fill_screen(noir);
-                    printf("debug -- selection\n");
                     // PHASE SELECTION TUILES
                     //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
                     selectionnees.nbTuiles=0; // cense vider la pile, a tester
                     rec4.x=120; rec4.y=40;
                     rec3.x=50; rec3.y=200;
-                    draw_fill_rectangle(rec3,rec4,noir);
+                    draw_fill_rectangle(rec3,rec4,noir); // supprimer "refaire"
 
                     copie_plateau(copieP[0],plateau[0]);
                     affiche_plateau_graphique(copieP[0]);
                     affiche_joueur_graphique(joueurActuel);
     
                     affiche_all();
-                    if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees)){
+                    if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees,&premieresMains[joueurActuel])){
                         selection=false;
                         //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
                         // choix placement tuile :
@@ -132,7 +132,6 @@ int main(int argc, char const *argv[])
                                         piocher(&joueurs.js[joueurActuel].chevalet);
                                         selection = false;
                                         modifP=false;
-                                        tourValide=false;
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
@@ -145,7 +144,6 @@ int main(int argc, char const *argv[])
                             piocher(&joueurs.js[joueurActuel].chevalet);
                             selection = false;
                             modifP=false;
-                            tourValide=false;
                             break;
                         } else if (dans_zone(clic,rec3,rec4)){ // choix - refaire
                             selection=true;
@@ -157,14 +155,12 @@ int main(int argc, char const *argv[])
                         printf("piocher");
                         selection = false;
                         modifP=false;
-                        tourValide=false;
                         break;
                     }
                     
                     /// bouton refaire => continue;
                     // PHASE SELECTION/MODIFICATION PLATEAU
                     while(modifP){
-                        printf("debug -- modifP\n");
                         affiche_joueur_graphique(joueurActuel);
                         affiche_all();
                         do
@@ -190,12 +186,11 @@ int main(int argc, char const *argv[])
                             piocher(&joueurs.js[joueurActuel].chevalet);
                             selection = false;
                             modifP=false;
-                            tourValide=false;
                             break;
                         } else // valider
                         {
                             if(analyse_plateau(copieP[0])){
-                                copie_plateau(plateau[0],copieP[0]);
+                                tourValide=true;
                                 modifP2=false;
                                 modifP=false;
                                 selection=false;
@@ -231,12 +226,10 @@ int main(int argc, char const *argv[])
                                 piocher(&joueurs.js[joueurActuel].chevalet);
                                 selection = false;
                                 modifP=false;
-                                tourValide=false;
                                 break;
                             } else // valider
                             {
                                 if(analyse_plateau(copieP[0])){
-                                    copie_plateau(plateau[0],copieP[0]);
                                     modifP2=false;
                                     modifP=false;
                                     selection=false;
@@ -271,12 +264,10 @@ int main(int argc, char const *argv[])
                                 piocher(&joueurs.js[joueurActuel].chevalet);
                                 selection = false;
                                 modifP=false;
-                                tourValide=false;
                                 break;
                             } else // valider
                             {
                                 if(analyse_plateau(copieP[0])){
-                                    copie_plateau(plateau[0],copieP[0]);
                                     modifP2=false;
                                     modifP=false;
                                     selection=false;
@@ -288,18 +279,20 @@ int main(int argc, char const *argv[])
                                     return 0;
                                 }
                             }
-                        }
-                    }
-                }
-            }
+                        } // end modifP2
+                    } // end modifP
+                } // end selection
+            } // end else tour joueur H
 
             //// victoire su joueur X ???
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
+                mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
-        }
+            transition(joueurActuel+1);
+        } // end tour
         
 
         // PHASE SELECTION TUILES
@@ -318,8 +311,6 @@ int main(int argc, char const *argv[])
 
         ///// fin de partie
     }
-    IMG_Quit();
-    TTF_Quit();
-    SDL_Quit();
+    quit();
     return 0;
 }

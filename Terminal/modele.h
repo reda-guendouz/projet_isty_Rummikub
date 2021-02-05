@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #define MAX_CHIFFRE 13
 #define JOUEURS_MAX 4
@@ -58,13 +59,63 @@ typedef struct LISTE_TUILES
     int nbTuiles;
 } LISTE_TUILES;
 
+/*
+Cette fonction permet d'ajouter une tuile dans une liste
+*/
 int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile);
 
+/*!
+ * @param       tuile    la tuile @struct{TUILE} a verifier
+ * @param       liste    la @struct{LISTE_TUILES} a verifier
+ * @result      TRUE si @param{tuile} est dans @param{liste} FALSE sinon
+*/
+int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile);
+
+/*
+Verifie si une combinaison de tuile est une suite potentiellement placable sur le plateau
+*/
 int suite(LISTE_TUILES *l);
+
+/*
+Tri une liste par rapport au nombre inscrit sur les tuiles
+*/
 void tri_liste(LISTE_TUILES *l);
+
+/*
+Verifie si une combinaison de tuile est composé de trois ou quatres tuiles du même chiffre mais de couleur différente
+Renvoie VRAI si la combinaison est un triplon ou un quadruplon, FALSE sinon
+*/
 int triplon_quadruplon(LISTE_TUILES *l);
+
+/*
+Test si une combinaisons est une suite, un triplon ou un quadruplon
+*/
 int test_combinaison(LISTE_TUILES *l);
-int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
+
+/*
+Supprime une selection de tuiles, d'un chevalet d'un joueur
+*/
+void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees);
+
+/*
+Copie une liste src dans une liste dest
+*/
+void copie_liste(LISTE_TUILES *src, LISTE_TUILES *dest);
+
+/*
+Supprime une tuile d'une liste
+*/
+void supprime_liste(LISTE_TUILES *l, TUILE tuile);
+
+/*
+Affiche une liste TUILE
+*/
+void affiche_liste_tuiles(LISTE_TUILES liste_tuiles);
+
+/*
+Renvoie la somme des tuiles d'une liste de tuile.
+*/
+int calcul_main(LISTE_TUILES liste_tuiles);
 
 /***********
  * Joueurs *
@@ -102,21 +153,49 @@ ERREUR POTENTIEL (non testé): l'affichage d'un joueur non existant
 */
 void affiche_joueurs();
 
+/*
+Verifie si un joueur rempli une condition de victoire
+Renvoie TRUE si le joueur a gagné, FALSE sinon
+*/
+int est_victorieux(JOUEUR j);
+
 /******************
  * Plateau de jeu *
  * ***************/
 
 TUILE plateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
+
 /*
-affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
+Affiche le plateau sous avec dimensions DIM_PLATEAU_H et DIM_PLATEAU_W
 */
 void affiche_plateau(TUILE *plateau_a_afficher);
 
+/*
+Regarde si une liste est placable à des coordonnées dans un plateau
+*/
 int est_placable(int taille_liste, int ligne, int colonne);
 
+/*
+Place des tuiles sur une copie du plateau
+*/
 void placer_tuiles(LISTE_TUILES selection, TUILE *copie_plateau, int l, int c);
 
+/*
+Crée une copie du plateau
+*/
 void copie_plateau(TUILE *dest, TUILE *src);
+
+/*
+Regarde si les tuiles sur le plateau sont correctement placé et forme bien des combinaisons
+Renvoie TRUE si le plateau est bon, FALSE sinon
+*/
+int analyse_plateau(TUILE *plateau);
+
+/*
+Change de place deux tuiles du plateaux.
+Renvoie TRUE si le changement est posible, FALSE sinon.
+*/
+int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource, int ligneDestination, int colonneDestination);
 
 /**********
  * Pioche *
@@ -129,41 +208,28 @@ la pioche est un encemble de tuiles pas un chevalet
 LISTE_TUILES pioche;
 
 /*
-afficher
-*/
-void affiche_liste_tuiles(LISTE_TUILES liste_tuiles);
-
-/*
-initialise la pioche puis la melange
+Initialise la pioche puis la melange
 */
 void init_pioche();
 
 /*
-melange la pioche de facon aleatoire
+Melange la pioche de facon aleatoire
 */
 void melanger_pioche();
 
 /*
-tire une carte au hasard dans la pioche et met a jour la pioche
+Tire une carte au hasard de la pioche, met a jour la pioche et ajoute la tuile à une liste de tuile (chevalet)
 */
 void piocher(LISTE_TUILES *l);
 
-void supprime_liste(LISTE_TUILES *l, TUILE tuile);
-int est_victorieux(JOUEUR j);
-void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
-void score_fin_partie(int indiceJoueurGagnant);
 
-int analyse_plateau(TUILE *plateau);
-
-
-
-/*
-IA
-*/
-int action_tour_ia(JOUEUR j);
+/******
+*  IA *
+* ****/
+int action_tour_ia(LISTE_TUILES* chevaleurIa);
 void combinationUtil(int arr[], int taille, int r, int index, int data[], int i, LISTE_TUILES chevaletIa, LISTE_TUILES* max);
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve);
-void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
+int placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
 
 
 
@@ -171,7 +237,8 @@ void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
  * DIVERS
  * *****/
 int char_to_int(char l);
-void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees);
-void copie_liste(LISTE_TUILES *src, LISTE_TUILES *dest);
-
-int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile);
+int readInt( int limMin, int limMax );
+void ecrire_score(char * chaine,int score);
+void affiche_score();
+void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
+void score_fin_partie(int indiceJoueurGagnant);

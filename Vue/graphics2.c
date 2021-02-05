@@ -366,9 +366,7 @@ void affiche_inscription(int numJoueur){
 		draw_line(ligne1,ligne2,blanc);
 		 ligne1.y++;
 		 ligne2.y++;
-	}
-	affiche_all();
-	
+	}	
 }
 
 /*
@@ -410,7 +408,6 @@ void inscription(char *pseudoJoueur, int numJoueur){
     					//affiche_texte(text,50,textP,blanc);
 						affiche_texte_special(text,45,textP,blanc,"assets/Playball.ttf");
 					}
-										
 					break;
                 case SDL_MOUSEBUTTONDOWN:
 					if (event.button.button == SDL_BUTTON_LEFT)
@@ -690,10 +687,11 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 /*
 * affiche une coutour sur toute les tuiles sur lesquelles on clic 
 */
-BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
-	POINT rec1,rec2,rec3,rec4,coin,dim,clic;
+BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BOOL *premiereMain) {
+	POINT rec1,rec2,rec3,rec4,err1,err2,coin,dim,clic;
 	int i,j,xg,xd;
 	COULEUR c;
+	BOOL done=true;
 	TUILE t;
 	selectionnees->nbTuiles=0;
 
@@ -707,47 +705,64 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Piochez",20,rec3,blanc);
 	affiche_all();
+	err1.x = 700; err1.y = HEIGHT-30;
 
 	rec1.x-=10; rec1.y-=10;
 	rec3.x-=10; rec3.y-=10;
 	rec4.x=rec3.x + rec2.x; rec4.y=rec3.y + rec2.y;
 	rec2.x+=rec1.x; rec2.y+=rec1.y;
-	clic = wait_clic();
-	while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4)) // valider - piocher
-	{
-		if(clic.y>=600 && clic.y<=654){
-			xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
-			xd = xg + ((joueurs.js[num_joueur].chevalet.nbTuiles)*44) - 3;
-			if(clic.x>=xg && clic.x<=xd){
-				for(i=0; i<joueurs.js[num_joueur].chevalet.nbTuiles; i++){
-					if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
-						coin.x=xg+(i*44)-1; coin.y=599;
-						dim.x=39; dim.y=55;
-						t = joueurs.js[num_joueur].chevalet.pile[i];
-						if(tuile_dans_liste(*selectionnees,t)){
-							c = noir;
-							supprime_liste(selectionnees,t);
+	while (done)
+	{	
+		clic = wait_clic();
+		while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4)) // valider - piocher
+		{
+			if(clic.y>=600 && clic.y<=654){
+				xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
+				xd = xg + ((joueurs.js[num_joueur].chevalet.nbTuiles)*44) - 3;
+				if(clic.x>=xg && clic.x<=xd){
+					for(i=0; i<joueurs.js[num_joueur].chevalet.nbTuiles; i++){
+						if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
+							coin.x=xg+(i*44)-1; coin.y=599;
+							dim.x=39; dim.y=55;
+							t = joueurs.js[num_joueur].chevalet.pile[i];
+							if(tuile_dans_liste(*selectionnees,t)){
+								c = noir;
+								supprime_liste(selectionnees,t);
+							}
+							else {
+								c = jaune;
+								ajouter_tuile(selectionnees,t);
+							}
+							for(j=0;j<3;j++){
+								draw_rectangle(coin,dim,c);
+								coin.x--; coin.y--;
+								dim.x+=2; dim.y+=2;
+							}
+							affiche_all();
 						}
-						else {
-							c = jaune;
-							ajouter_tuile(selectionnees,t);
-						}
-						for(j=0;j<3;j++){
-							draw_rectangle(coin,dim,c);
-							coin.x--; coin.y--;
-							dim.x+=2; dim.y+=2;
-						}
-						affiche_all();
 					}
 				}
 			}
+			clic = wait_clic();
 		}
-		clic = wait_clic();
+		printf("debug -- done : %d -- cmain : %d \n",*premiereMain,calcul_main(*selectionnees) );
+		if (dans_zone(clic,rec1,rec2) && *premiereMain && calcul_main(*selectionnees) < 30){ // valider
+			done=true;
+			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
+			affiche_all();
+			SDL_Delay(1200);
+			affiche_joueur_graphique(num_joueur);
+			affiche_all();
+
+		} else if (*premiereMain)
+			*premiereMain = false;
+		else
+			done=false;
 	}
 
-	if (dans_zone(clic,rec1,rec2)) // piocher
+	if (dans_zone(clic,rec1,rec2)) // valider
 		return true;
-	else // valider selection
+	else // piocher
 		return false;	
 }
 
@@ -927,4 +942,10 @@ void transition_IA(int val) {
 		rec1.x+=50;
 		SDL_Delay(1500);
 	}
+}
+
+void quit(){
+	IMG_Quit();
+	TTF_Quit();
+	SDL_Quit();
 }

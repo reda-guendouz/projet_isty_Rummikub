@@ -10,8 +10,8 @@ all: graphics2.o modele.o controleur.c
 graphics2.o: Vue/graphics2.c Vue/graphics2.h
 	$(CC) $(CFLAGS) -c Vue/graphics2.c
 
-modele.o: Modele/modele.c Modele/modele.h
-	$(CC) $(CFLAGS) -c Modele/modele.c
+modele.o: Terminal/modele.c Terminal/modele.h
+	$(CC) $(CFLAGS) -c Terminal/modele.c
 
 clean:
 	rm -f *.o

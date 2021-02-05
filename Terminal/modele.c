@@ -37,6 +37,17 @@ int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
     return TRUE;
 }
 
+int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile) {
+    int i;
+    TUILE t;
+    for(i=0; i < liste.nbTuiles; i++) {
+        t = liste.pile[i];
+        if(tuile.chiffre == t.chiffre && tuile.clr == t.clr)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 /**********
  * Joueur *
  * *******/
@@ -57,14 +68,14 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         }
         else
         {
-            printf("IA 1\n");
+            //printf("IA 1\n");
             strcpy(joueurs.js[i].pseudo, "IA");
         }
         joueurs.js[i].chevalet.nbTuiles = 0;
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
             piocher(&joueurs.js[i].chevalet);
-            affiche_tuile(pioche.pile[pioche.nbTuiles], j);
+            //affiche_tuile(pioche.pile[pioche.nbTuiles], j);
         }
     }
 }
@@ -118,12 +129,12 @@ void affiche_liste_tuiles(LISTE_TUILES liste_tuiles)
 
 void melanger_pioche()
 {
-    int i, nb2;
+    int i, nb2, index;
+    TUILE tmp;
     nb2 = MAX_TUILES;
     for (i = 0; i < MAX_TUILES; i++)
     {
-        TUILE tmp;
-        int index = rand() % nb2;
+        index = rand() % nb2;
         tmp = pioche.pile[index];
         pioche.pile[index] = pioche.pile[nb2 - 1];
         pioche.pile[MAX_TUILES - i - 1] = tmp;
@@ -133,11 +144,15 @@ void melanger_pioche()
 
 void piocher(LISTE_TUILES *liste)
 {
-    pioche.nbTuiles--;
-    TUILE tuile = pioche.pile[pioche.nbTuiles];
-    ajouter_tuile(liste, tuile);
-    /*joueurs.js[numJoueur].chevalet.pile[joueurs.js[numJoueur].chevalet.nbTuiles] = tuile;
-    joueurs.js[numJoueur].chevalet.nbTuiles++;*/
+    if (pioche.nbTuiles > 0){
+        pioche.nbTuiles--;
+        TUILE tuile = pioche.pile[pioche.nbTuiles];
+        ajouter_tuile(liste, tuile);
+    }
+    else {
+        printf("PLUS DE TUILES DANS LA PIOCHE");
+        sleep(3);
+    }
 }
 
 /***********
@@ -146,7 +161,6 @@ void piocher(LISTE_TUILES *liste)
 void affiche_plateau(TUILE *plateau_a_afficher)
 {
     int i, j, k;
-
     printf("\nPlateau:\n  ");
     for (k = 0; k < 22; k++)
     {
@@ -222,69 +236,94 @@ void placer_tuiles(LISTE_TUILES selection, TUILE *copie_plateau, int l, int c)
 
 int suite(LISTE_TUILES *l)
 {
-    int i, suite = 0;
-    int joker = 0;
-    if (l->nbTuiles > 2)
-    {
+    if (l->nbTuiles > 2) {
+        int i, nbJoker = 0, val = 0, clr = NOIR, new = 0,compteur =0;
+        TUILE remplacantJoker;
+        LISTE_TUILES copie;
+        copie.nbTuiles = 0;
+     
         tri_liste(l);
-        for (i = 0; i < l->nbTuiles - 1; i++)
-        {
-            if (l->pile[i].clr == NOIR && l->pile[i].chiffre == -1)
-            {
-                joker += 1;
-            }
-            else if (l->pile[i].clr == l->pile[i + 1].clr)
-            {
-                if (l->pile[i].chiffre + 1 == l->pile[i + 1].chiffre)
-                {
-                    suite += 1;
+        for (i = 0; i < l->nbTuiles; i++){
+            if (l->pile[i].chiffre == -1)
+                nbJoker++;
+            else {
+                if (!new){
+                    val = l->pile[i].chiffre;
+                    clr = l->pile[i].clr;
+                    new = 1;
+                    ajouter_tuile(&copie,l->pile[i]);
                 }
-                else
-                {
-                    if (joker > 0) //si un joker
-                    {
-                        joker -= 1;
-                        if (l->pile[i].chiffre == -l->pile[i + 1].chiffre + 2)
-                            suite += 1;
-                        else
-                            return 0;
+                else {
+                    if (val + 1 == l->pile[i].chiffre && clr == l->pile[i].clr){
+                        val++;
+                        ajouter_tuile(&copie,l->pile[i]);
                     }
-                    else
+                    else if (val + 1 != l->pile[i].chiffre && clr == l->pile[i].clr && nbJoker){
+                        remplacantJoker.clr = clr;
+                        remplacantJoker.chiffre = val + 1;
+                        val++;
+                        ajouter_tuile(&copie,remplacantJoker);
+                        nbJoker--;
+                        i--;
+                    }
+                    else 
                         return 0;
                 }
             }
-            else
-                return 0;
         }
-        return 1;
+        val++;
+        for (i = 0; i<nbJoker;i++){
+            remplacantJoker.chiffre = val;
+            remplacantJoker.clr = clr;
+            ajouter_tuile(&copie,remplacantJoker);
+            val++;
+        }
+        if (!new) {
+            for (i = 0; i<l->nbTuiles;i++)
+                compteur += 13 - i;
+            return compteur;
+        }
+        else 
+            return calcul_main(copie);
     }
+
     return 0;
 }
 
 int triplon_quadruplon(LISTE_TUILES *l)
 {
-    if (l->nbTuiles > 2 && l->nbTuiles < 5)
-    {
-        int i, j;
-        for (i = 0; i < l->nbTuiles - 1; i++)
-        {
-            if (l->pile[i].chiffre == l->pile[i + 1].chiffre)
-            {
-                for (j = i + 1; j < l->nbTuiles; j++)
-                {
-                    if (l->pile[i].clr == l->pile[j].clr)
-                    {
-                        return 0;
+    if (l->nbTuiles > 2 && l->nbTuiles < 5) {
+        int i,j, nbJoker = 0, compteur = 0, clr = NOIR, new = 0;
+        int  couleur[4];
+        for (i = 0; i <4; i++)
+            couleur[i] = 1;
+        
+        tri_liste(l);
+        for (i = 0; i < l->nbTuiles; i++){
+            if (l->pile[i].chiffre == -1)
+                nbJoker++;
+            else {
+                if (!new){
+                    compteur = l->pile[i].chiffre;
+                    clr = l->pile[i].clr;
+                    couleur[clr]=0;
+                    new = 1;
+                }
+                else {
+                    if (compteur == l->pile[i].chiffre && couleur[l->pile[i].clr]){
+                        couleur[l->pile[i].clr] = 0;
                     }
+                    else
+                        return 0;
                 }
             }
-            else
-                return 0;
         }
-        return l->pile[0].chiffre * l->nbTuiles;
+        if (!new)
+            return 13*l->nbTuiles;
+        else 
+            return compteur*l->nbTuiles;
     }
-    else
-        return 0;
+    return 0;
 }
 
 void tri_liste(LISTE_TUILES *l)
@@ -417,6 +456,65 @@ void score_fin_partie(int indiceJoueurGagnant)
     for (i = 0; i < joueurs.nbJs; i++)
     {
         joueurs.scores[i] += score[i];
+        ecrire_score(joueurs.js[i].pseudo,score[i]);
+    }
+}
+
+void ecrire_score(char * nomjoueur,int score){
+
+    time_t current_time;
+    char* c_time_string;
+    current_time = time(NULL);
+    c_time_string = ctime(&current_time);
+
+    FILE* fichier = NULL;
+
+    char chaine[500] = "";
+    char chaine_score[500] = "";
+
+    fichier = fopen("score.txt", "a");
+
+    if (fichier != NULL){
+        // On peut lire et écrire dans le fichier
+        strcat(chaine,"Date de la partie : ");
+        strcat(chaine,c_time_string);
+
+        strcat(chaine,"Joueur : ");
+
+        sprintf(chaine_score,"Score : %d",score);
+
+        strcat(chaine,nomjoueur);
+        strcat(chaine,"\n");
+
+        strcat(chaine,chaine_score);
+        strcat(chaine,"\n");
+
+        fputs(chaine,fichier);
+        
+        fclose(fichier);
+    }
+    else{
+        // On affiche un message d'erreur si on veut
+        printf("Impossible d'ouvrir le fichier score.txt en ecriture \n");
+    }
+}
+
+void affiche_score(){
+
+    FILE* fichier = NULL;
+    char chaine[500] = "";
+    fichier = fopen("score.txt", "r");
+
+    if (fichier != NULL){
+        // On peut lire et écrire dans le fichier
+        while (fgets(chaine,500,fichier) != NULL){ // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
+            printf("%s",chaine);
+        }
+        fclose(fichier);
+    }
+    else{
+        // On affiche un message d'erreur si on veut
+        printf("Impossible d'ouvrir le fichier score.txt en lecture \n");
     }
 }
 
@@ -477,7 +575,6 @@ int analyse_plateau(TUILE *plateau)
             }
         }
     }
-
     return TRUE;
 }
 
@@ -488,107 +585,92 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
         supprime_liste(chevalet, tuilesSelectionnees.pile[i]);
 }
 
-int action_tour_ia(JOUEUR ia)
+void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve)
 {
-    LISTE_TUILES listeIa = ia.chevalet;
-    LISTE_TUILES *ptr_listeIa = &listeIa;
-    LISTE_TUILES combinaisonsTrouve;
-    int i = 0;
-    TUILE copiePlateau[DIM_PLATEAU_H][DIM_PLATEAU_W];
-    combinaisonsTrouve.nbTuiles = 0;
-    copie_plateau(copiePlateau[0], plateau[0]);
-    tri_liste(ptr_listeIa);
-    affiche_liste_tuiles(listeIa);
-    trouver_combinaisons(listeIa, &combinaisonsTrouve);
-    if (combinaisonsTrouve.nbTuiles > 0)
-    {
-        printf("COMBINAISONS TROUVE IA PLACE \n");
-        for (i = 0; i < combinaisonsTrouve.nbTuiles; i++)
-            supprime_liste(&ia.chevalet, combinaisonsTrouve.pile[i]);
-        placer_combinaisons(combinaisonsTrouve, copiePlateau[0]);
-        copie_plateau(plateau[0], copiePlateau[0]);
-    }
-
-    else
-    {
-        printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
-        piocher(ptr_listeIa);
-    }
-    return 2;
-}
-
-void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES *combinaisonsTrouve)
-{
-    int i;
+    int i,j;
     int taille = chevaletIa.nbTuiles;
     int tab[taille];
     combinaisonsTrouve->nbTuiles = 0;
-    for (i = 0; i < taille; i++)
-        tab[i] = i;
-    for (i = 3; i < taille; i++)
-    {
+    for (i = 0; i<taille;i++)
+        tab[i]= i;
+    for (i=3;i<taille;i++) {
         int data[i];
-        combinationUtil(tab, taille, i, 0, data, 0, chevaletIa, combinaisonsTrouve);
+        combinationUtil(tab, taille, i, 0, data, 0, chevaletIa,combinaisonsTrouve);
     }
-    return;
+    return ;
 }
 
-void combinationUtil(int arr[], int taille, int r, int index, int data[], int i, LISTE_TUILES chevaletIa, LISTE_TUILES *max)
-{
+void combinationUtil(int arr[], int taille, int r, int index, int data[], int i, LISTE_TUILES chevaletIa, LISTE_TUILES* max) 
+{ 
     LISTE_TUILES new;
     new.nbTuiles = 0;
     int j;
-    if (index == r)
-    {
+    if (index == r){
         for (j = 0; j < r; j++)
             ajouter_tuile(&new, chevaletIa.pile[data[j]]);
-        if (test_combinaison(&new))
-        {
-            if (new.nbTuiles > max->nbTuiles)
-                copie_liste(&new, max); // VERIF max poids
+        if (test_combinaison(&new)){
+            if (calcul_main(new) > calcul_main(*max))
+                copie_liste(&new,max);
         }
         return;
     }
     if (i >= taille)
         return;
     data[index] = arr[i];
-    combinationUtil(arr, taille, r, index + 1, data, i + 1, chevaletIa, max);
-    combinationUtil(arr, taille, r, index, data, i + 1, chevaletIa, max);
+    combinationUtil(arr, taille, r, index + 1, data, i + 1, chevaletIa,max);
+    combinationUtil(arr, taille, r, index, data, i+1,chevaletIa,max);
 }
 
-void copie_liste(LISTE_TUILES *src, LISTE_TUILES *dst)
-{
+
+void copie_liste(LISTE_TUILES* src, LISTE_TUILES* dst){
     dst->nbTuiles = 0;
     int i = 0;
-    for (i = 0; i < src->nbTuiles; i++)
-    {
-        ajouter_tuile(dst, src->pile[i]);
+    for (i = 0; i < src->nbTuiles; i++){
+        ajouter_tuile(dst,src->pile[i]);
     }
 }
 
-void placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE *copiePlateau)
-{
-    int i, j, tailleCombinaisons = combinaisonTrouve.nbTuiles;
-    for (i = 0; i < DIM_PLATEAU_H; i++)
-    {
-        for (j = 0; j < DIM_PLATEAU_W; j++)
-        {
-            if (est_placable(tailleCombinaisons, i, j))
-            {
-                placer_tuiles(combinaisonTrouve, copiePlateau, i, j);
-                return;
+int placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau) {
+    int i,j, tailleCombinaisons = combinaisonTrouve.nbTuiles;
+    for (i = 0; i<DIM_PLATEAU_H;i++){
+        for (j=0; j<DIM_PLATEAU_W;j++){
+            if (j > 0){
+                j--;tailleCombinaisons++;
+            }
+            if (est_placable(tailleCombinaisons,i,j)){
+                placer_tuiles(combinaisonTrouve,copiePlateau,i,j);
+                return TRUE;
+            }
+            if (j > 0){
+                j++;tailleCombinaisons--;
             }
         }
     }
+    return FALSE;   
 }
 
-int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile) {
+int readInt( int limMin, int limMax ) {
+   for (;;) { // tant que la saisie n'est pas valide
+      // lire
+      char str[12];
+      if ( !fgets( str , sizeof str/sizeof*str , stdin ) )
+         printf( "Incident lors de la saisie\n" );
+      else {
+         // convertir
+         char *end;
+         long  res;
+         int errno = 0;
+         res = strtol( str, &end, 0 );
+         if ( errno == 0 && end != str  && res >= limMin  &&  res <= limMax )
+            return (int)res;
+      }
+   }
+}
+
+int calcul_main(LISTE_TUILES listeTuiles){
     int i;
-    TUILE t;
-    for(i=0; i < liste.nbTuiles; i++) {
-        t = liste.pile[i];
-        if(tuile.chiffre == t.chiffre && tuile.clr == t.clr)
-            return TRUE;
-    }
-    return FALSE;
+    int compteur = 0;
+    for (i = 0; i < listeTuiles.nbTuiles; i++)
+        compteur += listeTuiles.pile[i].chiffre;
+    return compteur;
 }
