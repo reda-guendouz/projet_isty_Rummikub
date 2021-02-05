@@ -58,25 +58,6 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
     int i, j, tmp = nbJoueursH;
     for (i = 0; i < nbJoueurs; i++)
     { 
-        for (j = 0; j < PIOCHE_DEPART; j++)
-        {
-            if (nbJoueursH == 0 )
-                piocher(&joueurs.js[i].chevalet);
-            else
-            {
-                TUILE t,t1,t2;
-                t.clr = ROUGE;
-                t1.clr = BLEU;
-                t2.clr = ORANGE;
-                t.chiffre = t1.chiffre=  t2.chiffre=12;
-                joueurs.js[i].chevalet.nbTuiles=3;
-                joueurs.js[i].chevalet.pile[0]=t;
-                joueurs.js[i].chevalet.pile[1]=t1;
-                joueurs.js[i].chevalet.pile[2]=t2;
-            }
-            
-            //affiche_tuile(pioche.pile[pioche.nbTuiles], j);
-        }
         if (nbJoueursH > 0)
         {/*
             printf("Entrez le pseudonyme du joueur %d : ", tmp);
@@ -88,6 +69,11 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
             //printf("IA 1\n");
             strcpy(joueurs.js[i].pseudo, "IA");
             joueurs.js[i].chevalet.nbTuiles = 0;
+        }
+        for (j = 0; j < PIOCHE_DEPART; j++)
+        {
+            piocher(&joueurs.js[i].chevalet);
+            affiche_tuile(pioche.pile[pioche.nbTuiles], j);
         }
     }
 }
@@ -667,7 +653,7 @@ void combinationUtil(int arr[], int taille, int r, int index, int data[], int i,
     if (i >= taille)
         return;
     data[index] = arr[i];
-    combinationUtil(arr, taille, r, index + 1, data, i + 1, chevaletIa,max);
+    //combinationUtil(arr, taille, r, index + 1, data, i + 1, chevaletIa,max);
     combinationUtil(arr, taille, r, index, data, i+1,chevaletIa,max);
 }
 

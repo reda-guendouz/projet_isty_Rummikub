@@ -74,12 +74,14 @@ int main(int argc, char const *argv[])
 
             if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
+                printf("debug -- chevalet ia :\n");
+                affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
                 combinaisonsTrouve.nbTuiles=0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copieP[0],plateau[0]);
                 if (premieresMains[joueurActuel] && calcul_main(combinaisonsTrouve) < 30) {
                     piocher(&joueurs.js[joueurActuel].chevalet);
-                    transition_IA(2);
+                    //transition_IA(2);
                 }
                 else {
                     premieresMains[joueurActuel] = false;
@@ -93,7 +95,7 @@ int main(int argc, char const *argv[])
                     } 
                     else {
                         piocher(&joueurs.js[joueurActuel].chevalet);
-                        transition_IA(2);
+                        //transition_IA(2);
                     }
                 }
             } else // tour d'un joueur H
@@ -316,16 +318,16 @@ int main(int argc, char const *argv[])
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
-                printf();
+                printf("tour valide\n");
                 if (est_victorieux(joueurs.js[joueurActuel])){
                     affiche_victoire_graphique(joueurActuel);
                     score_fin_partie(joueurActuel);
                 }
                 mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
-            joueurActuel = (joueurActuel+1)%joueurs.nbJs;
+            joueurActuel = (joueurActuel+1)%joueurs.nbJs;/*
             if (joueurActuel + 1 - nbJoueursH  <= 0)
-                transition(joueurActuel+1);
+                transition(joueurActuel+1);*/
         } // end tour
         
 
