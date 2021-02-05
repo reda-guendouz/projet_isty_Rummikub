@@ -225,16 +225,26 @@ void piocher(LISTE_TUILES *l);
 /******
 *  IA *
 * ****/
-int action_tour_ia(LISTE_TUILES* chevaleurIa);
+/*
+Trouve une combinaisons jouable par l'IA
+ */
 void combinationUtil(int arr[], int data[], int start, int end, int index, int r, LISTE_TUILES chevalet, LISTE_TUILES* bestListe);
+
+/*
+Trouve la meilleur combinaisons possibles pour l'IA
+*/
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve);
+
+/*
+Place une combinaison sur le plateau
+*/
 int placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau);
 
 
 
-/******
- * DIVERS
- * *****/
+/**********
+ * DIVERS *
+ * ********/
 int char_to_int(char l);
 int readInt( int limMin, int limMax );
 void ecrire_score(char * chaine,int score);

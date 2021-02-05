@@ -50,6 +50,7 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
     {
         tmp = i + 1;
         joueurs.js[i].numJoueur = tmp;
+        //DEMANDE LES PSEUDOS DES JOUEURS
         if (nbJoueursH > 0) {
             printf("Entrez le pseudonyme du joueur %d : ", tmp);
             scanf(" %s", joueurs.js[i].pseudo);
@@ -60,6 +61,7 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
             strcpy(joueurs.js[i].pseudo, "IA"); 
         }  
         joueurs.js[i].chevalet.nbTuiles = 0;
+        //AJOUTE LES TUILES DANS LE CHEVALET DES JOUEURS
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
             piocher(&joueurs.js[i].chevalet);
@@ -90,6 +92,7 @@ void init_pioche()
 {
     int i, j, k;
     pioche.nbTuiles = 0;
+    //CREATION DE TOUTES LES TUILES DU JEU
     for (i = 0; i < 2; i++)
     {
         for (j = 1; j <= MAX_CHIFFRE; j++)
@@ -132,6 +135,7 @@ void melanger_pioche()
 
 void piocher(LISTE_TUILES *liste)
 {
+    //AJOUTE LA PREMIERE TUILE DE LA PIOCHE DANS LE CHEVALET D'UN JOUEUR
     if (pioche.nbTuiles > 0){
         pioche.nbTuiles--;
         TUILE tuile = pioche.pile[pioche.nbTuiles];
@@ -227,34 +231,36 @@ int suite(LISTE_TUILES *l)
      
         tri_liste(l);
         for (i = 0; i < l->nbTuiles; i++){
+            //COMPTE LE NOMBRE DE JOKER
             if (l->pile[i].chiffre == -1)
                 nbJoker++;
             else {
                 if (!new){
                     val = l->pile[i].chiffre;
                     clr = l->pile[i].clr;
+                    //REGARDE SI LA SUITE EST DE LA MEME COULEUR
                     for (j = i; j < l->nbTuiles; j++){
                         if (clr != l->pile[j].clr)
                             return 0;
                     }
+                    //RECUPERE L'INCIDE DE LA PREMIERE VALEUR APRES LE DERNIER JOKER
                     if (nbJoker)
                         new = i;
                     else
-                        new = -6;
+                        new = -1;
                     ajouter_tuile(&copie,l->pile[i]);
                     placementJoker[cmptPlacementJoker] = val;
                     cmptPlacementJoker++;
                 }
                 else {
+                    //VERIFIE SI C'EST BIEN UNE SUITE
                     if (val + 1 == l->pile[i].chiffre){
-                        //printf("BONNE COULEUR BONNE SUITE +1 sans joker  %d  --- %d \n",val,l->pile[i].chiffre);
                         val++;
                         ajouter_tuile(&copie,l->pile[i]);
                         placementJoker[cmptPlacementJoker] = val;
                         cmptPlacementJoker++;
                     }
                     else if (val + 1 != l->pile[i].chiffre && nbJoker){
-                        //printf("JOKER CONSOME\n");
                         remplacantJoker.clr = clr;
                         remplacantJoker.chiffre = val + 1;
                         val++;
@@ -270,12 +276,14 @@ int suite(LISTE_TUILES *l)
         //affiche_liste_tuiles(copie);
         compteur = l->pile[new].chiffre;
         remplacantJoker.clr = clr;
+        //PLACEMENT DES JOKER EN DEBUT DE SUITE
         while (l->pile[l->nbTuiles - 1].chiffre + nbJoker > 13){
             remplacantJoker.chiffre = compteur - 1;
             ajouter_tuile(&copie,remplacantJoker);
             tri_liste(&copie);
             nbJoker--; compteur--;
         }
+        //PLACEMENT DES JOKER EN FIN DE SUITE
         val++;
         for (i = 0; i<nbJoker;i++){
             remplacantJoker.chiffre = val;
@@ -294,7 +302,6 @@ int suite(LISTE_TUILES *l)
                 compteur += copie.pile[i].chiffre;
             permutationJoker(&copie,placementJoker,cmptPlacementJoker);
             copie_liste(&copie,l);
-            //printf("COMPTEUR : %d \n",compteur);
             return compteur;
         }
     }
@@ -303,6 +310,7 @@ int suite(LISTE_TUILES *l)
 
 
 void permutationJoker(LISTE_TUILES* l, int* chiffres, int taille){
+    //AJOUTE LES JOKERS DANS LA SUITE A LEUR BONNE PLACE
     int i,j,trouve = 0;
     for (i = 0; i< l->nbTuiles;i++){
         trouve = 0;
@@ -428,6 +436,7 @@ void affiche_victoire(JOUEUR j, int indiceJoueurGagnant)
 
 int est_placable(int taille_liste, int ligne, int colonne)
 {
+    //REGARDE A UN ENDROIT UNE COORDONNEE SI IL Y A LA PLACE DE PLACER UNE COMBINASIONS
     int i, j, taille_dispo = 0, depart = FALSE;
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
@@ -454,7 +463,6 @@ int intervertion_tuiles(TUILE *copie_plateau, int ligneSource, int colonneSource
 {
     // verifier ici d'abord que les lignes et colonnes sont bonnes
     // sinon retourner false
-    printf(" SOURCE : %d %d  ---- DESTINATION %d %d \n",ligneSource,colonneSource,ligneDestination,colonneDestination);
     if (ligneSource < 0 || ligneSource >= DIM_PLATEAU_H || colonneSource < 0 || colonneSource >= DIM_PLATEAU_W ||
         ligneDestination < 0 || ligneDestination >= DIM_PLATEAU_H || colonneDestination < 0 || colonneDestination >= DIM_PLATEAU_W)
         return FALSE;
@@ -476,6 +484,7 @@ void score_fin_partie(int indiceJoueurGagnant)
     {
         if (i != indiceJoueurGagnant)
         {
+            //CALCUL LE SCORE EN FONCTION DES AUTRES JOUEURS
             for (j = 0; j < joueurs.js[i].chevalet.nbTuiles; j++)
             {
                 score[indiceJoueurGagnant] += joueurs.js[i].chevalet.pile[j].chiffre;
@@ -588,6 +597,7 @@ int analyse_plateau(TUILE *plateau)
     unsigned char test = FALSE;
     LISTE_TUILES analyse;
     analyse.nbTuiles = 0;
+    //PARCOUR DU PLATEAU ET VERIFIE SI TOUTES LES COMBINAISONS SONT VIABLES OU NON
     for (i = 0; i < DIM_PLATEAU_H; i++)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
@@ -611,6 +621,7 @@ int analyse_plateau(TUILE *plateau)
 
 void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
 {
+    //ENLEVE LES TUILES SELECTIONNE D'UN CHEVALET
     int i;
     for (i = 0; i < tuilesSelectionnees.nbTuiles; i++)
         supprime_liste(chevalet, tuilesSelectionnees.pile[i]);
@@ -618,13 +629,14 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
 
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve)
 {
+    //CHERCHE TOUTES LES COMBINAISONS POSSIBLES JOUABLES D'UN CHEVALET
     int i;
     int taille = chevaletIa.nbTuiles;
     int tab[taille];
     combinaisonsTrouve->nbTuiles = 0;
     for (i = 0; i<taille;i++)
         tab[i]= i;
-    for (i=3;i<5;i++) {
+    for (i=3;i<taille;i++) {
         int data[i];
         combinationUtil(tab, data, 0, taille,0, i, chevaletIa, combinaisonsTrouve);
     }
@@ -640,8 +652,6 @@ void combinationUtil(int arr[], int data[], int start, int end, int index, int r
 		for (int j=0; j<r; j++) 
             ajouter_tuile(&newListe,chevalet.pile[data[j]]); 
 		if (test_combinaison(&newListe)){
-            //affiche_liste_tuiles(newListe);
-            //printf("\n");
             if (calcul_main(&newListe) > calcul_main(bestListe))
                 copie_liste(&newListe,bestListe);
         }
@@ -663,6 +673,7 @@ void copie_liste(LISTE_TUILES* src, LISTE_TUILES* dst){
 }
 
 int placer_combinaisons(LISTE_TUILES combinaisonTrouve, TUILE* copiePlateau) {
+    //PARCOURS DU PLATEAU ET PLACE LA COMBINAISONS DANS LE PLATEAU
     int i,j, tailleCombinaisons = combinaisonTrouve.nbTuiles;
     for (i = 0; i<DIM_PLATEAU_H;i++){
         for (j=0; j<DIM_PLATEAU_W;j++){
@@ -694,14 +705,15 @@ int readInt( int limMin, int limMax ) {
 }
 
 int calcul_main(LISTE_TUILES* listeTuiles){ 
+    //CALCUL LA VALEUR DE LA MIN D'UNE COMBINAISONS
     int valTriplonQuadruplon = triplon_quadruplon(listeTuiles), valSuite = suite(listeTuiles);
-    printf("TRIPLON : %d -------- SUITE : %d \n",valTriplonQuadruplon,valSuite);
     if (valTriplonQuadruplon > valSuite)
         return valTriplonQuadruplon;
     return valSuite;
 }
 
 int est_dans_selection(int selection,int taille,int *tabSelection){
+    //REGARDE SI UN IN EST DANS UN TABLEAU DE INT
     int i;
     for (i = 0; i<taille;i++){
         if (tabSelection[i] == selection)

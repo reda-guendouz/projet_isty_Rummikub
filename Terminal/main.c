@@ -20,35 +20,9 @@ int main(void)
 
     while (jeu)
     {
-        /*
-        LISTE_TUILES test;
-        test.nbTuiles =0;
-        TUILE t1,joker,t3,t4,t5,t6;
-        t1.chiffre = 10;
-        t1.clr = NOIR;
-        joker.chiffre = -1;
-        joker.clr = NOIR;
-        t3.chiffre = 9;
-        t3.clr = NOIR;
-        t4.chiffre = 13;
-        t4.clr = NOIR;
-        ajouter_tuile(&test,joker);
-        ajouter_tuile(&test,joker);
-        ajouter_tuile(&test,joker);
-        ajouter_tuile(&test,t1);
-        ajouter_tuile(&test,t3);
-        ajouter_tuile(&test,t4);
-
-        int reponse;
-        reponse = suite(&test);
-        printf("SUITE  : %d \n",reponse);
-        affiche_liste_tuiles(test);
-        sleep(5);
-        */
-
         //LANCEMENT DU JEU
         partie = FALSE;
-        //system("clear");
+        system("clear");
         printf("Groupe : 8 Rummikub \n");
         printf("1. Lancer un partie \n");
         printf("2. Voir Tableau Score \n");
@@ -325,7 +299,6 @@ int main(void)
                 int i = 0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copiePlateau[0],plateau[0]);
-                //printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premiereMain[joueurActuel],calcul_main(combinaisonsTrouve));
                 if (premiereMain[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
                     printf("AUCUNE COMBINAISONS TROUVE IA PIOCHE \n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
