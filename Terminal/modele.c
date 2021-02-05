@@ -68,7 +68,7 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         }
         else
         {
-            printf("IA 1\n");
+            //printf("IA 1\n");
             strcpy(joueurs.js[i].pseudo, "IA");
         }
         joueurs.js[i].chevalet.nbTuiles = 0;
