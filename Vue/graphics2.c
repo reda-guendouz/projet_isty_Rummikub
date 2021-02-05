@@ -231,11 +231,18 @@ int dans_ecran(int x, int y)
 	// Inverse l'ordonn�e entre haut et bas
 #define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_SetRenderDrawColor(renderer,((color >> 16) & 0xFF),((color >> 8) & 0xFF),((color) & 0xFF),0);SDL_RenderDrawPoint(renderer, x, y);SDL_SetRenderDrawColor(renderer,255,255,255,0); }
 
+/*
+* affiche le pixel selon la couleur indique en parametre
+*/
 void draw_pixel(POINT p, COULEUR color)
 	{
 	add_pix(p.x,p.y,color);
 	if (SDL_AFFICHE_AUTO) affiche_all();
 	}
+
+/*
+* affiche une ligne colore entre les deux points indiques en parametre
+*/	
 
 void draw_line(POINT debutLigne, POINT finLigne, COULEUR color)
 	{
@@ -248,6 +255,10 @@ void draw_line(POINT debutLigne, POINT finLigne, COULEUR color)
 	//if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 	}
 
+/*
+* affiche un rectangle entre les deux points indique en parametre 
+* seule les contoures sont colore de la couleur indique en parametre 
+*/
 void draw_rectangle(POINT emplacement, POINT dimensions, COULEUR color)
 	{
 	int rrr = ((color >> 16) & 0xFF);
@@ -259,6 +270,10 @@ void draw_rectangle(POINT emplacement, POINT dimensions, COULEUR color)
 	//if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
+/*
+* affiche un rectangle entre les deux points indique en parametre 
+* ce rectangle est pleinement colore de la couleur indique en parametre 
+*/
 void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	{
 	int rrr = ((color >> 16) & 0xFF);
@@ -270,6 +285,9 @@ void draw_fill_rectangle(POINT p1, POINT p2, COULEUR color)
 	//if (SDL_AFFICHE_AUTO) affiche_all();
 	}
 
+/*
+* charge l'image dont le path est indique en parametre a l'emplacement indique
+*/
 void load_img(char *fic,POINT emplacement){
 	int png1 = 5; int png2 = 5;
 	SDL_Surface *image = IMG_Load(fic);
@@ -281,6 +299,9 @@ void load_img(char *fic,POINT emplacement){
 	SDL_FreeSurface(image);
 }
 
+/*
+* affiche la couleur indique en parametre sur tout l'ecran
+*/
 void fill_screen(COULEUR clr){
 	int rrr = ((clr >> 16) & 0xFF);
 	int ggg = ((clr >> 8) & 0xFF);
@@ -290,6 +311,9 @@ void fill_screen(COULEUR clr){
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);	
 }
 
+/*
+* affiche le menu d'accueil du jeu
+*/
 void affiche_menu_debut(){
 	fill_screen(noir);
 
@@ -303,16 +327,26 @@ void affiche_menu_debut(){
     RecEmplacement.x = 850; RecEmplacement.y = 420;
     affiche_texte_special("PLAYERS VS PLAYERS",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
 
-	text.x=730; text.y=600;
+	text.x=710; text.y=600;
     affiche_texte_special("Quitter",30,text,blanc,"assets/valianttimes.ttf");
     
 }
 
+/*
+* retourne vrai si le 1er point est dans le rectangle forme par les 2 autres points
+* retourne faux sinon
+* p1.x < clic.x < p2.x
+* p1.y < clic.y < p2.y
+*/ 
 int dans_zone(POINT clic, POINT p1, POINT p2){
 	if (clic.x > p2.x || clic.x < p1.x || clic.y > p2.y || clic.y < p1.y )
 		return false;
 	return true;
 }
+
+/*
+* affiche le menu de saisi de pseudo
+*/
 
 void affiche_inscription(int numJoueur){
 	SDL_RenderClear(renderer);
@@ -356,6 +390,9 @@ void affiche_inscription(int numJoueur){
 	
 }
 
+/*
+* recupere les caracteres saisis au clavier et instencie le pseudo du joueur indique en parametre
+*/
 void inscription(char *pseudoJoueur, int numJoueur){
 	BOOL done=false;
 	BOOL empty=true;
@@ -437,6 +474,9 @@ void inscription(char *pseudoJoueur, int numJoueur){
 	strcpy(pseudoJoueur,text);
 }
 
+/*
+* connterti un nombre entre 0 et 19 en la chaine de caractere correspondante
+*/
 void converti_int_en_str(int nb, char *p)
 {
 	int unite = nb%10;
@@ -451,6 +491,10 @@ void converti_int_en_str(int nb, char *p)
 	}
 }
 
+
+/*
+* permet d'obtenir le path correspondant a l'image illustrant la tuile indique en parametre
+*/
 void transforme_tuile_en_path(TUILE t,char *p2) {
     char p[23];
     strcpy(p,"assets/Tuiles/");
@@ -485,6 +529,10 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
     strcpy(p2,p);
 }
 
+
+/*
+* affiche le plateau du jeu avec les tuiles qu'il contient
+*/
 void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 	POINT l1,fond1,fond2,fond3,fond4;
 	int i,j,espace=45,espace2=65;
@@ -519,12 +567,21 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
-
+/*
+* affiche le chevalet, le numero et le nom du joueur indique en parametre
+*/
 void affiche_joueur_graphique(int num_joueur) {
 	POINT p,l1,l2;
 	p.x=75;
-	p.y=600;
+	p.y=550;
 
+
+	char textJoueur[9];
+	strcpy(textJoueur,"Joueur ");
+	textJoueur[7]= num_joueur + '0';
+	textJoueur[8]= '\0';
+	affiche_texte(textJoueur,20,p,blanc);
+	p.y=590;
 	affiche_texte(joueurs.js[num_joueur].pseudo,20,p,blanc);
 
     l1.x = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
@@ -543,6 +600,9 @@ void affiche_joueur_graphique(int num_joueur) {
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
 
+/*
+* affiche une tuile aux coordonnees indiquees en parametre
+*/
 void affiche_tuile_graphique(TUILE t,POINT p) {
 	if (t.chiffre!=0)
 	{
@@ -646,6 +706,9 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 		return -1;
 }
 
+/*
+* affiche une coutour sur toute les tuiles sur lesquelles on clic 
+*/
 BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	POINT rec1,rec2,rec3,rec4,coin,dim,clic;
 	int i,j,xg,xd;
@@ -712,7 +775,9 @@ void affiche_modif_plateau(TUILE *plateau_a_afficher, int joueur){
 	affiche_joueur_graphique(joueur);
 }
 
-
+/*
+* converti les coordonnes d'un clic en coordonne de case dans la plateau
+*/
 void choix_case_plateau(POINT clic,int *ligne,int *colonne) {
 	int l=0,c=0,x=clic.x,y=clic.y;
 	x-=294;
@@ -729,7 +794,10 @@ void choix_case_plateau(POINT clic,int *ligne,int *colonne) {
 	*colonne=c;
 }
 
-
+/*
+* affiche un contour autour d'une tuile dans le plateau
+* le coutour est jaune si selec est vrai noir sinon
+*/
 void tuile_selectionne(int ligne,int colonne,BOOL selec) {
 	POINT p,dim;
 	int i;
@@ -752,6 +820,9 @@ void tuile_selectionne(int ligne,int colonne,BOOL selec) {
 		SDL_RenderPresent(renderer);
 }
 
+/*
+* affiche le pseudo du joueur gagnant de la partie
+*/
 void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
 	fill_screen(noir);
 	POINT text;
@@ -769,10 +840,11 @@ void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
 
 	text.x=645; text.y=350;
 	affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
-
-	//wait_escape();
 }
 
+/*
+* affiche un ecran de transition qui indique le numero du joueur dont le tour est le suivant 
+*/
 void transition(int joueurSuivant) {
 	fill_screen(noir);
 	POINT text,rec1,rec2;
@@ -804,4 +876,52 @@ void transition(int joueurSuivant) {
 
 	SDL_Delay(1000);
 
+}
+
+/*
+* affiche les indications sur le tour du joueur
+*/
+void affiche_info_tour(int val) {
+	POINT text;
+	text.x= 1320; text.y= 240;
+	affiche_texte_special("INFOS TOUR :",25,text,blanc,"assets/Poppins.ttf");
+	printf("val : %d",val);
+	text.x= 1295; text.y= 280;
+	switch (val)
+	{
+	case 1:
+		affiche_texte("- Selectionne des tuiles",17,text,blanc);
+		text.x= 1300; text.y= 300;
+		affiche_texte("puis valide",17,text,blanc);
+		text.x= 1295; text.y= 330;
+		affiche_texte("- Pioche",17,text,blanc);
+		break;
+	case 2:
+		affiche_texte("- Place des tuiles puis",17,text,blanc);
+		text.x= 1300; text.y= 300;
+		affiche_texte("valide",17,text,blanc);
+		text.x= 1295; text.y= 330;
+		affiche_texte("- Pioche",17,text,blanc);
+		text.x= 1295; text.y= 360;
+		affiche_texte("- Recommence le tour",17,text,blanc);
+		break;
+	case 3:
+		affiche_texte("- Valide le placement",17,text,blanc);
+		text.x= 1295; text.y= 310;
+		affiche_texte("- Pioche",17,text,blanc);
+		text.x= 1295; text.y= 340;
+		affiche_texte("- Recommence le tour",17,text,blanc);
+		break;
+	case 4:;
+		affiche_texte("- Deplace les tuiles",17,text,blanc);
+		text.x= 1300; text.y= 300;
+		affiche_texte("puis valide le coup",17,text,blanc);
+		text.x= 1295; text.y= 330;
+		affiche_texte("- Valide le coup",17,text,blanc);
+		text.x= 1295; text.y= 360;
+		affiche_texte("- Pioche",17,text,blanc);
+		text.x= 1295; text.y= 390;
+		affiche_texte("- Recommence le tour",17,text,blanc);
+		break;
+	}
 }
