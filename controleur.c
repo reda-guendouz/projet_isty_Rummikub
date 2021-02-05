@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
     POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,texteInfo,clic,oldClic,err;
     int i,j,nbJoueursH,nbJoueursIA=0,joueurActuel=0,ligne,colonne;
     BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true,modifP2=true;
-    LISTE_TUILES selectionnees, combinaisonsTrouve;;
+    LISTE_TUILES selectionnees, combinaisonsTrouve;
     TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W],tmp;
 
     init_pioche();
@@ -36,6 +36,7 @@ int main(int argc, char const *argv[])
             quit();
             return 0;
         }
+
         if(has_ia)
             nbJoueursIA = choix_joueurs(nbJoueursIA,TRUE);
         if(nbJoueursIA<3)
@@ -76,24 +77,29 @@ int main(int argc, char const *argv[])
             {
                 printf("debug -- chevalet ia :\n");
                 affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
+                LISTE_TUILES combinaisonsTrouve;
                 combinaisonsTrouve.nbTuiles=0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copieP[0],plateau[0]);
-                if (premieresMains[joueurActuel] && calcul_main(combinaisonsTrouve) < 30) {
+                printf("PREMIERE MAIN : %d  ---- CALCUL DE MAIN : %d\n",premiereMain[joueurActuel],calcul_main(combinaisonsTrouve));
+                if (premieresMains[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
+                    printf("debug -- premiere main pas passe1\n");
                     piocher(&joueurs.js[joueurActuel].chevalet);
                     //transition_IA(2);
                 }
                 else {
-                    premieresMains[joueurActuel] = false;
                     if (combinaisonsTrouve.nbTuiles > 0 && placer_combinaisons(combinaisonsTrouve, copieP[0])) 
                     {
+                        printf("debug -- premiere main passe\n");
                         for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
                             supprime_liste(&joueurs.js[joueurActuel].chevalet,combinaisonsTrouve.pile[i]);
                         }
                         copie_plateau(plateau[0], copieP[0]);
+                        premieresMains[joueurActuel] = false;
                         transition_IA(1);
                     } 
                     else {
+                        printf("debug -- premiere main pas passe2\n");
                         piocher(&joueurs.js[joueurActuel].chevalet);
                         //transition_IA(2);
                     }
@@ -139,7 +145,7 @@ int main(int argc, char const *argv[])
                                 if (est_placable(selectionnees.nbTuiles,ligne,colonne)) // placement tuile :
                                 {
                                     placer_tuiles(selectionnees,copieP[0],ligne,colonne);
-                                    affiche_plateau_graphique_slow(copieP[0]);
+                                    affiche_plateau_graphique_slow(copieP[0],ligne,colonne);
                                     affiche_info_tour(3);
                                     affiche_all();
                                     do
@@ -161,13 +167,16 @@ int main(int argc, char const *argv[])
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
-                                    printf("reda is dommed\n");
                                     affiche_texte("Erreur : votre liste ne peut se mettre ici",25,err,rouge);
                                     SDL_Delay(1200);
                                     //// afficher "erreur: votre liste ne peut se mettre ici"
                                 }
-                            } else
+                            } else {
                                 selection=true;
+                                affiche_texte("Erreur : selectionnez au moins une tuile",25,err,rouge);
+                                SDL_Delay(1200);
+                                continue;
+                            }
                         } else if (dans_zone(clic,rec5,rec6)) // choix - piocher
                         {
                             piocher(&joueurs.js[joueurActuel].chevalet);
@@ -227,9 +236,10 @@ int main(int argc, char const *argv[])
                             } else
                             {
                                 //// afficher : "erreur : placement de tuiles invalides"
+                                selection=true;
                                 affiche_texte("Erreur : Votre plateau n'est pas valide",25,err,rouge);
-
-                                return 0;
+                                SDL_Delay(1200);
+                                break;
                             }
                         }
                         while(modifP2){
@@ -269,14 +279,15 @@ int main(int argc, char const *argv[])
                                 } else
                                 {
                                     //// afficher : "erreur : placement de tuiles invalides"
-                                    return 0;
+                                    selection=true;
+                                    affiche_texte("Erreur : Votre plateau n'est pas valide",25,err,rouge);
+                                    SDL_Delay(1200);
+                                    break;
                                 }
                             }
-                            printf("debug -- modifP2 2eme tour\n");
                             do
                             {
                                 clic = wait_clic();
-                            printf("debug -clic- modifP2 2eme tour\n");
                             } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec7,rec8));//plateau - refaire - piocher - valider
                             if (dans_zone(clic,rec1,rec2)) // plateau intervertion 1
                             {
@@ -307,7 +318,10 @@ int main(int argc, char const *argv[])
                                 } else
                                 {
                                     //// afficher : "erreur : placement de tuiles invalides"
-                                    return 0;
+                                    selection=true;
+                                    affiche_texte("Erreur : Votre plateau n'est pas valide",25,err,rouge);
+                                    SDL_Delay(1200);
+                                    break;
                                 }
                             }
                         } // end modifP2

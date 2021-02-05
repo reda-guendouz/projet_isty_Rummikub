@@ -710,7 +710,7 @@ int readInt( int limMin, int limMax ) {
 
 int calcul_main(LISTE_TUILES* listeTuiles){ 
     int valTriplonQuadruplon = triplon_quadruplon(listeTuiles), valSuite = suite(listeTuiles);
-    printf("TRIPLON : %d -------- SUITE : %d \n",valTriplonQuadruplon,valSuite);
+    //printf("TRIPLON : %d -------- SUITE : %d \n",valTriplonQuadruplon,valSuite);
     if (valTriplonQuadruplon > valSuite)
         return valTriplonQuadruplon;
     return valSuite;
