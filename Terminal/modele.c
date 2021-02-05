@@ -33,7 +33,6 @@ void affiche_tuile(TUILE tuile, int numTuiles)
 
 int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
 {
-    int i;
     liste->pile[liste->nbTuiles] = tuile;
     liste->nbTuiles++;
     return TRUE;
@@ -282,7 +281,8 @@ int suite(LISTE_TUILES *l)
             return compteur;
         }
         else {
-            compteur = calcul_main(copie);
+            for (i = 0; i < copie.nbTuiles; i++)
+                compteur += copie.pile[i].chiffre;
             permutationJoker(&copie,placementJoker,cmptPlacementJoker);
             copie_liste(&copie,l);
             return compteur;
@@ -311,7 +311,7 @@ void permutationJoker(LISTE_TUILES* l, int* chiffres, int taille){
 int triplon_quadruplon(LISTE_TUILES *l)
 {
     if (l->nbTuiles > 2 && l->nbTuiles < 5) {
-        int i,j, nbJoker = 0, compteur = 0, clr = NOIR, new = 0;
+        int i,nbJoker = 0, compteur = 0, clr = NOIR, new = 0;
         int  couleur[4];
         for (i = 0; i <4; i++)
             couleur[i] = 1;
@@ -580,7 +580,6 @@ int analyse_plateau(TUILE *plateau)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
-            printf("Contenu : %d\n",plateau[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre);
             if (plateau[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre != 0)
             {
                 ajouter_tuile(&analyse, plateau[(int unsigned)(i * DIM_PLATEAU_W + j)]);
@@ -607,7 +606,7 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
 
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve)
 {
-    int i,j;
+    int i;
     int taille = chevaletIa.nbTuiles;
     int tab[taille];
     combinaisonsTrouve->nbTuiles = 0;
@@ -687,12 +686,11 @@ int readInt( int limMin, int limMax ) {
    }
 }
 
-int calcul_main(LISTE_TUILES listeTuiles){
-    int i;
-    int compteur = 0;
-    for (i = 0; i < listeTuiles.nbTuiles; i++)
-        compteur += listeTuiles.pile[i].chiffre;
-    return compteur;
+int calcul_main(LISTE_TUILES listeTuiles){ 
+    int valTriplonQuadruplon = triplon_quadruplon(&listeTuiles), valSuite = suite(&listeTuiles); 
+    if (valTriplonQuadruplon > valSuite)
+        return valTriplonQuadruplon;
+    return valSuite;
 }
 
 int est_dans_selection(int selection,int taille,int *tabSelection){
