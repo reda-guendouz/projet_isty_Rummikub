@@ -19,8 +19,8 @@ int main(int argc, char const *argv[])
         rec2.x = 620; rec2.y = 400;
         rec3.x = 850; rec3.y = 420;
         rec4.x = 1375; rec4.y = 500;
-        rec5.x = 730; rec5.y = 600;
-        rec6.x = 800; rec6.y = 630;
+        rec5.x = 710; rec5.y = 600;
+        rec6.x = 780; rec6.y = 630;
         
         texteInfo.x=50; texteInfo.y=350;
         do
@@ -52,7 +52,7 @@ int main(int argc, char const *argv[])
             inscription(joueurs.js[i].pseudo, i + 1);
 
         printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
-
+        
         affiche_auto_off();
         // bouton valider :
         rec7.x=1360; rec7.y=460;

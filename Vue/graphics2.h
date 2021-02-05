@@ -95,6 +95,7 @@
 	* dimensions premier rectangle  : 90x320 - 640x450
 	* dimensions deuxieme rectangle : 790x420 - 1410x550
 	*/
+	void affiche_score_graphique(POINT p);
 	void affiche_menu_debut();
 
 	void fill_screen(COULEUR clr);
@@ -116,10 +117,13 @@
 
 	void tuile_selectionne(int ligne,int colonne,BOOL selec);
 
-	
+	void affiche_victoire_graphique(int indiceJoueurGagnant);
+
 	void transition(int joueurSuivant);
 	
 	void affiche_info_tour(int val);
 	void transition_IA(int val);
 
 	void quit();
+
+	

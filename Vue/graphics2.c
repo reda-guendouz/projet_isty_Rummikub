@@ -296,6 +296,65 @@ void fill_screen(COULEUR clr){
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);	
 }
 
+
+char* replace_char(char* str, char find, char replace){
+    char *current_pos = strchr(str,find);
+    while (current_pos) {
+        *current_pos = replace;
+        current_pos = strchr(current_pos,find);
+    }
+    return str;
+}
+
+
+
+
+/*
+* affiche les scores sous la forme d'un tableau au point indique en parametre
+*/
+void affiche_score_graphique(POINT point){
+	FILE* fichier = NULL;
+    char chaine[500] = "";
+    fichier = fopen("Terminal/score.txt", "r");
+	int ligne=0;
+	POINT text = point;
+
+	if (fichier != NULL){
+        while (fgets(chaine,500,fichier) != NULL){
+			char d[] = ":";
+  			char *p = strtok(chaine, d);
+			int i=0;
+			while(p != NULL)
+			{
+				if(i==1) {
+					int taille = sizeof(p)/sizeof(p[0]); 
+					p[taille-1] = '8';
+					strcpy(p,replace_char(p,'\n',' '));
+					if (ligne%3==1) {
+						printf("Joueur (moi) : %s\n", p);
+						affiche_texte(p,20,text,blanc);
+						text.x = point.x+120;
+					}
+					else if (ligne%3==2) {
+						printf("Score (moi) :%s\n", p);
+						affiche_texte(p,20,text,blanc);
+						text.x = text.x-120;
+						text.y = text.y+40;
+					}
+				}		
+				p = strtok(NULL, d);
+				i++;
+			}
+			ligne++;
+        }
+        fclose(fichier);
+    }
+    else{
+        affiche_texte("Fichier score introuvable",20,point,rouge);
+    }
+	
+}
+
 /*
 * affiche le menu d'accueil du jeu
 */
@@ -312,7 +371,8 @@ void affiche_menu_debut(){
     affiche_texte_special("PLAYERS VS PLAYERS",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
 	text.x=710; text.y=600;
     affiche_texte_special("Quitter",30,text,blanc,"assets/valianttimes.ttf");
-    
+	RecEmplacement.x = 10; RecEmplacement.y = 420;
+	affiche_score_graphique(RecEmplacement);
 }
 
 /*
@@ -819,20 +879,20 @@ void tuile_selectionne(int ligne,int colonne,BOOL selec) {
 /*
 * affiche le pseudo du joueur gagnant de la partie
 */
-void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
+void affiche_victoire_graphique(int indiceJoueurGagnant) {
 	fill_screen(noir);
 	POINT text;
-	
+
 	text.x=425; text.y=50;
 	affiche_texte_special("VICTOIRE !",200,text,blanc,"assets/valianttimes.ttf");
 
 	// Joueur gagnant
 	int taille =0;
-	while(j.pseudo[taille]!='\0'){
+	while(joueurs.js[indiceJoueurGagnant].pseudo[taille]!='\0'){
 		taille++;
 	}
 	text.x=750-((taille*16)/2); text.y=300;
-	affiche_texte_special(j.pseudo,50,text,vert,"assets/valianttimes.ttf");
+	affiche_texte_special(joueurs.js[indiceJoueurGagnant].pseudo,50,text,vert,"assets/valianttimes.ttf");
 
 	text.x=645; text.y=350;
 	affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
