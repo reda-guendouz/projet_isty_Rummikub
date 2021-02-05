@@ -129,6 +129,7 @@ void affiche_liste_tuiles(LISTE_TUILES liste_tuiles)
 
 void melanger_pioche()
 {
+    srand(time(0));
     int i, nb2, index;
     TUILE tmp;
     nb2 = MAX_TUILES;

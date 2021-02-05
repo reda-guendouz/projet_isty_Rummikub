@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
     POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,texteInfo,clic,oldClic,err;
     int i,j,nbJoueursH,nbJoueursIA=0,joueurActuel=0,ligne,colonne;
     BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true,modifP2=true;
-    LISTE_TUILES selectionnees;
+    LISTE_TUILES selectionnees, combinaisonsTrouve;;
     TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W],tmp;
 
     init_pioche();
@@ -72,10 +72,34 @@ int main(int argc, char const *argv[])
             tourValide=false;
             printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo,joueurActuel);
 
-            if (has_ia && !strcmp(joueurs.js[joueurActuel].pseudo,"IA")) // tour d'un ia
+            if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
+                /*
                 printf("IA IS PLAYING...\n");
-                SDL_Delay(500);
+                SDL_Delay(500);*/
+                combinaisonsTrouve.nbTuiles = 0;
+                i = 0;
+                trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
+                copie_plateau(copieP[0],plateau[0]);
+                if (premieresMains[joueurActuel] && calcul_main(combinaisonsTrouve) < 30) {
+                    piocher(&joueurs.js[joueurActuel].chevalet);
+                    transition_IA(2);
+                }
+                else {
+                    premieresMains[joueurActuel] = false;
+                    if (combinaisonsTrouve.nbTuiles > 0 && placer_combinaisons(combinaisonsTrouve, copieP[0])) 
+                    {
+                        for(i =0; i<combinaisonsTrouve.nbTuiles; i++){
+                            supprime_liste(&joueurs.js[joueurActuel].chevalet,combinaisonsTrouve.pile[i]);
+                        }
+                        copie_plateau(plateau[0], copieP[0]);
+                        transition_IA(1);
+                    } 
+                    else {
+                        piocher(&joueurs.js[joueurActuel].chevalet);
+                        transition_IA(2);
+                    }
+                }
             } else // tour d'un joueur H
             {
                 while (selection)
@@ -296,7 +320,7 @@ int main(int argc, char const *argv[])
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
                 if (est_victorieux(joueurs.js[joueurActuel]))
-                    affiche_victoire(joueurActuel);                
+                    affiche_victoire_graphique(joueurActuel);                
                 mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
