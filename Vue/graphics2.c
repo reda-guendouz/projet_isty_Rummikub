@@ -52,7 +52,7 @@ void init_graphics()
     TTF_Font *test = TTF_OpenFont(POLICE_NAME, 10);
     if (test) {
         verdana_ok=TRUE;
-        printf("police %s OK : affichage graphique OK.\n",POLICE_NAME);
+        printf("police par defaut %s OK : affichage graphique OK.\n",POLICE_NAME);
 		TTF_CloseFont(test);
     }
     else {
@@ -854,7 +854,6 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			}
 			clic = wait_clic();
 		}
-		printf("debug -- done : %d -- cmain : %d \n",*premiereMain,calcul_main(selectionnees) );
 		if (dans_zone(clic,rec1,rec2) && *premiereMain && calcul_main(selectionnees) < 30){ // valider
 			done=true;
 			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);

@@ -233,12 +233,7 @@ int triplon_quadruplon(LISTE_TUILES *l)
 }
 
 int test_combinaison(LISTE_TUILES *l)
-{
-    if (triplon_quadruplon(l) + suite(l))
-    {
-        printf("gogos\n");
-    }
-    
+{    
     return triplon_quadruplon(l) + suite(l);
 }
 
@@ -293,7 +288,6 @@ int calcul_main(LISTE_TUILES *listeTuiles)
 {
     //CALCUL LA VALEUR DE LA MIN D'UNE COMBINAISONS
     int valTriplonQuadruplon = triplon_quadruplon(listeTuiles), valSuite = suite(listeTuiles);
-    printf("VALEUR SUITE : %d\n",valSuite);
     if (valTriplonQuadruplon > valSuite)
     {
         return valTriplonQuadruplon;
@@ -337,14 +331,11 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         joueurs.js[i].numJoueur = tmp;
         //DEMANDE LES PSEUDOS DES JOUEURS
         if (nbJoueursH > 0)
-        {/*
-            printf("Entrez le pseudonyme du joueur %d : ", tmp);
-            scanf(" %s", joueurs.js[i].pseudo);*/
+        {
             nbJoueursH--;
         }
         else
         {
-            printf("IA 1\n");
             strcpy(joueurs.js[i].pseudo, "IA");
         }
         joueurs.js[i].chevalet.nbTuiles = 0;
@@ -352,7 +343,6 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
             piocher(&joueurs.js[i].chevalet);
-            affiche_tuile(pioche.pile[pioche.nbTuiles], j);
         }
     }
 }
@@ -622,21 +612,20 @@ void combinationUtil(int arr[], int data[], int start, int end, int index, int r
 {
     LISTE_TUILES newListe;
     newListe.nbTuiles = 0;
-    int j=0;
+    int j=0,i=0;
     if (index == r)
     {
         //les pblms
-        for (int j=0; j<r; j++) 
+        for (j=0; j<r; j++) 
 			ajouter_tuile(&newListe,chevalet.pile[data[j]]);
         if (test_combinaison(&newListe)) {
 		    if (calcul_main(&newListe) > calcul_main(bestListe)) {
-                printf("ANCIEN MAIN : %d -------  NOUVELLE MAIN : %d\n",calcul_main(&newListe),calcul_main(bestListe));
                 copie_liste(&newListe,bestListe);
             }
         }
 		return;  
     }
-    for (int i = start; i <= end && end - i + 1 >= r - index; i++)
+    for (i = start; i <= end && end - i + 1 >= r - index; i++)
     {
         data[index] = arr[i];
         combinationUtil(arr, data, i + 1, end, index + 1, r, chevalet, bestListe);
@@ -646,7 +635,7 @@ void combinationUtil(int arr[], int data[], int start, int end, int index, int r
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES *combinaisonsTrouve)
 {
     //CHERCHE TOUTES LES COMBINAISONS POSSIBLES JOUABLES D'UN CHEVALET
-    int i,j;
+    int i;
     int taille = chevaletIa.nbTuiles;
     combinaisonsTrouve->nbTuiles = 0;
     int tab[taille];
