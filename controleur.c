@@ -42,6 +42,7 @@ int main(int argc, char const *argv[])
             nbJoueursH = choix_joueurs(nbJoueursIA,FALSE);
         else 
             nbJoueursH = 1;
+        printf("joueurs : %d - IA : %d\n",nbJoueursH,nbJoueursIA);
         init_joueurs(nbJoueursH + nbJoueursIA, nbJoueursH);
 
         BOOL premieresMains[nbJoueursH+nbJoueursIA];

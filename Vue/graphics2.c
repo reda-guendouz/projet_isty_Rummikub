@@ -388,7 +388,7 @@ void affiche_menu_debut(){
     RecEmplacement.x = 850; RecEmplacement.y = 420;
     affiche_texte_special("PLAYERS VS PLAYERS",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
 	text.x=710; text.y=600;
-    affiche_texte_special("Quitter",30,text,blanc,"assets/valianttimes.ttf");
+    affiche_texte_special("Quitter",30,text,rouge,"assets/valianttimes.ttf");
 	RecEmplacement.x = 1300; RecEmplacement.y = 50;
 	affiche_score_graphique(RecEmplacement);
 }
@@ -445,6 +445,7 @@ void affiche_inscription(int numJoueur){
 		 ligne1.y++;
 		 ligne2.y++;
 	}	
+	affiche_all();
 }
 
 /*
@@ -667,7 +668,7 @@ void affiche_joueur_graphique(int num_joueur) {
 
 	char textJoueur[9];
 	strcpy(textJoueur,"Joueur ");
-	textJoueur[7]= num_joueur + '0';
+	textJoueur[7]= num_joueur+1 + '0';
 	textJoueur[8]= '\0';
 	affiche_texte(textJoueur,20,p,blanc);
 	p.y=590;
@@ -792,7 +793,7 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 	}
 		
 	else
-		return -1;
+		return 4;
 }
 
 /*
@@ -958,18 +959,21 @@ void transition(int joueurSuivant) {
 	fill_screen(noir);
 	POINT text,rec1,rec2;
 	int i;
-	text.x = 680; text.y=100;
+	text.x = 690; text.y=100;
 
 	char textJoueur[9];
 	strcpy(textJoueur,"Joueur ");
 	textJoueur[7]= joueurSuivant + '0';
 	textJoueur[8]= '\0';
-    affiche_texte_special(textJoueur,70,text,blanc,"assets/valianttimes.ttf");
+	affiche_texte_special(textJoueur,50,text,blanc,"assets/valianttimes.ttf");
 
-	text.x = 560; text.y=180;
+	text.x = 750 - ((strlen(joueurs.js->pseudo)/2)*20); text.y=170;
+    affiche_texte_special(joueurs.js->pseudo,70,text,bleu,"assets/valianttimes.ttf");
+
+	text.x = 560; text.y=230;
 	affiche_texte_special("preparez-vous a jouer",60,text,blanc,"assets/valianttimes.ttf");
 
-	rec1.x= 686; rec1.y=400;
+	rec1.x= 686; rec1.y=420;
 	rec2.x=	15; rec2.y =15;
 	for(i=0;i<3;i++) {
 		draw_fill_rectangle(rec1,rec2,blanc);
@@ -1041,11 +1045,11 @@ void transition_IA(int val) {
 	fill_screen(noir);
 	POINT text,rec1,rec2;
 	int i;
-	text.x = 728; text.y=100;
+	text.x = 722; text.y=100;
     affiche_texte_special("IA",70,text,rouge,"assets/valianttimes.ttf");
 
 	if(val==1){
-		text.x = 560; text.y=190;
+		text.x = 560; text.y=180;
 		affiche_texte_special("est en train de jouer",60,text,blanc,"assets/valianttimes.ttf");
 	}
 	else
