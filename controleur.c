@@ -107,7 +107,7 @@ int main(int argc, char const *argv[])
                     fill_screen(noir);
                     // PHASE SELECTION TUILES
                     //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
-                    selectionnees.nbTuiles=0; // cense vider la pile, a tester
+                    mettre_a_jour(&selectionnees,selectionnees); // vide tuiles selectionnees
                     rec4.x=120; rec4.y=40;
                     rec3.x=50; rec3.y=200;
                     draw_fill_rectangle(rec3,rec4,noir); // supprimer "refaire"
@@ -163,6 +163,7 @@ int main(int argc, char const *argv[])
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
+                                    printf("reda is dommed\n");
                                     affiche_texte("Erreur : votre liste ne peut se mettre ici",25,err,rouge);
                                     SDL_Delay(1200);
                                     //// afficher "erreur: votre liste ne peut se mettre ici"
