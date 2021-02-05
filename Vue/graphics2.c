@@ -767,8 +767,41 @@ void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
 	text.x=750-((taille*16)/2); text.y=300;
 	affiche_texte_special(j.pseudo,50,text,vert,"assets/valianttimes.ttf");
 
-	text.x=630; text.y=350;
+	text.x=645; text.y=350;
 	affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
 
-	wait_escape();
+	//wait_escape();
+}
+
+void transition(int joueurSuivant) {
+	fill_screen(noir);
+	POINT text,rec1,rec2;
+	text.x = 680; text.y=100;
+
+	char textJoueur[9];
+	strcpy(textJoueur,"Joueur ");
+	textJoueur[7]= joueurSuivant + '0';
+	textJoueur[8]= '\0';
+    affiche_texte_special(textJoueur,70,text,blanc,"assets/valianttimes.ttf");
+
+	text.x = 560; text.y=180;
+	affiche_texte_special("preparez-vous a jouer",60,text,blanc,"assets/valianttimes.ttf");
+
+	rec1.x= 686; rec1.y=400;
+	rec2.x=	15; rec2.y =15;
+	draw_fill_rectangle(rec1,rec2,blanc);
+
+	affiche_all();
+	SDL_Delay(1000);
+	rec1.x+=50;
+	draw_fill_rectangle(rec1,rec2,blanc);
+
+	affiche_all();
+	SDL_Delay(1000);
+	rec1.x+=50;
+	draw_fill_rectangle(rec1,rec2,blanc);
+	affiche_all();
+
+	SDL_Delay(1000);
+
 }

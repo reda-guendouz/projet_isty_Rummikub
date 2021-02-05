@@ -115,3 +115,6 @@
 
 
 	void tuile_selectionne(int ligne,int colonne,BOOL selec);
+
+	
+	void transition(int joueurSuivant);

@@ -87,12 +87,6 @@ int main(int argc, char const *argv[])
                     rec3.x=50; rec3.y=200;
                     draw_fill_rectangle(rec3,rec4,noir);
 
-                    /*affiche_victoire_graphique(joueurs.js[0],0);
-                    IMG_Quit();
-                    TTF_Quit();
-                    SDL_Quit();
-                    return 0;*/
-
                     copie_plateau(copieP[0],plateau[0]);
                     affiche_plateau_graphique(copieP[0]);
                     affiche_joueur_graphique(joueurActuel);
@@ -268,6 +262,7 @@ int main(int argc, char const *argv[])
                                 oldClic.y=colonne;
                             } else if (dans_zone(clic,rec3,rec4)) // refaire
                             {
+                                printf("refaire\n");
                                 modifP2=false;
                                 modifP=true;
                                 break;
