@@ -646,10 +646,11 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 		return -1;
 }
 
-BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
+BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BOOL *premiereMain) {
 	POINT rec1,rec2,rec3,rec4,coin,dim,clic;
 	int i,j,xg,xd;
 	COULEUR c;
+	BOOL done;
 	TUILE t;
 	selectionnees->nbTuiles=0;
 
@@ -669,41 +670,46 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees) {
 	rec4.x=rec3.x + rec2.x; rec4.y=rec3.y + rec2.y;
 	rec2.x+=rec1.x; rec2.y+=rec1.y;
 	clic = wait_clic();
-	while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4)) // valider - piocher
-	{
-		if(clic.y>=600 && clic.y<=654){
-			xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
-			xd = xg + ((joueurs.js[num_joueur].chevalet.nbTuiles)*44) - 3;
-			if(clic.x>=xg && clic.x<=xd){
-				for(i=0; i<joueurs.js[num_joueur].chevalet.nbTuiles; i++){
-					if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
-						coin.x=xg+(i*44)-1; coin.y=599;
-						dim.x=39; dim.y=55;
-						t = joueurs.js[num_joueur].chevalet.pile[i];
-						if(tuile_dans_liste(*selectionnees,t)){
-							c = noir;
-							supprime_liste(selectionnees,t);
+	while (done)
+	{	
+		while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4)) // valider - piocher
+		{
+			if(clic.y>=600 && clic.y<=654){
+				xg = 445 + ((14-joueurs.js[num_joueur].chevalet.nbTuiles)*22);
+				xd = xg + ((joueurs.js[num_joueur].chevalet.nbTuiles)*44) - 3;
+				if(clic.x>=xg && clic.x<=xd){
+					for(i=0; i<joueurs.js[num_joueur].chevalet.nbTuiles; i++){
+						if(clic.x>=xg+i*44 && clic.x<=xg+(i*44)+38){
+							coin.x=xg+(i*44)-1; coin.y=599;
+							dim.x=39; dim.y=55;
+							t = joueurs.js[num_joueur].chevalet.pile[i];
+							if(tuile_dans_liste(*selectionnees,t)){
+								c = noir;
+								supprime_liste(selectionnees,t);
+							}
+							else {
+								c = jaune;
+								ajouter_tuile(selectionnees,t);
+							}
+							for(j=0;j<3;j++){
+								draw_rectangle(coin,dim,c);
+								coin.x--; coin.y--;
+								dim.x+=2; dim.y+=2;
+							}
+							affiche_all();
 						}
-						else {
-							c = jaune;
-							ajouter_tuile(selectionnees,t);
-						}
-						for(j=0;j<3;j++){
-							draw_rectangle(coin,dim,c);
-							coin.x--; coin.y--;
-							dim.x+=2; dim.y+=2;
-						}
-						affiche_all();
 					}
 				}
 			}
+			clic = wait_clic();
 		}
-		clic = wait_clic();
+		if (dans_zone(clic,rec1,rec2) && ) // valider
+			return true;
 	}
 
-	if (dans_zone(clic,rec1,rec2)) // piocher
+	if (dans_zone(clic,rec1,rec2)) // valider
 		return true;
-	else // valider selection
+	else // piocher
 		return false;	
 }
 

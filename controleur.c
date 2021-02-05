@@ -41,13 +41,15 @@ int main(int argc, char const *argv[])
             nbJoueursH = choix_joueurs(nbJoueursIA,FALSE);
         else 
             nbJoueursH = 1;
-
-        
-
         init_joueurs(nbJoueursH + nbJoueursIA, nbJoueursH);
 
+        BOOL premieresMains[nbJoueursH+nbJoueursIA];
+        for (i = 0; i < joueurs.nbJs; i++)
+            premieresMains[i] = true;
+        
+
         for (i = 0; i < nbJoueursH; i++)
-                inscription(joueurs.js[i].pseudo, i + 1);
+            inscription(joueurs.js[i].pseudo, i + 1);
 
         printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
 
@@ -66,6 +68,7 @@ int main(int argc, char const *argv[])
             fill_screen(noir);
             selection=true;
             modifP=true;
+            tourValide=false;
             printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo,joueurActuel);
 
             if (has_ia && !strcmp(joueurs.js[joueurActuel].pseudo,"IA")) // tour d'un ia
@@ -90,7 +93,7 @@ int main(int argc, char const *argv[])
                     affiche_joueur_graphique(joueurActuel);
     
                     affiche_all();
-                    if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees)){
+                    if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees,&premieresMains[joueurActuel])){
                         selection=false;
                         //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
                         // choix placement tuile :
@@ -130,7 +133,6 @@ int main(int argc, char const *argv[])
                                         piocher(&joueurs.js[joueurActuel].chevalet);
                                         selection = false;
                                         modifP=false;
-                                        tourValide=false;
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
@@ -143,7 +145,6 @@ int main(int argc, char const *argv[])
                             piocher(&joueurs.js[joueurActuel].chevalet);
                             selection = false;
                             modifP=false;
-                            tourValide=false;
                             break;
                         } else if (dans_zone(clic,rec3,rec4)){ // choix - refaire
                             selection=true;
@@ -155,7 +156,6 @@ int main(int argc, char const *argv[])
                         printf("piocher");
                         selection = false;
                         modifP=false;
-                        tourValide=false;
                         break;
                     }
                     
@@ -188,7 +188,6 @@ int main(int argc, char const *argv[])
                             piocher(&joueurs.js[joueurActuel].chevalet);
                             selection = false;
                             modifP=false;
-                            tourValide=false;
                             break;
                         } else // valider
                         {
@@ -229,7 +228,6 @@ int main(int argc, char const *argv[])
                                 piocher(&joueurs.js[joueurActuel].chevalet);
                                 selection = false;
                                 modifP=false;
-                                tourValide=false;
                                 break;
                             } else // valider
                             {
@@ -269,7 +267,6 @@ int main(int argc, char const *argv[])
                                 piocher(&joueurs.js[joueurActuel].chevalet);
                                 selection = false;
                                 modifP=false;
-                                tourValide=false;
                                 break;
                             } else // valider
                             {
@@ -297,6 +294,7 @@ int main(int argc, char const *argv[])
                 copie_plateau(plateau[0],copieP[0]);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
+            transition(joueurActuel);
         }
         
 
