@@ -317,16 +317,19 @@ void affiche_score_graphique(POINT point){
     char chaine[500] = "";
     fichier = fopen("Terminal/score.txt", "r");
 	int ligne=0,ch,totalLignes=0;
-	POINT text = point;
+	POINT text, ligne1,ligne2;
 	if (fichier != NULL){
+		text.x=point.x+60; text.y=point.y-40;
+		affiche_texte_special("SCORE",30,text,blanc,"assets/valianttimes.ttf");
+
 		while(!feof(fichier))
 		{
 			ch = fgetc(fichier);
 			if(ch == '\n')
 				totalLignes++;
 		}
-		printf("l:%d\n",totalLignes);
 		fichier = fopen("Terminal/score.txt", "r");
+		text = point;
         while (fgets(chaine,500,fichier) != NULL){
 			char d[] = " :";
   			char *p = strtok(chaine, d);
@@ -337,12 +340,16 @@ void affiche_score_graphique(POINT point){
 					if (ligne!=totalLignes)
 						p[strlen(p)-2]='\0';
 					if (ligne%3==1) {
-						printf("Joueur (moi) : %s\n", p);
 						affiche_texte(p,20,text,blanc);
 						text.x = point.x+120;
+						if(ligne>3){
+							ligne1.x = point.x-5; ligne1.y =point.y+((ligne/3)*40)-8;
+							ligne2.x=ligne1.x+170; ligne2.y= ligne1.y;
+							draw_line(ligne1,ligne2,blanc);
+
+						}
 					}
 					else if (ligne%3==2) {
-						printf("Score (moi) :%s\n", p);
 						affiche_texte(p,20,text,blanc);
 						text.x = text.x-120;
 						text.y = text.y+40;
@@ -353,7 +360,12 @@ void affiche_score_graphique(POINT point){
 			}
 			ligne++;
         }
+		printf("ligne: %d",ligne);
         fclose(fichier);
+		ligne1.x = point.x+100; ligne1.y = point.y;
+		ligne2.x=ligne1.x; ligne2.y= ligne1.y+((ligne/3)*40)-10;
+		draw_line(ligne1,ligne2,blanc);
+		affiche_all();
     }
     else{
         affiche_texte("Fichier score introuvable",20,point,rouge);
@@ -377,7 +389,7 @@ void affiche_menu_debut(){
     affiche_texte_special("PLAYERS VS PLAYERS",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
 	text.x=710; text.y=600;
     affiche_texte_special("Quitter",30,text,blanc,"assets/valianttimes.ttf");
-	RecEmplacement.x = 10; RecEmplacement.y = 420;
+	RecEmplacement.x = 1300; RecEmplacement.y = 50;
 	affiche_score_graphique(RecEmplacement);
 }
 
@@ -902,6 +914,10 @@ void affiche_victoire_graphique(int indiceJoueurGagnant) {
 
 	text.x=645; text.y=350;
 	affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
+
+
+	text.x = 1200; text.y = 200;
+	affiche_score_graphique(text);	
 }
 
 /*
