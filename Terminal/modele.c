@@ -220,7 +220,8 @@ void placer_tuiles(LISTE_TUILES selection, TUILE *copie_plateau, int l, int c)
 int suite(LISTE_TUILES *l)
 {
     if (l->nbTuiles > 2) {
-        int i, nbJoker = 0, val = 0, clr = NOIR, new = 0,compteur =0;
+        int i, nbJoker = 0, val = 0, clr = NOIR, new = 0,compteur = 0,cmptPlacementJoker = 0 ;
+        int placementJoker[l->nbTuiles];
         TUILE remplacantJoker;
         LISTE_TUILES copie;
         copie.nbTuiles = 0;
@@ -233,13 +234,17 @@ int suite(LISTE_TUILES *l)
                 if (!new){
                     val = l->pile[i].chiffre;
                     clr = l->pile[i].clr;
-                    new = 1;
+                    new = i;
                     ajouter_tuile(&copie,l->pile[i]);
+                    placementJoker[cmptPlacementJoker] = val;
+                    cmptPlacementJoker++;
                 }
                 else {
                     if (val + 1 == l->pile[i].chiffre && clr == l->pile[i].clr){
                         val++;
                         ajouter_tuile(&copie,l->pile[i]);
+                        placementJoker[cmptPlacementJoker] = val;
+                        cmptPlacementJoker++;
                     }
                     else if (val + 1 != l->pile[i].chiffre && clr == l->pile[i].clr && nbJoker){
                         remplacantJoker.clr = clr;
@@ -254,6 +259,15 @@ int suite(LISTE_TUILES *l)
                 }
             }
         }
+        //affiche_liste_tuiles(copie);
+        compteur = l->pile[new].chiffre;
+        remplacantJoker.clr = clr;
+        while (l->pile[l->nbTuiles - 1].chiffre + nbJoker > 13){
+            remplacantJoker.chiffre = compteur - 1;
+            ajouter_tuile(&copie,remplacantJoker);
+            tri_liste(&copie);
+            nbJoker--; compteur--;
+        }
         val++;
         for (i = 0; i<nbJoker;i++){
             remplacantJoker.chiffre = val;
@@ -262,15 +276,36 @@ int suite(LISTE_TUILES *l)
             val++;
         }
         if (!new) {
+            compteur = 0;
             for (i = 0; i<l->nbTuiles;i++)
                 compteur += 13 - i;
             return compteur;
         }
-        else 
-            return calcul_main(copie);
+        else {
+            compteur = calcul_main(copie);
+            permutationJoker(&copie,placementJoker,cmptPlacementJoker);
+            copie_liste(&copie,l);
+            return compteur;
+        }
     }
-
     return 0;
+}
+
+
+void permutationJoker(LISTE_TUILES* l, int* chiffres, int taille){
+    int i,j,trouve = 0;
+    for (i = 0; i< l->nbTuiles;i++){
+        trouve = 0;
+        for (j = 0; j < taille; j++){
+            if (l->pile[i].chiffre == chiffres[j]){
+                trouve = 1;
+            }
+        }
+        if (!trouve){
+            l->pile[i].chiffre = -1;
+            l->pile[i].clr = NOIR;
+        }
+    }
 }
 
 int triplon_quadruplon(LISTE_TUILES *l)
@@ -656,4 +691,13 @@ int calcul_main(LISTE_TUILES listeTuiles){
     for (i = 0; i < listeTuiles.nbTuiles; i++)
         compteur += listeTuiles.pile[i].chiffre;
     return compteur;
+}
+
+int est_dans_selection(){
+    /*int i;
+    for (i = 0; i<taille;i++){
+        if (tabSelection[i] == selection)
+            return 1;
+    }*/
+    return 0;
 }

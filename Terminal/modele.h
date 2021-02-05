@@ -110,6 +110,12 @@ Renvoie la somme des tuiles d'une liste de tuile.
 */
 int calcul_main(LISTE_TUILES liste_tuiles);
 
+/*
+Permute les Joker dans la suite
+*/
+void permutationJoker(LISTE_TUILES* l, int* chiffres, int taille);
+
+
 /***********
  * Joueurs *
  * ********/
@@ -235,3 +241,4 @@ void ecrire_score(char * chaine,int score);
 void affiche_score();
 void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
 void score_fin_partie(int indiceJoueurGagnant);
+int est_dans_selection();
