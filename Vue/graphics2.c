@@ -704,7 +704,7 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			clic = wait_clic();
 		}
 		if (dans_zone(clic,rec1,rec2) && ) // valider
-			return true;
+			done=false;
 	}
 
 	if (dans_zone(clic,rec1,rec2)) // valider
