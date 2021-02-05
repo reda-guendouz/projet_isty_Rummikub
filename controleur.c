@@ -325,7 +325,8 @@ int main(int argc, char const *argv[])
                 mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
-            transition(joueurActuel+1);
+            if (joueurActuel + 1 - nbJoueursH  <= 0) 
+                transition(joueurActuel+1);
         } // end tour
         
 
