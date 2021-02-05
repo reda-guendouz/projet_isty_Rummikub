@@ -116,6 +116,7 @@ int main(void)
                     {
                         //SELECTION DE TUILE A METTRE SUR LE PLATEAU
                         marwane = 0;
+                        int estSelectionne[50];
                         while (selectionTuiles)
                         {
                             placerTuile = FALSE;
@@ -134,7 +135,7 @@ int main(void)
                                 numTuileChoisis = readInt(-2,joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
                             }
                             while(est_dans_selection());
-                            //estSelectionne[mot] = numTuileChoisis;
+                            estSelectionne[marwane] = numTuileChoisis;
                             marwane++;
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (numTuileChoisis == -2)
