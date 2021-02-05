@@ -664,7 +664,7 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Piochez",20,rec3,blanc);
 	affiche_all();
-	err1.x = 800; err1.y = HEIGHT-25;
+	err1.x = 700; err1.y = HEIGHT-30;
 
 	rec1.x-=10; rec1.y-=10;
 	rec3.x-=10; rec3.y-=10;
@@ -709,7 +709,7 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			done=true;
 			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
 			affiche_all();
-			SDL_Delay(700);
+			SDL_Delay(1200);
 			affiche_joueur_graphique(num_joueur);
 			affiche_all();
 

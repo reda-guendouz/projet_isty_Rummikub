@@ -129,12 +129,12 @@ void affiche_liste_tuiles(LISTE_TUILES liste_tuiles)
 
 void melanger_pioche()
 {
-    int i, nb2;
+    int i, nb2, index;
+    TUILE tmp;
     nb2 = MAX_TUILES;
     for (i = 0; i < MAX_TUILES; i++)
     {
-        TUILE tmp;
-        int index = rand() % nb2;
+        index = rand() % nb2;
         tmp = pioche.pile[index];
         pioche.pile[index] = pioche.pile[nb2 - 1];
         pioche.pile[MAX_TUILES - i - 1] = tmp;

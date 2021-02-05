@@ -292,6 +292,7 @@ int main(int argc, char const *argv[])
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
+                mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
             transition(joueurActuel+1);
