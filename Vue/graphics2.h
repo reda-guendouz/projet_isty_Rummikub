@@ -118,3 +118,5 @@
 
 	
 	void transition(int joueurSuivant);
+
+	void quit();

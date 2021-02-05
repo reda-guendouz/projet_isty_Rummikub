@@ -805,3 +805,9 @@ void transition(int joueurSuivant) {
 	SDL_Delay(1000);
 
 }
+
+void quit(){
+	IMG_Quit();
+	TTF_Quit();
+	SDL_Quit();
+}
