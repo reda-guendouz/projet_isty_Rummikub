@@ -116,9 +116,9 @@ Permute les Joker dans la suite
 void permutationJoker(LISTE_TUILES* l, int* chiffres, int taille);
 
 
-/***********
- * Joueurs *
- * ********/
+/**********
+ * Joueur *
+ * *******/
 
 typedef struct JOUEUR
 {

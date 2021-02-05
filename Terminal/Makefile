@@ -1,5 +1,5 @@
 CC=gcc
-fichiers=main.c modele.c
+fichiers=controleur.c modele.c
 exec=exec
 
 all:
