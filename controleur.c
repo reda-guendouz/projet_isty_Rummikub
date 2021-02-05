@@ -32,9 +32,7 @@ int main(int argc, char const *argv[])
             has_ia = true;
         }
         else if (dans_zone(clic, rec5, rec6)) { // quitter
-            IMG_Quit();
-            TTF_Quit();
-            SDL_Quit();
+            quit();
             return 0;
         }
         if(has_ia)
@@ -318,8 +316,6 @@ int main(int argc, char const *argv[])
 
         ///// fin de partie
     }
-    IMG_Quit();
-    TTF_Quit();
-    SDL_Quit();
+    quit();
     return 0;
 }
