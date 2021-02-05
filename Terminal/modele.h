@@ -241,4 +241,4 @@ void ecrire_score(char * chaine,int score);
 void affiche_score();
 void affiche_victoire(JOUEUR j, int indiceJoueurGagnant);
 void score_fin_partie(int indiceJoueurGagnant);
-int est_dans_selection();
+int est_dans_selection(int selection,int taille,int *tabSelection);

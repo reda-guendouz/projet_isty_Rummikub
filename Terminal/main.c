@@ -9,8 +9,8 @@ int main(void)
     int jouer, nbJoueurs,nbJoueursH, nbJoueursIA, choixJoueur, joueurActuel, numTuileChoisis, choixPlacement, choixModifPlateau,
     colonneSource,  colonneDestination, premiereCombinaisons;
     char ligneSource, ligneDestination;
-    int marwane;
-    //int estSelectionne[50];
+    int selection = 0;
+    int estSelectionne[50];
     LISTE_TUILES tuilesSelectionnes;
     int premiereMain[nbJoueurs];
     tuilesSelectionnes.pile[MAX_TUILES];
@@ -24,11 +24,11 @@ int main(void)
         LISTE_TUILES test;
         test.nbTuiles =0;
         TUILE t1,joker,t3,t4,t5,t6;
-        t1.chiffre = 12;
+        t1.chiffre = 10;
         t1.clr = NOIR;
         joker.chiffre = -1;
         joker.clr = NOIR;
-        t3.chiffre = 11;
+        t3.chiffre = 9;
         t3.clr = NOIR;
         t4.chiffre = 13;
         t4.clr = NOIR;
@@ -43,8 +43,8 @@ int main(void)
         reponse = suite(&test);
         printf("SUITE  : %d \n",reponse);
         affiche_liste_tuiles(test);
-        sleep(5);*/
-
+        sleep(5);
+        */
 
         //LANCEMENT DU JEU
         partie = FALSE;
@@ -114,9 +114,12 @@ int main(void)
                     selectionTuiles = TRUE;
                     while (tour)
                     {
+                        int i;
+                        for (i=0;i<selection;i++){
+                             estSelectionne[i] = -3;
+                        }
+                        selection = 0;
                         //SELECTION DE TUILE A METTRE SUR LE PLATEAU
-                        marwane = 0;
-                        int estSelectionne[50];
                         while (selectionTuiles)
                         {
                             placerTuile = FALSE;
@@ -134,14 +137,17 @@ int main(void)
                                 printf("(-2). Piochez et passer son tour\n");
                                 numTuileChoisis = readInt(-2,joueurs.js[joueurActuel].chevalet.nbTuiles - 1);
                             }
-                            while(est_dans_selection());
-                            estSelectionne[marwane] = numTuileChoisis;
-                            marwane++;
+                            while(est_dans_selection(numTuileChoisis,selection+1,estSelectionne));
+                            printf("Tuile : %d\n",numTuileChoisis);
+                            estSelectionne[selection] = numTuileChoisis;
+                            selection++;
                             //ARRETE SON TOUR ET PASSER A LA PIOCHE
                             if (numTuileChoisis == -2)
-                            {
+                            {   
+                                printf("aaaaaaaa\n");
                                 tour = FALSE;
                                 selectionTuiles = FALSE;
+                                modifPlateau = FALSE;
                                 choixJoueur = 2;
                             }
                             //PLACER LES TUILES SELECTIONNEES
@@ -149,12 +155,24 @@ int main(void)
                             {
                                 if (tuilesSelectionnes.nbTuiles > 0)
                                 {
-
-                                    if (!premiereMain[joueurActuel] && calcul_main(tuilesSelectionnes) > 30) {
+                                    affiche_liste_tuiles(tuilesSelectionnes);
+                                    if (premiereMain[joueurActuel] && (calcul_main(tuilesSelectionnes) >= 30)) {
                                         premiereMain[joueurActuel] = 0;
                                         selectionTuiles = FALSE;
                                         placerTuile = TRUE;
+                                    }   
+                                    else{
+                                        int i;
+                                        for (i=0;i<selection;i++){
+                                            estSelectionne[i] = -3;
+                                        }
+                                        selection = 0;
+                                        tuilesSelectionnes.nbTuiles = 0;
+                                        printf("Pour votre premiere main valeur > 30\n");
+                                        sleep(2);
                                     }
+                                    int i;
+                                    
                                 }
                                 else
                                     printf("Selectionner au moins une tuile avant de valider la selection\n");
@@ -265,7 +283,7 @@ int main(void)
                                 }
                                 else
                                 {
-                                    system("clear");
+                                    //system("clear");
                                     printf("le plateau n'est pas valide\n");
                                 }
                             }

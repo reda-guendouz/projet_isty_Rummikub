@@ -580,6 +580,7 @@ int analyse_plateau(TUILE *plateau)
     {
         for (j = 0; j < DIM_PLATEAU_W; j++)
         {
+            printf("Contenu : %d\n",plateau[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre);
             if (plateau[(int unsigned)(i * DIM_PLATEAU_W + j)].chiffre != 0)
             {
                 ajouter_tuile(&analyse, plateau[(int unsigned)(i * DIM_PLATEAU_W + j)]);
@@ -590,6 +591,7 @@ int analyse_plateau(TUILE *plateau)
                 if (!test_combinaison(&analyse))
                     return FALSE;
                 test = FALSE;
+                analyse.nbTuiles=0;
             }
         }
     }
@@ -693,11 +695,11 @@ int calcul_main(LISTE_TUILES listeTuiles){
     return compteur;
 }
 
-int est_dans_selection(){
-    /*int i;
+int est_dans_selection(int selection,int taille,int *tabSelection){
+    int i;
     for (i = 0; i<taille;i++){
         if (tabSelection[i] == selection)
             return 1;
-    }*/
+    }
     return 0;
 }
