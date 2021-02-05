@@ -222,7 +222,7 @@ int main(void)
                                     printf("Où voulez-vous placer vos tuiles selectionnes ?\n ligne : ");
                                     scanf(" %c", &ligneSource);
                                     printf("colonne : ");
-                                    scanf(" %d", &colonneSource);
+                                    colonneSource = readInt(0,DIM_PLATEAU_W);
                                 } while (!est_placable(tuilesSelectionnes.nbTuiles, char_to_int(ligneSource), colonneSource));
                                 placer_tuiles(tuilesSelectionnes, copiePlateau[0], char_to_int(ligneSource), colonneSource);
                                 placerTuile = FALSE;
@@ -293,20 +293,22 @@ int main(void)
                                     printf("Quelles tuiles voulez-vous intervertir ?\ntuile source :\nligne : ");
                                     scanf(" %c", &ligneSource);
                                     printf("colonne : ");
-                                    scanf(" %d", &colonneSource);
+                                    colonneSource = readInt(0,DIM_PLATEAU_W);
                                     printf("tuile destination :\nligne : ");
                                     scanf(" %c", &ligneDestination);
                                     printf("colonne : ");
-                                    scanf(" %d", &colonneDestination);
+                                    colonneDestination = readInt(0,DIM_PLATEAU_W);
                                     if (!intervertion_tuiles(copiePlateau[0], char_to_int(ligneSource), colonneSource, char_to_int(ligneDestination), colonneDestination))
                                     {
                                         printf("Err: mauvaises positions\n");
                                     }
-                                    affiche_plateau(copiePlateau[0]);
-                                    printf("Voulez-vous continuer ?\n");
-                                    printf("0. Non\n");
-                                    printf("1. Oui\n");
-                                    choixModifPlateau = readInt(0,1);
+                                    else {
+                                        affiche_plateau(copiePlateau[0]);
+                                        printf("Voulez-vous continuer ?\n");
+                                        printf("0. Non\n");
+                                        printf("1. Oui\n");
+                                        choixModifPlateau = readInt(0,1);
+                                    }
                                 } while (choixModifPlateau);
                             }
                         }
