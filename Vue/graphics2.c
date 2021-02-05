@@ -587,9 +587,10 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
 
 
 /*
-* affiche le plateau du jeu avec les tuiles qu'il contient
+* affiche le plateau du jeu avec les tuiles qu'il contient 
+* et un delai de 200ms pour chaque tuile
 */
-void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
+void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher) {
 	POINT l1,fond1,fond2,fond3,fond4;
 	int i,j,espace=45,espace2=65;
     l1.x = 300; l1.y = 40;
@@ -622,6 +623,38 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 	}
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
+
+/*
+* affiche le plateau du jeu avec les tuiles qu'il contient
+*/
+void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
+	POINT l1,fond1,fond2,fond3,fond4;
+	int i,j,espace=45,espace2=65;
+    l1.x = 300; l1.y = 40;
+	fond1.x = l1.x - 6; fond1.y = l1.y - 6;
+	fond2.x = l1.x + DIM_PLATEAU_W*espace - 4; fond2.y=fond1.y;
+	fond3.x = fond1.x; fond3.y = fond1.y;
+	fond4.x = fond3.x; fond4.y = DIM_PLATEAU_H*espace2 + espace2/2 + 2;
+	draw_line(fond1,fond2,blanc);
+	draw_line(fond3,fond4,blanc);
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
+			draw_line(fond3,fond4,blanc);
+			affiche_tuile_graphique(plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)],l1);			
+			l1.x+=espace;
+    	}
+		l1.x=300;
+        l1.y+=espace2;
+		fond1.y = l1.y - 6;
+		fond2.y=fond1.y;
+		draw_line(fond1,fond2,blanc);
+	}
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
+}
+
 
 /*
 * affiche le chevalet, le numero et le nom du joueur indique en parametre
@@ -828,12 +861,15 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			done=true;
 			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
 			affiche_all();
+			mettre_a_jour(selectionnees,*selectionnees);
 			SDL_Delay(1200);
 			affiche_joueur_graphique(num_joueur);
 			affiche_all();
 
-		} else if (*premiereMain)
+		} else if (*premiereMain){
 			*premiereMain = false;
+			done=false;
+		}
 		else
 			done=false;
 	}
@@ -842,11 +878,6 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 		return true;
 	else // piocher
 		return false;	
-}
-
-void affiche_modif_plateau(TUILE *plateau_a_afficher, int joueur){
-	affiche_plateau_graphique(plateau_a_afficher);
-	affiche_joueur_graphique(joueur);
 }
 
 /*
@@ -952,7 +983,14 @@ void transition(int joueurSuivant) {
 * affiche les indications sur le tour du joueur
 */
 void affiche_info_tour(int val) {
-	POINT text;
+	POINT text,suppr;
+
+	//supprimer ancien message:
+	text.x=1295; text.y=280;
+	suppr.x=WIDTH-text.x; suppr.y = 110;
+	draw_fill_rectangle(text,suppr,noir);
+	//
+
 	text.x= 1320; text.y= 240;
 	affiche_texte_special("INFOS TOUR :",25,text,blanc,"assets/Poppins.ttf");
 	printf("val : %d",val);
@@ -967,30 +1005,30 @@ void affiche_info_tour(int val) {
 		affiche_texte("- Pioche",17,text,blanc);
 		break;
 	case 2:
-		affiche_texte("- Place des tuiles puis",17,text,blanc);
+		affiche_texte("- Place les tuiles puis",17,text,blanc);
 		text.x= 1300; text.y= 300;
 		affiche_texte("valide",17,text,blanc);
 		text.x= 1295; text.y= 330;
 		affiche_texte("- Pioche",17,text,blanc);
-		text.x= 1295; text.y= 360;
+		text.y= 360;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
 	case 3:
 		affiche_texte("- Valide le placement",17,text,blanc);
 		text.x= 1295; text.y= 310;
 		affiche_texte("- Pioche",17,text,blanc);
-		text.x= 1295; text.y= 340;
+		text.y= 340;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
-	case 4:;
+	case 4:
 		affiche_texte("- Deplace les tuiles",17,text,blanc);
 		text.x= 1300; text.y= 300;
 		affiche_texte("puis valide le coup",17,text,blanc);
 		text.x= 1295; text.y= 330;
 		affiche_texte("- Valide le coup",17,text,blanc);
-		text.x= 1295; text.y= 360;
+		text.y= 360;
 		affiche_texte("- Pioche",17,text,blanc);
-		text.x= 1295; text.y= 390;
+		text.y= 390;
 		affiche_texte("- Recommence le tour",17,text,blanc);
 		break;
 	}

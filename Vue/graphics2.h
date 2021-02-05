@@ -85,6 +85,7 @@
 	void converti_int_en_str(int nb, char *p);
 	void transforme_tuile_en_path(TUILE t, char *p);
 	void affiche_plateau_graphique(TUILE *plateau_a_afficher);
+	void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher);
 
 	void affiche_joueur_graphique(int num_joueur);
 
@@ -112,13 +113,12 @@
 	int choix_joueurs(int nbIA, BOOL demandeIA);
 	BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BOOL *premiereMain) ;
 	void choix_case_plateau(POINT clic,int *ligne,int *colonne);
-	void affiche_modif_plateau(TUILE *plateau_a_afficher, int joueur);
 
 
 	void tuile_selectionne(int ligne,int colonne,BOOL selec);
 
 	void affiche_victoire_graphique(int indiceJoueurGagnant);
-
+	
 	void transition(int joueurSuivant);
 	
 	void affiche_info_tour(int val);
