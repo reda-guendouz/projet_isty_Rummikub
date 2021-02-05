@@ -509,9 +509,10 @@ void transforme_tuile_en_path(TUILE t,char *p2) {
 
 
 /*
-* affiche le plateau du jeu avec les tuiles qu'il contient
+* affiche le plateau du jeu avec les tuiles qu'il contient 
+* et un delai de 200ms pour chaque tuile
 */
-void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
+void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher) {
 	POINT l1,fond1,fond2,fond3,fond4;
 	int i,j,espace=45,espace2=65;
     l1.x = 300; l1.y = 40;
@@ -544,6 +545,38 @@ void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
 	}
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
 }
+
+/*
+* affiche le plateau du jeu avec les tuiles qu'il contient
+*/
+void affiche_plateau_graphique(TUILE *plateau_a_afficher) {
+	POINT l1,fond1,fond2,fond3,fond4;
+	int i,j,espace=45,espace2=65;
+    l1.x = 300; l1.y = 40;
+	fond1.x = l1.x - 6; fond1.y = l1.y - 6;
+	fond2.x = l1.x + DIM_PLATEAU_W*espace - 4; fond2.y=fond1.y;
+	fond3.x = fond1.x; fond3.y = fond1.y;
+	fond4.x = fond3.x; fond4.y = DIM_PLATEAU_H*espace2 + espace2/2 + 2;
+	draw_line(fond1,fond2,blanc);
+	draw_line(fond3,fond4,blanc);
+    for (i = 0; i < DIM_PLATEAU_H; i++)
+    {
+        for (j = 0; j < DIM_PLATEAU_W; j++)
+        {
+			fond3.x = espace + l1.x - 4; fond4.x = fond3.x ;
+			draw_line(fond3,fond4,blanc);
+			affiche_tuile_graphique(plateau_a_afficher[(int unsigned)(i * DIM_PLATEAU_W + j)],l1);			
+			l1.x+=espace;
+    	}
+		l1.x=300;
+        l1.y+=espace2;
+		fond1.y = l1.y - 6;
+		fond2.y=fond1.y;
+		draw_line(fond1,fond2,blanc);
+	}
+	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
+}
+
 
 /*
 * affiche le chevalet, le numero et le nom du joueur indique en parametre
@@ -817,23 +850,23 @@ void tuile_selectionne(int ligne,int colonne,BOOL selec) {
 /*
 * affiche le pseudo du joueur gagnant de la partie
 */
-void affiche_victoire_graphique(JOUEUR j, int indiceJoueurGagnant) {
-	fill_screen(noir);
-	POINT text;
-	
-	text.x=425; text.y=50;
-	affiche_texte_special("VICTOIRE !",200,text,blanc,"assets/valianttimes.ttf");
+void affiche_victoire_graphique(int indiceJoueurGagnant) {
+    fill_screen(noir);
+    POINT text;
+    
+    text.x=425; text.y=50;
+    affiche_texte_special("VICTOIRE !",200,text,blanc,"assets/valianttimes.ttf");
 
-	// Joueur gagnant
-	int taille =0;
-	while(j.pseudo[taille]!='\0'){
-		taille++;
-	}
-	text.x=750-((taille*16)/2); text.y=300;
-	affiche_texte_special(j.pseudo,50,text,vert,"assets/valianttimes.ttf");
+    // Joueur gagnant
+    int taille =0;
+    while(joueurs.js[indiceJoueurGagnant].pseudo[taille]!='\0'){
+        taille++;
+    }
+    text.x=750-((taille*16)/2); text.y=300;
+    affiche_texte_special(joueurs.js[indiceJoueurGagnant].pseudo,50,text,vert,"assets/valianttimes.ttf");
 
-	text.x=645; text.y=350;
-	affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
+    text.x=645; text.y=350;
+    affiche_texte_special("remporte la partie",40,text,blanc,"assets/valianttimes.ttf");
 }
 
 /*
@@ -868,7 +901,14 @@ void transition(int joueurSuivant) {
 * affiche les indications sur le tour du joueur
 */
 void affiche_info_tour(int val) {
-	POINT text;
+	POINT text,suppr;
+
+	//supprimer ancien message:
+	text.x=1295; text.y=280;
+	suppr.x=WIDTH-text.x; suppr.y = 110;
+	draw_fill_rectangle(text,suppr,noir);
+	//
+
 	text.x= 1320; text.y= 240;
 	affiche_texte_special("INFOS TOUR :",25,text,blanc,"assets/Poppins.ttf");
 	printf("val : %d",val);

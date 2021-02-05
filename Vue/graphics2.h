@@ -85,6 +85,7 @@
 	void converti_int_en_str(int nb, char *p);
 	void transforme_tuile_en_path(TUILE t, char *p);
 	void affiche_plateau_graphique(TUILE *plateau_a_afficher);
+	void affiche_plateau_graphique_slow(TUILE *plateau_a_afficher) {
 
 	void affiche_joueur_graphique(int num_joueur);
 
@@ -115,6 +116,7 @@
 
 	void tuile_selectionne(int ligne,int colonne,BOOL selec);
 
+	void affiche_victoire_graphique(int indiceJoueurGagnant) 
 	
 	void transition(int joueurSuivant);
 	

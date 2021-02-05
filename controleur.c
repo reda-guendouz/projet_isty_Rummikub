@@ -117,7 +117,7 @@ int main(int argc, char const *argv[])
                                 if (est_placable(selectionnees.nbTuiles,ligne,colonne)) // placement tuile :
                                 {
                                     placer_tuiles(selectionnees,copieP[0],ligne,colonne);
-                                    affiche_plateau_graphique(copieP[0]);
+                                    affiche_plateau_graphique_slow(copieP[0]);
                                     affiche_info_tour(3);
                                     affiche_all();
                                     do
@@ -291,11 +291,12 @@ int main(int argc, char const *argv[])
                     } // end modifP
                 } // end selection
             } // end else tour joueur H
-
-            //// victoire su joueur X ???
+                        
             affiche_all();
             if (tourValide){
                 copie_plateau(plateau[0],copieP[0]);
+                if (est_victorieux(joueurs.js[joueurActuel]))
+                    affiche_victoire(joueurActuel);                
                 mettre_a_jour(&joueurs.js[joueurActuel].chevalet,selectionnees);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
