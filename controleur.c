@@ -80,7 +80,6 @@ int main(int argc, char const *argv[])
                 while (selection)
                 {
                     fill_screen(noir);
-                    printf("debug -- selection\n");
                     // PHASE SELECTION TUILES
                     //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
                     selectionnees.nbTuiles=0; // cense vider la pile, a tester
@@ -162,7 +161,6 @@ int main(int argc, char const *argv[])
                     /// bouton refaire => continue;
                     // PHASE SELECTION/MODIFICATION PLATEAU
                     while(modifP){
-                        printf("debug -- modifP\n");
                         affiche_joueur_graphique(joueurActuel);
                         affiche_all();
                         do
@@ -192,7 +190,7 @@ int main(int argc, char const *argv[])
                         } else // valider
                         {
                             if(analyse_plateau(copieP[0])){
-                                copie_plateau(plateau[0],copieP[0]);
+                                tourValide=true;
                                 modifP2=false;
                                 modifP=false;
                                 selection=false;
@@ -232,7 +230,6 @@ int main(int argc, char const *argv[])
                             } else // valider
                             {
                                 if(analyse_plateau(copieP[0])){
-                                    copie_plateau(plateau[0],copieP[0]);
                                     modifP2=false;
                                     modifP=false;
                                     selection=false;
@@ -271,7 +268,6 @@ int main(int argc, char const *argv[])
                             } else // valider
                             {
                                 if(analyse_plateau(copieP[0])){
-                                    copie_plateau(plateau[0],copieP[0]);
                                     modifP2=false;
                                     modifP=false;
                                     selection=false;
