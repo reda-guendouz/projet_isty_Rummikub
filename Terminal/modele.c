@@ -55,7 +55,7 @@ int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile) {
 void init_joueurs(int nbJoueurs, int nbJoueursH)
 {
     joueurs.nbJs = nbJoueurs;
-    int i, j, tmp = nbJoueursH;
+    int i, j;
     for (i = 0; i < nbJoueurs; i++)
     { 
         if (nbJoueursH > 0)
@@ -73,7 +73,7 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
             piocher(&joueurs.js[i].chevalet);
-            affiche_tuile(pioche.pile[pioche.nbTuiles], j);
+            //affiche_tuile(pioche.pile[pioche.nbTuiles], j);
         }
     }
 }
@@ -641,33 +641,40 @@ void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTro
     combinaisonsTrouve->nbTuiles = 0;
     for (i = 0; i<taille;i++)
         tab[i]= i;
-    for (i=3;i<5;i++) {
+    for (i=3;i<6;i++) {
         int data[i];
         combinationUtil(tab, data, 0, taille,0, i, chevaletIa, combinaisonsTrouve);
     }
-    return ;
+    return;
 }
 
 void combinationUtil(int arr[], int data[], int start, int end, int index, int r, LISTE_TUILES chevalet, LISTE_TUILES* bestListe) 
 { 
     LISTE_TUILES newListe;
+    int i,j;
     newListe.nbTuiles = 0;
 	if (index == r) 
 	{ 
-		for (int j=0; j<r; j++) 
-            ajouter_tuile(&newListe,chevalet.pile[data[j]]); 
+		for (j=0; j<r; j++) 
+            ajouter_tuile(&newListe,chevalet.pile[data[j]]);
 		if (test_combinaison(&newListe)){
             //affiche_liste_tuiles(newListe);
             //printf("\n");
-            if (calcul_main(&newListe) > calcul_main(bestListe))
+            if (calcul_main(&newListe) > calcul_main(bestListe)){
                 copie_liste(&newListe,bestListe);
+            }
         }
 		return; 
 	} 
-	for (int i=start; i<=end && end-i+1 >= r-index; i++) 
+    printf("milieu -- \n");
+	for (i=start; i<=end && end-i+1 >= r-index; i++) 
 	{ 
-		data[index] = arr[i]; 
+        printf("boucle 2 -- \n");
+		data[index] = arr[i];
+        printf("boucle 2.2 -- \n");
 		combinationUtil(arr, data, i+1, end, index+1, r, chevalet, bestListe); 
+        
+        printf("boucle 2.3 -- \n");
 	} 
 }
 
