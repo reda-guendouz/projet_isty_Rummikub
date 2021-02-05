@@ -64,6 +64,13 @@ Cette fonction permet d'ajouter une tuile dans une liste
 */
 int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile);
 
+/*!
+ * @param       tuile    la tuile @struct{TUILE} a verifier
+ * @param       liste    la @struct{LISTE_TUILES} a verifier
+ * @result      TRUE si @param{tuile} est dans @param{liste} FALSE sinon
+*/
+int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile);
+
 /*
 Verifie si une combinaison de tuile est une suite potentiellement placable sur le plateau
 */

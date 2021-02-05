@@ -647,10 +647,10 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 }
 
 BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BOOL *premiereMain) {
-	POINT rec1,rec2,rec3,rec4,coin,dim,clic;
+	POINT rec1,rec2,rec3,rec4,err1,err2,coin,dim,clic;
 	int i,j,xg,xd;
 	COULEUR c;
-	BOOL done;
+	BOOL done=true;
 	TUILE t;
 	selectionnees->nbTuiles=0;
 
@@ -664,14 +664,15 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 	rec3.x+=10; rec3.y+=10;
 	affiche_texte("Piochez",20,rec3,blanc);
 	affiche_all();
+	err1.x = 800; err1.y = HEIGHT-25;
 
 	rec1.x-=10; rec1.y-=10;
 	rec3.x-=10; rec3.y-=10;
 	rec4.x=rec3.x + rec2.x; rec4.y=rec3.y + rec2.y;
 	rec2.x+=rec1.x; rec2.y+=rec1.y;
-	clic = wait_clic();
 	while (done)
 	{	
+		clic = wait_clic();
 		while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4)) // valider - piocher
 		{
 			if(clic.y>=600 && clic.y<=654){
@@ -703,7 +704,18 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			}
 			clic = wait_clic();
 		}
-		if (dans_zone(clic,rec1,rec2) && ) // valider
+		printf("debug -- done : %d -- cmain : %d \n",*premiereMain,calcul_main(*selectionnees) );
+		if (dans_zone(clic,rec1,rec2) && *premiereMain && calcul_main(*selectionnees) < 30){ // valider
+			done=true;
+			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
+			affiche_all();
+			SDL_Delay(700);
+			affiche_joueur_graphique(num_joueur);
+			affiche_all();
+
+		} else if (*premiereMain)
+			*premiereMain = false;
+		else
 			done=false;
 	}
 

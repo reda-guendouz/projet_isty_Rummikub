@@ -283,10 +283,10 @@ int main(int argc, char const *argv[])
                                     return 0;
                                 }
                             }
-                        }
-                    }
-                }
-            }
+                        } // end modifP2
+                    } // end modifP
+                } // end selection
+            } // end else tour joueur H
 
             //// victoire su joueur X ???
             affiche_all();
@@ -294,8 +294,8 @@ int main(int argc, char const *argv[])
                 copie_plateau(plateau[0],copieP[0]);
             }
             joueurActuel = (joueurActuel+1)%joueurs.nbJs;
-            transition(joueurActuel);
-        }
+            transition(joueurActuel+1);
+        } // end tour
         
 
         // PHASE SELECTION TUILES

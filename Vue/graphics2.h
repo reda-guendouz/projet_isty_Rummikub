@@ -10,7 +10,7 @@
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 #include "couleur.h" // Constantes de couleur
-#include "../Modele/modele.h"
+#include "../Terminal/modele.h"
 
 
 	//  type POINT

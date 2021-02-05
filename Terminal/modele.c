@@ -37,6 +37,17 @@ int ajouter_tuile(LISTE_TUILES *liste, TUILE tuile)
     return TRUE;
 }
 
+int tuile_dans_liste(LISTE_TUILES liste, TUILE tuile) {
+    int i;
+    TUILE t;
+    for(i=0; i < liste.nbTuiles; i++) {
+        t = liste.pile[i];
+        if(tuile.chiffre == t.chiffre && tuile.clr == t.clr)
+            return TRUE;
+    }
+    return FALSE;
+}
+
 /**********
  * Joueur *
  * *******/
