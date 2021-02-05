@@ -329,7 +329,7 @@ void permutationJoker(LISTE_TUILES* l, int* chiffres, int taille){
 int triplon_quadruplon(LISTE_TUILES *l)
 {
     if (l->nbTuiles > 2 && l->nbTuiles < 5) {
-        int i,j, nbJoker = 0, compteur = 0, clr = NOIR, new = 0;
+        int i, nbJoker = 0, compteur = 0, clr = NOIR, new = 0;
         int  couleur[4];
         for (i = 0; i <4; i++)
             couleur[i] = 1;
@@ -625,7 +625,7 @@ void mettre_a_jour(LISTE_TUILES *chevalet, LISTE_TUILES tuilesSelectionnees)
 
 void trouver_combinaisons(LISTE_TUILES chevaletIa, LISTE_TUILES* combinaisonsTrouve)
 {
-    int i,j;
+    int i;
     int taille = chevaletIa.nbTuiles;
     int tab[taille];
     combinaisonsTrouve->nbTuiles = 0;
