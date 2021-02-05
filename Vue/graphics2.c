@@ -66,12 +66,14 @@ void init_graphics()
 
 void affiche_auto_on () { SDL_AFFICHE_AUTO = 1; }
 void affiche_auto_off() { SDL_AFFICHE_AUTO = 0; }
+
+
 void affiche_all()
 	{
 	SDL_Event event;
 	if (SDL_PollEvent(&event)) 
 		if (event.type == SDL_QUIT) exit(0);
-	if (__init_graphics_est_deja_appele) {SDL_RenderPresent(renderer);printf("je suis call\n");}
+	if (__init_graphics_est_deja_appele) {SDL_RenderPresent(renderer);}
 		else wait_escape();
 	}
 
@@ -98,19 +100,18 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
 	if (police) texte = TTF_RenderUTF8_Blended(police, texte_affichable, color);
 	if (texte)  {
-			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
-			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
-			SDL_Rect position = {texteX, texteY, texteW, texteH};
-			SDL_RenderCopy(renderer, texture, NULL, &position);
-			if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
-			SDL_DestroyTexture(texture);
-			SDL_FreeSurface(texte);
-			}
-	else printf("%s\n",texte_affichable);
+		SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
+		SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
+		SDL_Rect position = {texteX, texteY, texteW, texteH};
+		SDL_RenderCopy(renderer, texture, NULL, &position);
+		if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);
+		SDL_DestroyTexture(texture);
+		SDL_FreeSurface(texte);
+	}
 	TTF_CloseFont(police);
 }
 
-/// si ne fonctionne pas, mettre position = {0, 0, X, X}
+
 void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR C, char *ttf_file){
 	int texteW = 0;   int texteH = 0;
 	int texteX = p.x; int texteY = p.y;
@@ -127,17 +128,16 @@ void affiche_texte_special(char *texte_affichable, int taille, POINT p, COULEUR 
 	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
 	if (police) texte = TTF_RenderUTF8_Blended(police, texte_affichable, color);
 	if (texte)  {
-			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
-			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
-			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
-			SDL_Rect position = {texteX, texteY, texteW, texteH};
-			SDL_RenderCopy(renderer, texture, NULL, &position);
-			SDL_RenderPresent(renderer);
-			if (SDL_AFFICHE_AUTO) affiche_all();
-			SDL_DestroyTexture(texture);
-			SDL_FreeSurface(texte);
-			}
-	else printf("%s\n",texte_affichable);
+		/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
+		SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
+		SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
+		SDL_Rect position = {texteX, texteY, texteW, texteH};
+		SDL_RenderCopy(renderer, texture, NULL, &position);
+		SDL_RenderPresent(renderer);
+		if (SDL_AFFICHE_AUTO) affiche_all();
+		SDL_DestroyTexture(texture);
+		SDL_FreeSurface(texte);
+	}
 	TTF_CloseFont(police);
 	SDL_SetRenderDrawColor(renderer,255,255,255,0);
 }
@@ -157,7 +157,7 @@ void wait_escape()
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
 		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
-		/* Si l'utilisateur a appuy� sur une touche */
+		/* Si l'utilisateur a appuye sur une touche */
 		if (event.type == SDL_KEYDOWN)
 			{
 			switch (event.key.keysym.sym)
@@ -191,15 +191,11 @@ POINT wait_clic()
 			}
 		/* Si l'utilisateur deplace la souris */
 		if (event.type == SDL_MOUSEMOTION)
-			{
-			printf("%cEn attente de clic ... %4d %4d           %c",13,event.motion.x,event.motion.y,13);
 			fflush(stdout);
-			}
 		/* Si l'utilisateur a demand� � fermer la fen�tre, on quitte */
 		if (event.type == SDL_QUIT) exit(EXIT_SUCCESS);
 
 		}
-	printf("%cClic en  %4d %4d\n",13,P.x,P.y);
 	___MOUSE_POSITION = P;
 	return P;
 	}
@@ -296,7 +292,6 @@ void fill_screen(COULEUR clr){
 	if (SDL_AFFICHE_AUTO) SDL_RenderPresent(renderer);	
 }
 
-
 char* replace_char(char* str, char find, char replace){
     char *current_pos = strchr(str,find);
     while (current_pos) {
@@ -305,9 +300,6 @@ char* replace_char(char* str, char find, char replace){
     }
     return str;
 }
-
-
-
 
 /*
 * affiche les scores sous la forme d'un tableau au point indique en parametre
@@ -333,7 +325,7 @@ void affiche_score_graphique(POINT point){
         while (fgets(chaine,500,fichier) != NULL){
 			char d[] = " :";
   			char *p = strtok(chaine, d);
-			int i=0,taille;
+			int i=0;
 			while(p != NULL)
 			{
 				if(i==1) {
@@ -360,7 +352,6 @@ void affiche_score_graphique(POINT point){
 			}
 			ligne++;
         }
-		printf("ligne: %d",ligne);
         fclose(fichier);
 		ligne1.x = point.x+100; ligne1.y = point.y;
 		ligne2.x=ligne1.x; ligne2.y= ligne1.y+((ligne/3)*40)-10;
@@ -372,6 +363,7 @@ void affiche_score_graphique(POINT point){
     }
 	
 }
+
 
 /*
 * affiche le menu d'accueil du jeu
@@ -800,7 +792,7 @@ int choix_joueurs(int nbIA,BOOL demandeIA){
 * affiche une coutour sur toute les tuiles sur lesquelles on clic 
 */
 BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BOOL *premiereMain) {
-	POINT rec1,rec2,rec3,rec4,err1,err2,coin,dim,clic;
+	POINT rec1,rec2,rec3,rec4,err1,coin,dim,clic;
 	int i,j,xg,xd;
 	COULEUR c;
 	BOOL done=true;
@@ -857,7 +849,6 @@ BOOL selectionne_tuiles_chevalet(int num_joueur, LISTE_TUILES *selectionnees, BO
 			}
 			clic = wait_clic();
 		}
-		printf("debug -- done : %d -- cmain : %d \n",*premiereMain,calcul_main(*selectionnees) );
 		if (dans_zone(clic,rec1,rec2) && *premiereMain && calcul_main(*selectionnees) < 30){ // valider
 			done=true;
 			affiche_texte("Erreur : premier placement > 30 !",25,err1,rouge);
@@ -997,7 +988,6 @@ void affiche_info_tour(int val) {
 
 	text.x= 1320; text.y= 240;
 	affiche_texte_special("INFOS TOUR :",25,text,blanc,"assets/Poppins.ttf");
-	printf("val : %d",val);
 	text.x= 1295; text.y= 280;
 	switch (val)
 	{

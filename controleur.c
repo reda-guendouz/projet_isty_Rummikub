@@ -3,8 +3,8 @@
 int main(int argc, char const *argv[])
 {
     // creation des variables du jeu
-    POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,texteInfo,clic,oldClic,err;
-    int i,j,nbJoueursH,nbJoueursIA=0,joueurActuel=0,ligne,colonne;
+    POINT rec1,rec2,rec3,rec4,rec5,rec6,rec7,rec8,clic,oldClic,err;
+    int i,nbJoueursH,nbJoueursIA=0,joueurActuel=0,ligne,colonne;
     BOOL has_ia=false,partie=true,tour=true,tourValide=false,selection=true,modifP=true,modifP2=true;
     LISTE_TUILES selectionnees, combinaisonsTrouve;;
     TUILE copieP[DIM_PLATEAU_H][DIM_PLATEAU_W],tmp;
@@ -23,7 +23,6 @@ int main(int argc, char const *argv[])
         rec6.x = 780; rec6.y = 630;
 	    err.x = 680; err.y = HEIGHT-30;
         
-        texteInfo.x=50; texteInfo.y=350;
         do
         {
             clic = wait_clic();
@@ -42,7 +41,6 @@ int main(int argc, char const *argv[])
             nbJoueursH = choix_joueurs(nbJoueursIA,FALSE);
         else 
             nbJoueursH = 1;
-        printf("joueurs : %d - IA : %d\n",nbJoueursH,nbJoueursIA);
         init_joueurs(nbJoueursH + nbJoueursIA, nbJoueursH);
 
         BOOL premieresMains[nbJoueursH+nbJoueursIA];
@@ -53,7 +51,6 @@ int main(int argc, char const *argv[])
         for (i = 0; i < nbJoueursH; i++)
             inscription(joueurs.js[i].pseudo, i + 1);
 
-        printf("debug -- test creation joueur %d : %s\n", joueurActuel, joueurs.js[joueurActuel].pseudo);
         
         affiche_auto_off();
         // bouton valider :
@@ -71,13 +68,9 @@ int main(int argc, char const *argv[])
             selection=true;
             modifP=true;
             tourValide=false;
-            printf("debug -- IA pseudo : %s || numJoueur\n",joueurs.js[joueurActuel].pseudo,joueurActuel);
 
             if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
-                /*
-                printf("IA IS PLAYING...\n");
-                SDL_Delay(500);*/
                 combinaisonsTrouve.nbTuiles = 0;
                 i = 0;
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
@@ -107,7 +100,6 @@ int main(int argc, char const *argv[])
                 {
                     fill_screen(noir);
                     // PHASE SELECTION TUILES
-                    //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
                     mettre_a_jour(&selectionnees,selectionnees); // vide tuiles selectionnees
                     rec4.x=120; rec4.y=40;
                     rec3.x=50; rec3.y=200;
@@ -121,7 +113,6 @@ int main(int argc, char const *argv[])
                     affiche_info_tour(1);
                     if(selectionne_tuiles_chevalet(joueurActuel,&selectionnees,&premieresMains[joueurActuel])){
                         selection=false;
-                        //// afficher texte : "Ou voulez-vous mettre vos tuiles ?" (sur deux 'lignes' surement)
                         // choix placement tuile :
                         draw_rectangle(rec3,rec4,blanc);
                         rec3.x+=10; rec3.y+=10;
@@ -164,10 +155,8 @@ int main(int argc, char const *argv[])
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
-                                    printf("reda is dommed\n");
                                     affiche_texte("Erreur : votre liste ne peut se mettre ici",25,err,rouge);
                                     SDL_Delay(1200);
-                                    //// afficher "erreur: votre liste ne peut se mettre ici"
                                 }
                             } else
                                 selection=true;
@@ -184,7 +173,6 @@ int main(int argc, char const *argv[])
                     } else // choix - piocher
                     {
                         piocher(&joueurs.js[joueurActuel].chevalet);
-                        printf("piocher");
                         selection = false;
                         modifP=false;
                         break;
@@ -198,7 +186,6 @@ int main(int argc, char const *argv[])
                         do
                         {
                             clic = wait_clic();
-                            printf("debug -- modifP\n");
                         } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec7,rec8));//plateau - refaire - piocher - valider
                         if (dans_zone(clic,rec1,rec2)) // plateau intervertion 1
                         {
@@ -229,18 +216,14 @@ int main(int argc, char const *argv[])
                                 break;
                             } else
                             {
-                                //// afficher : "erreur : placement de tuiles invalides"
                                 affiche_texte("Erreur : Votre plateau n'est pas valide",25,err,rouge);
-
                                 return 0;
                             }
                         }
                         while(modifP2){
-                            printf("debug -- modifP2\n");
                             do
                             {
                                 clic = wait_clic();
-                            printf("debug -clic- modifP2\n");
                             } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec7,rec8));//plateau - refaire - piocher - valider
                             if (dans_zone(clic,rec1,rec2)) // plateau intervertion 2
                             {
@@ -253,7 +236,6 @@ int main(int argc, char const *argv[])
                             {
                                 modifP2=false;
                                 modifP=true;
-                                printf("refaire\n");
                                 continue;
                             } else if (dans_zone(clic,rec5,rec6)) // piocher
                             {
@@ -275,11 +257,9 @@ int main(int argc, char const *argv[])
                                     return 0;
                                 }
                             }
-                            printf("debug -- modifP2 2eme tour\n");
                             do
                             {
                                 clic = wait_clic();
-                            printf("debug -clic- modifP2 2eme tour\n");
                             } while (!dans_zone(clic,rec1,rec2) && !dans_zone(clic,rec3,rec4) && !dans_zone(clic,rec5,rec6) && !dans_zone(clic,rec7,rec8));//plateau - refaire - piocher - valider
                             if (dans_zone(clic,rec1,rec2)) // plateau intervertion 1
                             {
@@ -289,7 +269,6 @@ int main(int argc, char const *argv[])
                                 oldClic.y=colonne;
                             } else if (dans_zone(clic,rec3,rec4)) // refaire
                             {
-                                printf("refaire\n");
                                 modifP2=false;
                                 modifP=true;
                                 break;
@@ -329,24 +308,7 @@ int main(int argc, char const *argv[])
             if (joueurActuel + 1 - nbJoueursH  <= 0) 
                 transition(joueurActuel+1);
         } // end tour
-        
-
-        // PHASE SELECTION TUILES
-        //// ne pas oublier de supprimer LISTE-TUILES selectionnees et copieP
-        /// bouton refaire => continue;
-        // PHASE SELECTION/MODIFICATION PLATEAU
-        /// while(plateau){
-        //// ne pas oublier de supprimer copieP
-        /// bouton refaire plateau => continue;
-        /// bouton retour selection => break;
-        // VALIDATION DU JOUEUR
-        // PHASE VERIFICATION (implicite/caché)
-        /// if (toutEstBon) selection = false; plateau = false;
-        /// else break; // retour a la selection
-        /// }
-
-        ///// fin de partie
-    }
+    }///// fin de partie
     quit();
     return 0;
 }
