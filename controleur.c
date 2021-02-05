@@ -72,10 +72,8 @@ int main(int argc, char const *argv[])
 
             if (joueurActuel + 1 - nbJoueursH  > 0) // tour d'un ia
             {
-                affiche_liste_tuiles(joueurs.js[joueurActuel].chevalet);
                 LISTE_TUILES combinaisonsTrouve;
                 combinaisonsTrouve.nbTuiles=0;
-                affiche_liste_tuiles(combinaisonsTrouve);
                 trouver_combinaisons(joueurs.js[joueurActuel].chevalet,&combinaisonsTrouve);
                 copie_plateau(copieP[0],plateau[0]);
                 if (premieresMains[joueurActuel] && calcul_main(&combinaisonsTrouve) < 30) {
@@ -155,6 +153,7 @@ int main(int argc, char const *argv[])
                                         piocher(&joueurs.js[joueurActuel].chevalet);
                                         selection = false;
                                         modifP=false;
+                                        break;
                                     }
                                 } else{ // retour a la selection
                                     selection = true;
