@@ -75,7 +75,7 @@ void init_joueurs(int nbJoueurs, int nbJoueursH)
         for (j = 0; j < PIOCHE_DEPART; j++)
         {
             piocher(&joueurs.js[i].chevalet);
-            affiche_tuile(pioche.pile[pioche.nbTuiles], j);
+            //affiche_tuile(pioche.pile[pioche.nbTuiles], j);
         }
     }
 }
