@@ -1,14 +1,8 @@
 #include "police.h"
 #include "graphics2.h"
 
-
-
-
-/// previously here : #ifdef SDL_ttf_OK
-
 #define POLICE_NAME "assets/verdana.ttf"
 int verdana_ok = FALSE;
-/// fin de "previously"
 
 	SDL_Window *screen;
     SDL_Renderer *renderer;
@@ -26,11 +20,11 @@ int verdana_ok = FALSE;
 
 void init_graphics()
 	{
-	/// Initialisation d'une taille voulu
+	// Initialisation d'une taille voulu
 	WIDTH  = 1500;
 	HEIGHT = 700;
 
-	/// Initialisation de la SDL_surface (variable 1.1)
+	// Initialisation de la SDL_surface (variable 1.1)
 	if(SDL_Init(SDL_INIT_VIDEO) != 0)
 		{
 			printf("Impossible de charger la librairie SDL: %s\n", SDL_GetError());
@@ -49,10 +43,8 @@ void init_graphics()
 	/// a voir avec les pseudos des joueurs
 	// Autorise la prise en compte de repetition lors d'un appui
 	// long sur une touche
-	///////SDL_EnableKeyRepeat(1,0);
-
 	__init_graphics_est_deja_appele = TRUE;
-	///printf("Fenetre de %d x %d\n",WIDTH,HEIGHT);
+
     printf("SDL_ttf OK, ");
     /// Initialise la police (fichier police.h)
     TTF_Init();
@@ -72,11 +64,8 @@ void init_graphics()
 	affiche_all();
 	}
 
-	// 2.2 Affichage automatique ou manuel
 void affiche_auto_on () { SDL_AFFICHE_AUTO = 1; }
 void affiche_auto_off() { SDL_AFFICHE_AUTO = 0; }
-	// Affiche tous les objets et v�rifie que la fonction init_graphics
-	// a �t� appel�e pr�c�demment et affiche un message d'erreur sinon.
 void affiche_all()
 	{
 	SDL_Event event;
@@ -93,7 +82,6 @@ COULEUR couleur_RGB(int r, int g, int b)
 	return C;
 	}
 
-/// si ne fonctionne pas, mettre position = {0, 0, X, X}
 void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	int texteW = 0;   int texteH = 0;
 	int texteX = p.x; int texteY = p.y;
@@ -110,7 +98,6 @@ void affiche_texte(char *texte_affichable, int taille, POINT p, COULEUR C){
 	/* Ecriture du texte dans la SDL_Surface "texte" en mode Blended (optimal) */
 	if (police) texte = TTF_RenderUTF8_Blended(police, texte_affichable, color);
 	if (texte)  {
-			/// old : \\\ SDL_BlitSurface(texte, NULL, SDL_screen, &position); /* Blit du texte par-dessus */
 			SDL_Texture *texture = SDL_CreateTextureFromSurface(renderer, texte);
 			SDL_QueryTexture(texture,NULL,NULL,&texteW,&texteH);		
 			SDL_Rect position = {texteX, texteY, texteW, texteH};
@@ -217,7 +204,6 @@ POINT wait_clic()
 	return P;
 	}
 
-/// obligatoire pour le dessin (a comprendre, ainsi que le define "add_pix")
 int dans_ecran(int x, int y)
 	{
 	if (x<0) return 0;
@@ -227,9 +213,8 @@ int dans_ecran(int x, int y)
 	return 1;
 	}
 
-	// 4.x.2 Macro qui permet d'ajouter un pixel
-	// Inverse l'ordonn�e entre haut et bas
 #define add_pix(x,y,color)  if (dans_ecran((x),(y))) { SDL_SetRenderDrawColor(renderer,((color >> 16) & 0xFF),((color >> 8) & 0xFF),((color) & 0xFF),0);SDL_RenderDrawPoint(renderer, x, y);SDL_SetRenderDrawColor(renderer,255,255,255,0); }
+
 
 /*
 * affiche le pixel selon la couleur indique en parametre
@@ -316,7 +301,6 @@ void fill_screen(COULEUR clr){
 */
 void affiche_menu_debut(){
 	fill_screen(noir);
-
     POINT text,RecEmplacement;
     text.y=25; text.x=400;
     affiche_texte_special("RUMMIKUB",130,text,blanc,"assets/Cartoon.ttf");
@@ -326,7 +310,6 @@ void affiche_menu_debut(){
     affiche_texte_special("PLAYERS VS IA",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
     RecEmplacement.x = 850; RecEmplacement.y = 420;
     affiche_texte_special("PLAYERS VS PLAYERS",90,RecEmplacement,blanc,"assets/valianttimes.ttf");
-
 	text.x=710; text.y=600;
     affiche_texte_special("Quitter",30,text,blanc,"assets/valianttimes.ttf");
     
@@ -347,7 +330,6 @@ int dans_zone(POINT clic, POINT p1, POINT p2){
 /*
 * affiche le menu de saisi de pseudo
 */
-
 void affiche_inscription(int numJoueur){
 	SDL_RenderClear(renderer);
     POINT textP,rec1,rec2,rec3,l,ligne1,ligne2;
@@ -377,7 +359,6 @@ void affiche_inscription(int numJoueur){
 	draw_rectangle(rec3,rec2,blanc);
 	rec3.x+=13; rec3.y+=10;
 	affiche_texte("Refaire",40,rec3,blanc);
-
 
 	ligne1.x=400; ligne1.y=460;
 	ligne2.x=700; ligne2.y=ligne1.y;
@@ -926,7 +907,6 @@ void transition_IA(int val) {
 	POINT text,rec1,rec2;
 	int i;
 	text.x = 728; text.y=100;
-
     affiche_texte_special("IA",70,text,rouge,"assets/valianttimes.ttf");
 
 	if(val==1){
